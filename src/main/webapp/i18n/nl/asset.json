@@ -1,0 +1,28 @@
+{
+    "app": {
+        "asset" : {
+            "home": {
+                "title": "Assets",
+                "createLabel": "Maak een nieuwe Asset",
+                "createOrEditLabel": "Maak of wijzig een Asset",
+                "search": "Search for Asset"
+            },
+            "created": "A new Asset is created with identifier {{ param }}",
+            "updated": "A Asset is updated with identifier {{ param }}",
+            "deleted": "A Asset is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Bent u zeker dat u Asset {{ id }} wilt verwijderen?"
+            },
+            "detail": {
+                "title": "Asset"
+            },
+            "parentId": "Parent Id",
+            "name": "Name",
+            "code": "Code",
+            "assetType": "Asset Type",
+            "capacity": "Capacity",
+            "year": "Year",
+            "workOrder": "Work Order"
+        }
+    }
+}

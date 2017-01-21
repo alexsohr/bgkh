@@ -1,0 +1,9 @@
+{
+    "app": {
+        "WorkOrderType" : {
+            "null": "",
+            "STRATEGIC": "STRATEGIC",
+            "NON_STRATEGIC": "NON_STRATEGIC"
+        }
+    }
+}

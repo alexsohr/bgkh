@@ -1,0 +1,175 @@
+<aside id="left-panel">
+
+    <!-- User info -->
+    <div login-info></div>
+    <!-- end user info -->
+
+    <nav ng-controller="NavigationController as vm">
+        <!-- NOTE: Notice the gaps after each icon usage <i></i>..
+        Please note that these links work a bit different than
+        traditional href="" links. See documentation for details.
+        -->
+        <ul data-smart-menu ng-if="vm.isAuthenticated()">
+            <li data-menu-collapse>
+                <a href="#" title="{{getWord('Dashboard')}}">
+                    <i class="fa fa-lg fa-fw fa-home"></i> <span
+                    class="menu-item-parent">{{getWord('Dashboard')}}</span></a>
+                <ul>
+                    <li>
+                        <a data-ui-sref-active="active" data-ui-sref="app.dashboard" title="{{getWord('Dashboard')}}"><i
+                            class="fa fa-clock-o"></i>
+                            {{getWord('Dashboard')}}</a>
+                    </li>
+                    <li>
+                        <a data-ui-sref="app.calendar" title="{{getWord('Calendar')}}"><i
+                            class="fa fa-calendar"></i>
+                            {{getWord('Calendar')}}</a>
+                    </li>
+                    <li>
+                        <a data-ui-sref="#" title="{{getWord('Assigned assets')}}"><i
+                            class="fa fa-cogs"></i>
+                            {{getWord('Assigned assets')}}</a>
+                    </li>
+                    <li>
+                        <a data-ui-sref="#" title="{{getWord('Assigned work order')}}"><i
+                            class="fa fa-briefcase"></i>
+                            {{getWord('Assigned work order')}}</a>
+                    </li>
+                    <li>
+                        <a data-ui-sref="#" title="{{getWord('Request work order')}}"><i
+                            class="fa fa-bullhorn"></i>
+                            {{getWord('Request work order')}}</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li data-menu-collapse class="top-menu-invisible">
+                <a href="#" title="{{getWord('Assets')}}"><i
+                    class="fa fa-lg fa-fw fa-cogs"></i>
+                    <span class="menu-item-parent">{{getWord('Assets')}}</span></a>
+                <ul>
+                    <li>
+                        <a data-ui-sref="#" title="{{getWord('All assets')}}"><i
+                            class="fa fa-lg fa-fw fa-cogs"></i>
+                            {{getWord('All assets')}}</a>
+                    </li>
+                    <li>
+                        <a data-ui-sref="#" title="{{getWord('Facilities')}}"><i
+                            class="fa fa-lg fa-fw fa-building"></i>
+                            {{getWord('Facilities')}}</a>
+                    </li>
+                    <li>
+                        <a data-ui-sref="#" title="{{getWord('Equipments')}}"><i
+                            class="fa fa-lg fa-fw fa-gear"></i>
+                            {{getWord('Equipments')}}</a>
+                    </li>
+                </ul>
+            </li>
+            <li data-menu-collapse class="top-menu-invisible">
+                <a href="#" title="{{getWord('Maintenance')}}">
+                    <i class="fa fa-lg fa-fw fa-wrench"></i> <span
+                    class="menu-item-parent">{{getWord('Maintenance')}}</span></a>
+                <ul>
+                    <li>
+                        <a data-ui-sref="#" title="{{getWord('Work orders')}}"><i
+                            class="fa fa-lg fa-fw fa-briefcase"></i>
+                            {{getWord('Work orders')}}</a>
+                    </li>
+                    <li>
+                        <a data-ui-sref="#" title="{{getWord('Scheduled maintenance')}}"><i
+                            class="fa fa-lg fa-fw fa-calendar"></i>
+                            {{getWord('Scheduled maintenance')}}</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a data-ui-sref="app.home" title="{{getWord('Alerts')}}">
+                    <i class="fa fa-lg fa-fw fa-bell"></i> <span
+                    class="menu-item-parent">{{getWord('Alerts')}}</span></a>
+            </li>
+            <li>
+                <a data-ui-sref="app.home" title="{{getWord('Reports')}}">
+                    <i class="fa fa-lg fa-fw fa-bar-chart"></i> <span
+                    class="menu-item-parent">{{getWord('Reports')}}</span></a>
+            </li>
+            <li data-menu-collapse>
+                <a href="#" title="{{getWord('Settings')}}">
+                    <i class="fa fa-lg fa-fw fa-sliders"></i> <span
+                    class="menu-item-parent">{{getWord('Settings')}}</span></a>
+                <ul>
+
+                    <li>
+                        <a data-ui-sref="app.admin.user-management" title="{{getWord('Users & permissions')}}">
+                            <i class="glyphicon glyphicon-user"></i> <span
+                            class="menu-item-parent">{{getWord('Users & permissions')}}</span></a>
+                    </li>
+                    <li>
+                        <a data-ui-sref="app.admin.jhi-metrics" title="{{getWord('Metrics')}}">
+                            <i class="glyphicon glyphicon-dashboard"></i> <span
+                            class="menu-item-parent">{{getWord('Metrics')}}</span></a>
+                    </li>
+                    <li>
+                        <a data-ui-sref="app.admin.jhi-health" title="{{getWord('Health')}}">
+                            <i class="glyphicon glyphicon-heart"></i> <span
+                            class="menu-item-parent">{{getWord('Health')}}</span></a>
+                    </li>
+                    <li>
+                        <a data-ui-sref="app.admin.jhi-configuration" title="{{getWord('Configuration')}}">
+                            <i class="glyphicon glyphicon-list-alt"></i> <span
+                            class="menu-item-parent">{{getWord('Configuration')}}</span></a>
+                    </li>
+                    <li>
+                        <a data-ui-sref="app.admin.audits" title="{{getWord('Audits')}}">
+                            <i class="glyphicon glyphicon-bell"></i> <span
+                            class="menu-item-parent">{{getWord('Audits')}}</span></a>
+                    </li>
+                    <li>
+                        <a data-ui-sref="app.admin.logs" title="{{getWord('Logs')}}">
+                            <i class="glyphicon glyphicon-tasks"></i> <span
+                            class="menu-item-parent">{{getWord('Logs')}}</span></a>
+                    </li>
+                    <li>
+                        <a data-ui-sref="app.admin.docs" title="{{getWord('API')}}">
+                            <i class="glyphicon glyphicon-book"></i> <span
+                            class="menu-item-parent">{{getWord('API')}}</span></a>
+                    </li>
+                </ul>
+            </li>
+            <li data-menu-collapse>
+                <a href="#" title="{{getWord('Account')}}">
+                    <i data-ui-sref-active="active" class="fa fa-lg fa-fw fa-users"></i> <span
+                    class="menu-item-parent">{{getWord('Account')}}</span></a>
+                <ul>
+
+                    <li>
+                        <a data-ui-sref="app.account.settings" title="{{getWord('Settings')}}">
+                            <i class="glyphicon glyphicon-wrench"></i> <span
+                            class="menu-item-parent">{{getWord('Settings')}}</span></a>
+                    </li>
+                    <li>
+                        <a data-ui-sref="app.account.password" title="{{getWord('Password')}}">
+                            <i class="glyphicon glyphicon-lock"></i> <span
+                            class="menu-item-parent">{{getWord('Password')}}</span></a>
+                    </li>
+                    <li>
+                        <a data-ui-sref="app.account.sessions" title="{{getWord('Session')}}">
+                            <i class="glyphicon glyphicon-cloud"></i> <span
+                            class="menu-item-parent">{{getWord('Session')}}</span></a>
+                    </li>
+                    <li>
+                        <a ng-click="vm.logout()" title="{{getWord('Logout')}}">
+                            <i class="fa fa-lg fa-fw fa-user"></i> <span
+                            class="menu-item-parent">{{getWord('Logout')}}</span></a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <!-- NOTE: This allows you to pull menu items from server -->
+        <!-- <ul data-smart-menu-items="/api/menu-items.json"></ul> -->
+    </nav>
+
+    <span class="minifyme" data-action="minifyMenu" minify-menu>
+    <i class="fa fa-arrow-circle-left hit"></i>
+  </span>
+
+</aside>

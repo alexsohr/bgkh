@@ -1,0 +1,19 @@
+<div class="well well-light">
+    <div id="{{handler}}" class="{{reusableFormClass}}">
+        <div>
+            <div>
+                <div>
+                    <h4 class="form-title">{{header}}</h4>
+                </div>
+                <div class="form-body">
+                </div>
+                <div class="form-footer">
+                    <span ng-hide="angular.equals({}, footer)" ng-bind-html="footer"></span>
+                    <button type="button" class="btn btn-default" ng-click="closeForm()">
+                        {{$root.getWord('Cancel')}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,45 @@
+<!-- MAIN CONTENT -->
+<div id="content">
+    <div class="row">
+        <div smart-include="app/layout/partials/dashboard-sub-header.tpl.html"></div>
+    </div>
+    <!-- widget grid -->
+    <section id="widget-grid1" widget-grid>
+        <!-- row -->
+        <div class="row">
+            <article class="col-sm-12">
+
+                <div smart-include="app/dashboard/live-feeds.tpl.html" class="placeholder-live-feeds"></div>
+            </article>
+        </div>
+        <!-- end row -->
+        <!-- row -->
+        <div class="row">
+            <article class="col-sm-12 col-md-12 col-lg-12">
+                <work-order-asset-widget></work-order-asset-widget>
+            </article>
+        </div>
+
+        <!-- end row -->
+        <!-- row -->
+        <div class="row">
+            <article class="col-sm-12 col-md-12 col-lg-6">
+                <chat-widget></chat-widget>
+            </article>
+            <article class="col-sm-12 col-md-12 col-lg-6">
+                <full-calendar id="dashboard-calendar-widget" data-events="events"></full-calendar>
+            </article>
+        </div>
+        <!-- end row -->
+        <!-- row -->
+        <div class="row">
+            <article class="col-sm-12 col-md-12 col-lg-12">
+                <div smart-include="app/dashboard/todo/todo-widget.tpl.html"></div>
+            </article>
+        </div>
+        <!-- end row -->
+    </section>
+    <!-- end widget grid -->
+
+</div>
+<!-- END MAIN CONTENT -->

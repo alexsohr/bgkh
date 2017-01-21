@@ -1,0 +1,62 @@
+<div id="chat-widget" jarvis-widget data-widget-color="red" data-widget-editbutton="false"
+     data-widget-deletebutton="false">
+
+
+    <header>
+        <span class="widget-icon"> <i class="fa fa-comments txt-color-white"></i> </span>
+
+        <h2> {{$root.getWord('Messages')}} </h2>
+
+    </header>
+
+    <!-- widget div-->
+    <div>
+        <div class="widget-body widget-hide-overflow no-padding">
+            <!-- content goes here -->
+
+            <chat-users></chat-users>
+
+            <!-- CHAT BODY -->
+            <div id="chat-body" class="chat-body custom-scroll">
+                <ul>
+                    <li class="message" ng-repeat="message in chatMessages">
+                        <img class="message-picture online" ng-src="{{message.user.picture}}">
+
+                        <div class="message-text">
+                            <time>
+                                {{message.date | date }}
+                            </time>
+                            <a ng-click="messageTo(message.user)" class="username">{{message.user.username}}</a>
+                            <div ng-bind-html="message.body"></div>
+
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- CHAT FOOTER -->
+            <div class="chat-footer">
+
+                <!-- CHAT TEXTAREA -->
+                <div class="textarea-div">
+
+                    <div class="typearea">
+                        <textarea placeholder="{{$root.getWord('Message')}}" id="textarea-expand"
+                                  class="custom-scroll" ng-model="newMessage"></textarea>
+                    </div>
+
+                </div>
+
+                <!-- CHAT REPLY/SEND -->
+											<span class="textarea-controls">
+												<button class="btn btn-sm btn-primary pull-right" ng-click="sendMessage()">
+                                                    {{$root.getWord('Reply')}}
+                                                </button>
+            </div>
+
+            <!-- end content -->
+        </div>
+
+    </div>
+    <!-- end widget div -->
+</div>

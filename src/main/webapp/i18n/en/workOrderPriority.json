@@ -1,0 +1,11 @@
+{
+    "app": {
+        "WorkOrderPriority" : {
+            "null": "",
+            "URGENT": "URGENT",
+            "HIGH": "HIGH",
+            "MEDIUM": "MEDIUM",
+            "LOW": "LOW"
+        }
+    }
+}

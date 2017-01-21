@@ -1,0 +1,96 @@
+<div>
+    <div class="navbar navbar-default no-padding">
+
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="btn-group dropdown" data-dropdown>
+                    <a href="javascript:void(0);" class="dropdown-toggle"
+                       data-toggle="dropdown">
+                        {{$root.getWord('Import data')}}
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="#{{workOrderModal}}" ng-click="openWorkOrderAddModal()"
+                               data-target="#workOrderModal"
+                               data-toggle="modal">{{$root.getWord('Add')}}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div>
+
+
+    <table datatable-basic data-table-options="workOrdersTableOptions"
+           class="display projects-table table table-striped table-bordered table-hover"
+           cellspacing="0" width="100%">
+        <thead>
+        <tr>
+            <th></th>
+            <th data-hide="phone,tablet">{{$root.getWord('ID')}}</th>
+            <th>{{$root.getWord('Asset name')}}</th>
+            <th>{{$root.getWord('Type')}}</th>
+            <th data-hide="phone">{{$root.getWord('Status')}}</th>
+            <th data-hide="phone"><i class="fa fa-fw fa-user text-muted"></i>{{$root.getWord('Est')}}
+            </th>
+            <th data-hide="phone">{{$root.getWord('Priority')}}</th>
+            <th data-hide="phone,tablet"><i
+                    class="fa fa-fw fa-calendar text-muted hidden-mobile"></i>
+                {{$root.getWord('Estimated hours')}}
+            </th>
+            <th>{{$root.getWord('Tracker')}}</th>
+            <th data-hide="phone,tablet"><i
+                    class="fa fa-fw fa-user text-muted hidden-md hidden-sm hidden-xs"></i>
+                {{$root.getWord('Users')}}
+            </th>
+            <th>{{$root.getWord('Action')}}</th>
+        </tr>
+        </thead>
+        <caption class="smart-datatable-child-format" data-child-control="td.details-control">
+            <table cellpadding="5" cellspacing="0" border="0"
+                   class="table table-hover table-condensed">
+                <tr>
+                    <td style="width:100px">تجهیز:</td>
+                    <td ng-bind-html="d.assets"></td>
+                </tr>
+                <tr>
+                    <td>توضیحات:</td>
+                    <td ng-bind-html="d.description">}</td>
+                </tr>
+                <tr>
+                    <td>ملاحضات:</td>
+                    <td ng-bind-html="d.comments"></td>
+                </tr>
+                <tr>
+                    <td>تاریخ پایان:</td>
+                    <td ng-bind-html="d.date-completed"></td>
+                </tr>
+            </table>
+        </caption>
+    </table>
+
+    <!-- Modal -->
+    <reusable-modal ng-if="nested != 'nested'" modal-data-id="workOrderModal" modal-body="workOrderImportBody"
+                    modal-class="workOrderModalClass"
+                    modal-footer="workOrderImportFooter"
+                    modal-header="workOrderImportHeader"
+                    data-ng-click-right-button="workOrderImportModalClose()"></reusable-modal>
+    <nested-data-form ng-if="nested == 'nested'" form-data-id="workOrderModal"
+                      form-body="workOrderImportBody"
+                      form-footer="workOrderImportFooter"
+                      form-header="workOrderImportHeader"
+    ></nested-data-form>
+</div>

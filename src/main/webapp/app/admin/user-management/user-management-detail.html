@@ -1,0 +1,68 @@
+<!-- MAIN CONTENT -->
+<div id="content">
+    <!-- widget grid -->
+    <section id="widget-grid1" widget-grid>
+        <!-- row -->
+        <div class="row">
+            <article class="col-sm-12">
+
+                <div jarvis-widget data-widget-editbutton="false" data-widget-deletebutton="false"
+                     data-widget-fullscreenbutton="false" data-widget-togglebutton="false" data-widget-color="blue"
+                     ng-controller="TodoCtrl">
+                    <header>
+                        <span class="widget-icon"> <i class="glyphicon glyphicon-user txt-color-white"></i> </span>
+
+                        <h2> User details </h2>
+                    </header>
+                    <!-- widget div-->
+                    <div>
+                        <div class="widget-body">
+                            <!-- content goes here -->
+                            <div>
+                                <h2><span>User</span> "{{vm.user.login}}"</h2>
+                                <dl class="dl-horizontal">
+                                    <dt><span>Login</span></dt>
+                                    <dd><span>{{vm.user.login}}</span></dd>
+                                    <dt><span>First Name</span></dt>
+                                    <dd>{{vm.user.firstName}}</dd>
+                                    <dt><span>Last Name</span></dt>
+                                    <dd>{{vm.user.lastName}}</dd>
+                                    <dt><span>Email</span></dt>
+                                    <dd>{{vm.user.email}}</dd>
+                                    <dt><span>Activated</span></dt>
+                                    <dd>{{vm.user.activated}}</dd>
+                                    <dt><span>Lang Key</span></dt>
+                                    <dd>{{vm.user.langKey}}</dd>
+                                    <dt><span>Created By</span></dt>
+                                    <dd>{{vm.user.createdBy}}</dd>
+                                    <dt><span>Created Date</span></dt>
+                                    <dd>{{vm.user.createdDate | date:'dd/MM/yy HH:mm' }}</dd>
+                                    <dt><span>Last Modified By</span></dt>
+                                    <dd>{{vm.user.lastModifiedBy}}</dd>
+                                    <dt><span>Last Modified Date</span></dt>
+                                    <dd>{{vm.user.lastModifiedDate | date:'dd/MM/yy HH:mm'}}</dd>
+                                    <dt><span>Profiles</span></dt>
+                                    <dd>
+                                        <ul class="list-unstyled">
+                                            <li ng-repeat="authority in vm.user.authorities"><span>{{authority}}</span>
+                                            </li>
+                                        </ul>
+                                    </dd>
+                                </dl>
+                                <button type="submit"
+                                        ui-sref="app.admin.user-management"
+                                        class="btn btn-info">
+                                    <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span> Back</span>
+                                </button>
+                            </div>
+                            <div>&nbsp;</div>
+                            <!-- end content -->
+                        </div>
+
+                    </div>
+                    <!-- end widget div -->
+                </div>
+            </article>
+        </div>
+    </section>
+</div>

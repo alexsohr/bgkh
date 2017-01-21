@@ -1,0 +1,27 @@
+<div class="step-pane active" data-step="1">
+                                <span class="smart-form">
+                                <header>
+                                    {{$root.getWord('Chose a parent')}}
+                                </header>
+                                </span>
+    <br>
+    <!-- wizard form starts here -->
+    <form class="form-horizontal">
+        <fieldset>
+
+            <div class="form-group">
+
+                <div class="col-md-12">
+                    <div class="row">
+                        <assets-tree-grid-checkbox
+                                selected-tree-node="duplicatedAsset"
+                                on-select="selectedParentTree(branch)">
+                        </assets-tree-grid-checkbox>
+                    </div>
+                </div>
+            </div>
+
+        </fieldset>
+    </form>
+
+</div>

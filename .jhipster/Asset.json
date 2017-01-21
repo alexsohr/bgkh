@@ -1,0 +1,68 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "workOrder",
+            "otherEntityName": "workOrder",
+            "otherEntityRelationshipName": "asset"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "parentId",
+            "fieldType": "Long",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "minlength",
+                "maxlength"
+            ],
+            "fieldValidateRulesMinlength": 3,
+            "fieldValidateRulesMaxlength": 100
+        },
+        {
+            "fieldName": "code",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "minlength",
+                "maxlength"
+            ],
+            "fieldValidateRulesMinlength": 1,
+            "fieldValidateRulesMaxlength": 50
+        },
+        {
+            "fieldName": "assetType",
+            "fieldType": "AssetType",
+            "fieldValues": "ASSET_GROUP,ASSET,SUB_ASSET"
+        },
+        {
+            "fieldName": "capacity",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "min"
+            ],
+            "fieldValidateRulesMin": 0
+        },
+        {
+            "fieldName": "year",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "min"
+            ],
+            "fieldValidateRulesMin": 1800
+        }
+    ],
+    "changelogDate": "20170107053105",
+    "entityTableName": "asset",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl"
+}

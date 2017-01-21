@@ -1,0 +1,69 @@
+<!-- MAIN CONTENT -->
+<div id="content">
+    <!-- widget grid -->
+    <section id="widget-grid1" widget-grid>
+        <!-- row -->
+        <div class="row">
+            <article class="col-sm-12">
+
+                <div jarvis-widget data-widget-editbutton="false" data-widget-deletebutton="false"
+                     data-widget-fullscreenbutton="false" data-widget-togglebutton="false" data-widget-color="blue"
+                     ng-controller="TodoCtrl">
+                    <header>
+                        <span class="widget-icon"> <i class="glyphicon glyphicon-heart txt-color-white"></i> </span>
+
+                        <h2> Health </h2>
+                    </header>
+                    <!-- widget div-->
+                    <div>
+                        <div class="widget-body">
+                            <!-- content goes here -->
+                            <div>
+                                <h2>Health Checks</h2>
+
+                                <p>
+                                    <button type="button" class="btn btn-primary" ng-click="vm.refresh()"><span
+                                        class="glyphicon glyphicon-refresh"></span>&nbsp;<span>Refresh</span>
+                                    </button>
+                                </p>
+
+                                <table id="healthCheck" class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th class="">Service Name</th>
+                                        <th class="text-center">Status</th>
+                                        <th class="text-center">Details</th>
+
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="health in vm.healthData">
+                                        <td>{{'health.indicator.' + vm.baseName(health.name)}}
+                                            {{vm.subSystemName(health.name)}}
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="label" ng-class="vm.getLabelClass(health.status)">
+                                                {{'health.status.' + health.status}}
+                                            </span>
+                                        </td>
+                                        <td class="text-center">
+                                            <a class="hand" ng-click="vm.showHealth(health)"
+                                               ng-show="health.details || health.error">
+                                                <i class="glyphicon glyphicon-eye-open"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div>&nbsp;</div>
+                            <!-- end content -->
+                        </div>
+
+                    </div>
+                    <!-- end widget div -->
+                </div>
+            </article>
+        </div>
+    </section>
+</div>

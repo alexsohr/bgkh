@@ -1,0 +1,112 @@
+<div jarvis-widget id="live-feeds-widget" data-widget-togglebutton="false" data-widget-editbutton="false"
+     data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false">
+    <!-- widget options:
+    usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+    data-widget-colorbutton="false"
+    data-widget-editbutton="false"
+    data-widget-togglebutton="false"
+    data-widget-deletebutton="false"
+    data-widget-fullscreenbutton="false"
+    data-widget-custombutton="false"
+    data-widget-collapsed="true"
+    data-widget-sortable="false"
+
+    -->
+    <header>
+        <span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
+
+        <h2>{{getWord('Statistics')}} </h2>
+
+        <ul class="nav nav-tabs pull-right in" id="myTab">
+            <li class="active">
+                <a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> {{getWord('Work time/Designated time')}}</a>
+            </li>
+
+            <li>
+                <a data-toggle="tab" href="#s2"><i class="fa fa-bolt"></i> <span class="hidden-mobile hidden-tablet">{{getWord('Electricity & Water/Time')}}</span></a>
+            </li>
+        </ul>
+
+    </header>
+
+    <!-- widget div-->
+    <div class="no-padding">
+
+        <div class="widget-body">
+            <!-- content -->
+            <div id="myTabContent" class="tab-content">
+                <div class="tab-pane fade active in padding-10 no-padding-bottom" id="s1">
+                    <div class="widget-body-toolbar bg-color-white">
+
+                        <div class="col-sm-12 col-md-12 col-lg-8">
+                            <form class="form-inline" role="form">
+
+                                <div class="form-group">
+                                    <label>{{getWord('From/To')}}</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" style="direction: ltr;"
+                                               data-smart-masked-input="1399/99/99" data-mask-placeholder="-">
+                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                    </div>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" style="direction: ltr;"
+                                               data-smart-masked-input="1399/99/99" data-mask-placeholder="-">
+                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-4">
+                            <div class="smart-form" id="work-toggles">
+
+                                <div class="inline-group pull-right">
+
+                                    <label for="gra-0" class="checkbox">
+                                        <input type="checkbox" id="gra-0" ng-model="workOrderShow">
+                                        <i></i> {{getWord('Work orders time')}}</label>
+                                    <label for="gra-1" class="checkbox">
+                                        <input type="checkbox" id="gra-1" ng-model="designatedTimeShow">
+                                        <i></i> {{getWord('Designated time')}}</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="padding-10">
+
+                        <div id="statsChart" class="chart-large has-legend-unique" flot-basic flot-data="statsData"
+                             flot-options="statsDisplayOptions"></div>
+                    </div>
+
+                </div>
+                <!-- end s2 tab pane -->
+
+                <div class="tab-pane fade in padding-10 no-padding-bottom" id="s2">
+
+                    <div class="widget-body-toolbar bg-color-white smart-form" id="rev-toggles">
+
+                        <div class="inline-group">
+
+                            <label for="gra-3" class="checkbox">
+                                <input type="checkbox" id="gra-3" ng-model="electricityShow">
+                                <i></i> {{getWord('Electricity')}}</label>
+                            <label for="gra-4" class="checkbox">
+                                <input type="checkbox" id="gra-4" ng-model="waterShow">
+                                <i></i> {{getWord('Water')}}</label>
+                        </div>
+                    </div>
+
+                    <div class="padding-10">
+                        <div id="flotcontainer" class="chart-large has-legend-unique padding-10" flot-basic flot-data="revenewData"
+                             flot-options="revenewDisplayOptions"></div>
+                    </div>
+                </div>
+                <!-- end s3 tab pane -->
+            </div>
+
+            <!-- end content -->
+        </div>
+
+    </div>
+    <!-- end widget div -->
+</div>

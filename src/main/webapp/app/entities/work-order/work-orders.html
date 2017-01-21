@@ -1,0 +1,80 @@
+<div>
+    <h2 >Work Orders</h2>
+    <jhi-alert></jhi-alert>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-4 no-padding-left">
+                <button class="btn btn-primary" ui-sref="work-order.new" >
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <span  >
+                        Create new Work Order
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive">
+        <table class="jh-table table table-striped">
+            <thead>
+                <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
+                    <th jh-sort-by="id"><span >ID</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="workOrderStatus"><span >Work Order Status</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="workOrderType"><span >Work Order Type</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="description"><span >Description</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="dateCompleted"><span >Date Completed</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="priority"><span >Priority</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="est"><span >Est</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="estimatedHours"><span >Estimated Hours</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="comments"><span >Comments</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="tracker"><span >Tracker</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="assetId"><span >Asset</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="workOrder in vm.workOrders track by workOrder.id">
+                    <td><a ui-sref="work-order-detail({id:workOrder.id})">{{workOrder.id}}</a></td>
+                    <td >{{workOrder.workOrderStatus}}</td>
+                    <td >{{workOrder.workOrderType}}</td>
+                    <td>{{workOrder.description}}</td>
+                        <td>{{workOrder.dateCompleted | date:'mediumDate'}}</td>
+                    <td >{{workOrder.priority}}</td>
+                    <td >{{workOrder.est}}</td>
+                    <td>{{workOrder.estimatedHours}}</td>
+                    <td>{{workOrder.comments}}</td>
+                    <td>{{workOrder.tracker}}</td>
+                    <td>
+                        <a ui-sref="asset-detail({id:workOrder.assetId})">{{workOrder.assetId}}</a>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group flex-btn-group-container">
+                            <button type="submit"
+                                    ui-sref="work-order-detail({id:workOrder.id})"
+                                    class="btn btn-info btn-sm">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                                <span class="hidden-xs hidden-sm" ></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="work-order.edit({id:workOrder.id})"
+                                    class="btn btn-primary btn-sm">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="hidden-xs hidden-sm" ></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="work-order.delete({id:workOrder.id})"
+                                    class="btn btn-danger btn-sm">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                                <span class="hidden-xs hidden-sm" ></span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="text-center">
+        <jhi-item-count page="vm.page" total="vm.queryCount" items-per-page="vm.itemsPerPage"></jhi-item-count>
+        <uib-pagination class="pagination-sm" total-items="vm.totalItems" items-per-page="vm.itemsPerPage" ng-model="vm.page" ng-change="vm.transition()"></uib-pagination>
+    </div>
+</div>

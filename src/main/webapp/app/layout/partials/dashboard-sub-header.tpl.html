@@ -1,0 +1,20 @@
+<div class=" col-xs-12 col-sm-12 col-md-12 col-lg-12" data-sparkline-container>
+    <ul id="sparks" class="pull-left">
+        <li class="sparks-info">
+            <h5> {{getWord('Schedule Compliance')}} <span class="txt-color-blue">{{notifications.scheduleCompliance}}%</span></h5>
+        </li>
+        <li class="sparks-info">
+            <h5> {{getWord('High Priority Work Orders')}} <span class="txt-color-green"><i class="fa fa-arrow-circle-up"></i>&nbsp;{{notifications.highPriorityWorkOrders}} </span></h5>
+        </li>
+        <li class="sparks-info hidden-mobile hidden-tablet">
+            <h5> {{getWord('Open Work Orders')}} <span class="txt-color-orange">&nbsp;{{notifications.openWorkOrders}} </span></h5>
+        </li>
+        <li class="sparks-info">
+            <h5> {{getWord('Total Overdue Work Orders')}} <span class="txt-color-red"> {{notifications.totalOverdueWorkOrders}} </span></h5>
+        </li>
+        <li class="sparks-info hidden-mobile hidden-tablet">
+            <h5> {{getWord('Total Accepted Work Orders')}} <span class="txt-color-blueLight"> {{notifications.totalAcceptedWorkOrders}} </span></h5>
+        </li>
+    </ul>
+</div>
+			

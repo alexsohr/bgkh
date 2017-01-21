@@ -1,0 +1,31 @@
+{
+    "app": {
+        "workOrder" : {
+            "home": {
+                "title": "Work Orders",
+                "createLabel": "Maak een nieuwe Work Order",
+                "createOrEditLabel": "Maak of wijzig een Work Order",
+                "search": "Search for Work Order"
+            },
+            "created": "A new Work Order is created with identifier {{ param }}",
+            "updated": "A Work Order is updated with identifier {{ param }}",
+            "deleted": "A Work Order is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Bent u zeker dat u Work Order {{ id }} wilt verwijderen?"
+            },
+            "detail": {
+                "title": "Work Order"
+            },
+            "workOrderStatus": "Work Order Status",
+            "workOrderType": "Work Order Type",
+            "description": "Description",
+            "dateCompleted": "Date Completed",
+            "priority": "Priority",
+            "est": "Est",
+            "estimatedHours": "Estimated Hours",
+            "comments": "Comments",
+            "tracker": "Tracker",
+            "asset": "Asset"
+        }
+    }
+}

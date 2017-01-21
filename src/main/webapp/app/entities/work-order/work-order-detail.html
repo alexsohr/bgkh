@@ -1,0 +1,59 @@
+
+<div>
+    <h2><span >Work Order</span> {{vm.workOrder.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="dl-horizontal jh-entity-details">
+        <dt><span >Work Order Status</span></dt>
+        <dd>
+            <span >{{vm.workOrder.workOrderStatus}}</span>
+        </dd>
+        <dt><span >Work Order Type</span></dt>
+        <dd>
+            <span >{{vm.workOrder.workOrderType}}</span>
+        </dd>
+        <dt><span >Description</span></dt>
+        <dd>
+            <span>{{vm.workOrder.description}}</span>
+        </dd>
+        <dt><span >Date Completed</span></dt>
+        <dd>
+            <span>{{vm.workOrder.dateCompleted | date:'mediumDate'}}</span>
+        </dd>
+        <dt><span >Priority</span></dt>
+        <dd>
+            <span >{{vm.workOrder.priority}}</span>
+        </dd>
+        <dt><span >Est</span></dt>
+        <dd>
+            <span >{{vm.workOrder.est}}</span>
+        </dd>
+        <dt><span >Estimated Hours</span></dt>
+        <dd>
+            <span>{{vm.workOrder.estimatedHours}}</span>
+        </dd>
+        <dt><span >Comments</span></dt>
+        <dd>
+            <span>{{vm.workOrder.comments}}</span>
+        </dd>
+        <dt><span >Tracker</span></dt>
+        <dd>
+            <span>{{vm.workOrder.tracker}}</span>
+        </dd>
+        <dt><span >Asset</span></dt>
+        <dd>
+            <a ui-sref="asset-detail({id:vm.workOrder.assetId})">{{vm.workOrder.assetId}}</a>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            ui-sref="{{ vm.previousState }}"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span > Back</span>
+    </button>
+
+    <button type="button" ui-sref="work-order-detail.edit({id:vm.workOrder.id})" class="btn btn-primary">
+        <span class="glyphicon glyphicon-pencil"></span>
+        <span class="hidden-xs hidden-sm" > Edit</span>
+    </button>
+</div>

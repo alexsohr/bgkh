@@ -1,0 +1,10 @@
+{
+    "app": {
+        "AssetType" : {
+            "null": "",
+            "ASSET_GROUP": "ASSET_GROUP",
+            "ASSET": "ASSET",
+            "SUB_ASSET": "SUB_ASSET"
+        }
+    }
+}

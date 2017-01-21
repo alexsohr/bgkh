@@ -1,0 +1,10 @@
+{
+  "workRequests": 4,
+  "openWorkOrders": 10,
+  "scheduleCompliance": 15,
+  "totalFinishedWorkOrders": 5,
+  "totalAcceptedWorkOrders": 3,
+  "highPriorityWorkOrders": 3,
+  "totalOverdueWorkOrders": 5,
+  "totalWorkBacklog": "2.30 h"
+}
