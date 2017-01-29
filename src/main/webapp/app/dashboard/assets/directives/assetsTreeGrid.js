@@ -6,11 +6,16 @@ angular.module('app').directive('assetsTreeGrid', function () {
         replace: true,
         templateUrl: 'app/dashboard/assets/directives/assets-tree-grid.tpl.html',
         scope: true,
-        controller: function ($state, $scope, $rootScope, $compile, $element, $sce, $templateCache, AssetImportModalService) {
+        controller: function ($state, $scope, $rootScope, $compile, $element, $sce, $templateCache, AssetImportModalService, Asset) {
             var tree;
             $scope.assets_tree = tree = {};
             $scope.tree_data = {};
             $scope.col_defs = [];
+            $scope.loadAssets = loadAssets;
+            $scope.loadAssets();
+            $rootScope.$on('app:assetUpdate', function(event, result) {
+                $scope.loadAssets();
+            });
             $scope.expanding_property = {
                 field: "name",
                 displayName: $rootScope.getWord('Asset Name'),
@@ -26,56 +31,46 @@ angular.module('app').directive('assetsTreeGrid', function () {
                 {
                     field: "demographicId",
                     displayName: $rootScope.getWord('Action'),
-                    cellTemplate: "<div ng-hide=\"{{ row.branch['demographicId'] == 'root' }}\" class=\"btn-group dropdown\" data-dropdown>" +
+                    cellTemplate: "<div ng-hide=\"{{ row.branch['code'] == 'ROOT' }}\" class=\"btn-group dropdown\" data-dropdown>" +
                     "<button class=\"btn btn-primary btn-xs dropdown-toggle\" data-toggle=\"dropdown\">" +
                     $rootScope.getWord('Action') + " <span class=\"caret\"></span>" +
                     "</button>" +
                     "<ul class=\"dropdown-menu\">" +
                     "<li>" +
-                    "<a href=\"#pop\" ng-click='cellTemplateScope.openAssetEditModal(row.branch)' ng-src='{{ row.branch[col.field] }}' data-target=\"#assetModal\" data-toggle=\"modal\">" + $rootScope.getWord('Edit') + "</a>" +
+                    "<a ng-click='cellTemplateScope.openAssetEditModal(row.branch.id)' >" + $rootScope.getWord('Edit') + "</a>" +
                     "</li>" +
                     "<li>" +
-                    "<a href=\"#pop\" ng-click='cellTemplateScope.openAssetViewModal(row.branch)' ng-src='{{ row.branch[col.field] }}' data-target=\"#assetModal\" data-toggle=\"modal\">" + $rootScope.getWord('Details') + "</a>" +
+                    "<a ng-click='cellTemplateScope.openAssetViewModal(row.branch.id)' >" + $rootScope.getWord('Details') + "</a>" +
                     "</li>" +
                     "<li>" +
-                    "<a href=\"#pop\" ng-click='cellTemplateScope.openAssetDuplicateModal(row.branch)' ng-src='{{ row.branch[col.field] }}' data-target=\"#assetModal\" data-toggle=\"modal\">" + $rootScope.getWord('Duplicate') + "</a>" +
+                    "<a ng-click='cellTemplateScope.openAssetDuplicateModal(row.branch.id)' >" + $rootScope.getWord('Duplicate') + "</a>" +
                     "</li>" +
                     "<li>" +
-                    "<a href=\"#pop\" ng-click='cellTemplateScope.openAssetMoveModal(row.branch)' ng-src='{{ row.branch[col.field] }}' data-target=\"#assetModal\" data-toggle=\"modal\">" + $rootScope.getWord('Move') + "</a>" +
+                    "<a ng-click='cellTemplateScope.openAssetMoveModal(row.branch.id)' >" + $rootScope.getWord('Move') + "</a>" +
                     "</li>" +
                     "</ul>" +
                     "</div>",
                     cellTemplateScope: {
                         //FIXME cellTemplateScope.submitDataWithSuccessAlert() is not working
-                        openAssetEditModal: function (branch) {
-                            $scope.branch = branch;
-                            console.log({"openAssetEditModal called": branch});
-                            $scope.assetImportHeader = $rootScope.getWord('Edit Assets');
-                            $scope.assetImportBody = $compile('<assets-form asset="branch"></assets-form>')($scope);
-                            $scope.assetImportFooter = $sce.trustAsHtml("<button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\" ng-click='cellTemplateScope.submitDataWithSuccessAlert()'>" + $rootScope.getWord('Save') + "</button>");
+                        openAssetEditModal: function (branchId) {
+                            if (!AssetImportModalService.isOpen()) {
+                                AssetImportModalService.openEdit(branchId);
+                            }
                         },
-                        openAssetViewModal: function (branch) {
-                            $scope.branch = branch;
-                            console.log({"openAssetViewModal called": branch});
-                            $scope.assetImportHeader = $rootScope.getWord('View Assets');
-                            ;
-                            $scope.assetImportBody = $compile('<assets-form asset="branch" display-details="true"></assets-form>')($scope);
-                            $scope.assetImportFooter = '';
+                        openAssetViewModal: function (branchId) {
+                            if (!AssetImportModalService.isOpen()) {
+                                AssetImportModalService.openDetails(branchId);
+                            }
                         },
-                        openAssetDuplicateModal: function (branch) {
-                            $scope.branch = branch;
-                            console.log("openAssetImportModal called!");
-                            $scope.assetImportHeader = $rootScope.getWord('Duplicate Assets');
-                            $scope.assetImportBody = $compile('<assets-import-wizard callback-Wizard-Finish="assetImportModalClose()" asset="branch" duplicate-asset="True"></assets-import-wizard>')($scope);
-                            $scope.assetImportFooter = "";
+                        openAssetDuplicateModal: function (branchId) {
+                            if (!AssetImportModalService.isOpen()) {
+                                AssetImportModalService.openCopy(branchId);
+                            }
                         },
-                        openAssetMoveModal: function (branch) {
-                            $scope.branch = branch;
-                            var treeTemplate = $templateCache.get('app/dashboard/assets/directives/assetTreeModalContent.tpl.html');
-                            console.log("openAssetMoveModal called!");
-                            $scope.assetImportHeader = $rootScope.getWord('Move Asset');
-                            $scope.assetImportBody = $compile(treeTemplate)($scope);
-                            $scope.assetImportFooter = $sce.trustAsHtml("<button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\" ng-click='cellTemplateScope.submitDataWithSuccessAlert()'>" + $rootScope.getWord('Save') + "</button>");
+                        openAssetMoveModal: function (branchId) {
+                            if (!AssetImportModalService.isOpen()) {
+                                AssetImportModalService.openMove(branchId);
+                            }
                         },
                         submitDataWithSuccessAlert: function () {
                             console.log("submitDataWithSuccessAlert")
@@ -90,21 +85,74 @@ angular.module('app').directive('assetsTreeGrid', function () {
                     }
                 }
             ];
-            $scope.tree_data = $rootScope.tree_data;
+
+            function loadAssets() {
+                Asset.query(function (result) {
+                    $scope.tree_data = getTree(result, 'id', 'parentId');
+                    $scope.searchQuery = null;
+                });
+            }
 
             $scope.assetImportModalClose = function () {
                 console.log("Asset modal closed");
                 $scope.assets_tree.select_branch(null);
-                if(AssetImportModalService.isOpen()) {
+                if (AssetImportModalService.isOpen()) {
                     AssetImportModalService.close();
                 }
             }
 
             $scope.openAssetImportModal = function () {
-                if(!AssetImportModalService.isOpen()) {
+                if (!AssetImportModalService.isOpen()) {
                     AssetImportModalService.open();
                 }
                 console.log("openAssetImportModal called!");
+            }
+
+            function getTree(data, primaryIdName, parentIdName) {
+                if (!data || data.length == 0 || !primaryIdName || !parentIdName)
+                    return [];
+
+                var tree = [],
+                    rootIds = [],
+                    item = data[0],
+                    primaryKey = item[primaryIdName],
+                    treeObjs = {},
+                    parentId,
+                    parent,
+                    len = data.length,
+                    i = 0,
+                    primeryIds = [];
+
+                while (i < len) {
+                    item = data[i++];
+                    primaryKey = item[primaryIdName];
+                    if (!primeryIds[primaryKey]) {
+                        treeObjs[primaryKey] = item;
+                        parentId = item[parentIdName];
+
+                        if (parentId) {
+                            parent = treeObjs[parentId];
+
+                            if (parent.children) {
+                                parent.children.push(item);
+                            }
+                            else {
+                                parent.children = [item];
+                            }
+                        }
+                        else {
+                            rootIds.push(primaryKey);
+                        }
+                    }
+                    primeryIds.push(primaryKey)
+                }
+
+                for (var i = 0; i < rootIds.length; i++) {
+                    tree.push(treeObjs[rootIds[i]]);
+                }
+                ;
+
+                return tree;
             }
 
         },

@@ -27,13 +27,12 @@
                     <span></span>
                 </label>
             </td>
-            <td><a ng-click="user_clicks_branch(row.branch)"><i ng-class="row.tree_icon"
-                                                                ng-click="row.branch.expanded = !row.branch.expanded"
-                                                                class="indented tree-icon"></i></a><span
-                    ng-if="expandingProperty.cellTemplate" class="indented tree-label"
-                    ng-click="on_user_click(row.branch)" compile="expandingProperty.cellTemplate"></span>
-                <span ng-if="!expandingProperty.cellTemplate" class="indented tree-label"
-                      ng-click="on_user_click(row.branch)">
+            <td><a><i ng-class="row.tree_icon"
+                      ng-click="row.branch.expanded = !row.branch.expanded"
+                      class="indented tree-icon"></i></a><span
+                ng-if="expandingProperty.cellTemplate" class="indented tree-label"
+                compile="expandingProperty.cellTemplate"></span>
+                <span ng-if="!expandingProperty.cellTemplate" class="indented tree-label">
     {{row.branch[expandingProperty.field] || row.branch[expandingProperty]}}
                 </span>
             </td>

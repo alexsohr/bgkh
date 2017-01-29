@@ -12,7 +12,8 @@ angular.module('app').directive('assetsForm', function () {
             currentStep: '=currentStep',
             parentStep: '=parentStep'
         },
-        controller: function ($scope, $rootScope) {
+        controller: function ($scope) {
+
             $scope.state = "A";
             $scope.disableForm = false;
 
@@ -48,7 +49,9 @@ angular.module('app').directive('assetsForm', function () {
 
             if (!angular.isUndefinedOrNull($scope.asset)) {
                 $scope.state = "E";
-                $scope.hasSubTree = $scope.asset.children.length > 0;
+                if (!angular.isUndefinedOrNull($scope.asset.children)) {
+                    $scope.hasSubTree = $scope.asset.children.length > 0;
+                }
             }
         },
         link: function (scope, rootScope, element, attrs) {

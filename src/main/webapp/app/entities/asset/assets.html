@@ -30,13 +30,13 @@
             </thead>
             <tbody>
                 <tr ng-repeat="asset in vm.assets track by asset.id">
-                    <td><a ui-sref="asset-detail({id:asset.id})">{{asset.id}}</a></td>
-                    <td>{{asset.parentId}}</td>
-                    <td>{{asset.name}}</td>
-                    <td>{{asset.code}}</td>
-                    <td >{{asset.assetType}}</td>
-                    <td>{{asset.capacity}}</td>
-                    <td>{{asset.year}}</td>
+                    <td><a ui-sref="asset-detail({id:asset.id})">{{assetList.id}}</a></td>
+                    <td>{{assetList.parentId}}</td>
+                    <td>{{assetList.name}}</td>
+                    <td>{{assetList.code}}</td>
+                    <td >{{assetList.assetType}}</td>
+                    <td>{{assetList.capacity}}</td>
+                    <td>{{assetList.year}}</td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">
                             <button type="submit"

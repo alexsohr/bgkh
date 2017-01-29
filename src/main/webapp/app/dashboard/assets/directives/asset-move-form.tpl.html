@@ -1,0 +1,29 @@
+<div>
+    <form name="assetMoveForm" class="asset-move-form form-group" role="form" novalidate show-validation
+          ng-submit="assetMoveVm.save()">
+
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                    ng-click="assetMoveVm.clear()">&times;</button>
+            <h4 class="modal-title" id="myAssetLabel">Move a Asset</h4>
+        </div>
+        <div class="modal-body">
+            <div class="step-content">
+                <input type="hidden" ng-model="assetMoveVm.asset.id" name="id" />
+                <input type="hidden" ng-model="assetMoveVm.asset.parentId" name="parentId" />
+                <assets-tree-grid-checkbox
+                    selected-tree-node="duplicatedAsset"
+                    on-select="assetMoveVm.selectedParentTree(branch)">
+                </assets-tree-grid-checkbox>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="assetMoveVm.clear()">
+                    <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" ng-disabled="moveForm.$invalid || assetMoveVm.isSaving" class="btn btn-primary">
+                    <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

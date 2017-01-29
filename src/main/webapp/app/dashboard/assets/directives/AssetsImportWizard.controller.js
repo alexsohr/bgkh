@@ -2,17 +2,25 @@
 
 angular
     .module('app')
-    .controller('AssetImportWizardController', function ($scope, $compile, $rootScope, $timeout, $stateParams, $uibModalInstance, entity, Asset) {
+    .controller('AssetImportWizardController', function ($scope, $compile, $rootScope, $timeout, $stateParams, $uibModalInstance, entity ,Asset, AssetImport) {
         var assetVm = this;
 
+        assetVm.assetList = [];
         assetVm.asset = entity;
         assetVm.clear = clear;
         assetVm.save = save;
+        assetVm.importAssets = importAssets;
 
 
 
         function clear () {
             $uibModalInstance.dismiss('cancel');
+        }
+
+        function importAssets() {
+            assetVm.isSaving = true;
+            console.log(assetVm.assetList);
+            AssetImport.save(assetVm.assetList, onSaveSuccess, onSaveError);
         }
 
         function save () {

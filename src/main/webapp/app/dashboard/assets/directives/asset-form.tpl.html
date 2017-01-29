@@ -8,10 +8,10 @@
             <div class="col-md-12">
                 <label class="control-label">{{$root.getWord('Type')}}</label>
                 <div class="col-md-12">
-                    <select class="form-control" name="assetDisplayType[{{currentStep}}]" ng-model="assetVm.asset.assetType" ng-disabled="disableForm" ng-change="toggleAssetForm()">
-                        <option value="0">{{$root.getWord('Asset Group')}}</option>
-                        <option value="1">{{$root.getWord('Asset')}}</option>
-                        <option value="2">{{$root.getWord('Sub Asset')}}</option>
+                    <select class="form-control" ng-model="asset.assetType" ng-disabled="disableForm" ng-change="toggleAssetForm()">
+                        <option value="ASSET_GROUP">{{$root.getWord('Asset Group')}}</option>
+                        <option value="ASSET">{{$root.getWord('Asset')}}</option>
+                        <option value="SUB_ASSET">{{$root.getWord('Sub Asset')}}</option>
                     </select>
                 </div>
             </div>
@@ -23,7 +23,7 @@
             <div class="col-md-6 ">
                 <label class="control-label">{{$root.getWord('Asset Group Name')}}</label>
                 <div class="col-md-12">
-                    <input type="text" class="form-control" name="assetGroupName[{{currentStep}}]"  ng-model="assetVm.asset.name" ng-disabled="disableForm">
+                    <input type="text" class="form-control" ng-model="asset.name" ng-disabled="disableForm">
                 </div>
             </div>
 
@@ -31,7 +31,7 @@
             <div class="col-md-6">
                 <label class="control-label">{{$root.getWord('Asset Code')}}</label>
                 <div class="col-md-12">
-                    <input type="text" class="form-control" name="assetGroupCode[{{currentStep}}]" ng-model="asset.code" ng-disabled="disableForm">
+                    <input type="text" class="form-control" ng-model="asset.code" ng-disabled="disableForm">
                 </div>
             </div>
         </div>
@@ -41,14 +41,14 @@
             <div class="col-md-6 ">
                 <label class="control-label">{{$root.getWord('Asset Name')}}</label>
                 <div class="col-md-12">
-                    <input type="text" class="form-control" name="assetName[{{currentStep}}]"  ng-model="asset.name" ng-disabled="disableForm">
+                    <input type="text" class="form-control" ng-model="asset.name" ng-disabled="disableForm">
                 </div>
             </div>
 
             <div class="col-md-6 ">
                 <label class="control-label">{{$root.getWord('Asset Code')}}</label>
                 <div class="col-md-12">
-                    <input type="text" class="form-control" name="assetCode[{{currentStep}}]" ng-model="asset.code" ng-disabled="disableForm">
+                    <input type="text" class="form-control" ng-model="asset.code" ng-disabled="disableForm">
                 </div>
             </div>
         </div>
@@ -58,7 +58,7 @@
             <div class="col-md-6 ">
                 <label class="control-label">{{$root.getWord('Asset Type')}}</label>
                 <div class="col-md-12">
-                    <select class="form-control" ng-model="asset.typeVal" name="assetType[{{currentStep}}]" ng-disabled="disableForm">
+                    <select class="form-control" ng-model="asset.typeVal" ng-disabled="disableForm">
                         <option value="0">{{$root.getWord('Pump')}}</option>
                         <option value="1">{{$root.getWord('Electromotor')}}</option>
                     </select> <i></i>
@@ -68,7 +68,7 @@
             <div class="col-md-6 ">
                 <label class="control-label">{{$root.getWord('Installation Location')}}</label>
                 <div class="col-md-12">
-                    <input type="text" class="form-control" name="assetLocation[{{currentStep}}]" ng-model="asset.location" ng-disabled="disableForm">
+                    <input type="text" class="form-control" ng-model="asset.location" ng-disabled="disableForm">
                 </div>
             </div>
         </div>
@@ -78,7 +78,7 @@
                 <label class="control-label">{{$root.getWord('Installation Map')}}</label>
 
                 <div class="col-md-12">
-                    <input type="file" name="assetFile[{{currentStep}}]" class="btn btn-default col-md-12 col-xs-12"
+                    <input type="file" class="btn btn-default col-md-12 col-xs-12"
                            id="exampleInputFile2" ng-disabled="disableForm">
                 </div>
             </div>
@@ -89,7 +89,7 @@
 
                 <div class="col-md-12">
                     <span ng-if="disableForm">
-                        <input class="form-control" name="assetCapacity[{{currentStep}}]" value="1"
+                        <input class="form-control" value="1"
                                min="1" ng-model="asset.capacity" ng-disabled="disableForm">
                     </span>
                     <span ng-if="!disableForm">
@@ -104,7 +104,7 @@
             <div class="col-md-6 ">
                 <label class="control-label">{{$root.getWord('Manufacture')}}</label>
                 <div class="col-md-12">
-                    <input class="form-control" name="assetManufacture[{{currentStep}}]" placeholder="{{$root.getWord('Type something')}}..." type="text"
+                    <input class="form-control" placeholder="{{$root.getWord('Type something')}}..." type="text"
                            list="list" ng-model="asset.manufacture" ng-disabled="disableForm">
                     <datalist id="list">
                         <option value="Alexandra">Alexandra</option>
@@ -168,7 +168,7 @@
             <div class="col-md-6 ">
                 <label class="control-label">{{$root.getWord('Manufacture Year')}}</label>
                 <div class="col-md-12">
-                    <select class="form-control" name="assetYear[{{currentStep}}]" ng-model="asset.year" ng-disabled="disableForm">
+                    <select class="form-control" ng-model="asset.year" ng-disabled="disableForm">
                         <option>1980</option>
                         <option>1981</option>
                         <option>1982</option>
@@ -220,7 +220,7 @@
                 <label class="control-label">{{$root.getWord('Attachments')}}</label>
 
                 <div class="col-md-12">
-                    <input type="file" name="assetAttachments[{{currentStep}}]" class="btn btn-default col-md-12 col-xs-12"
+                    <input type="file" class="btn btn-default col-md-12 col-xs-12"
                            id="exampleInputFile3" ng-disabled="disableForm">
                 </div>
             </div>
@@ -230,7 +230,7 @@
                 <label class="control-label">{{$root.getWord('Details')}}</label>
 
                 <div class="col-md-12 textarea textarea-expandable ">
-                    <textarea rows="3" name="assetDetails[{{currentStep}}]" class="custom-scroll form-control" ng-disabled="disableForm">{{asset.details}}</textarea>
+                    <textarea rows="3" class="custom-scroll form-control" ng-disabled="disableForm">{{assetList.details}}</textarea>
                 </div>
             </div>
         </div>

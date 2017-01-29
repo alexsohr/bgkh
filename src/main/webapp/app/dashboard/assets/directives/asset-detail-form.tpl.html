@@ -1,0 +1,20 @@
+<div>
+    <form name="assetDetailForm" class="asset-detail-form form-group" role="form" novalidate show-validation>
+
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                    ng-click="assetEditVm.clear()">&times;</button>
+            <h4 class="modal-title" id="myAssetLabel">Create or edit a Asset</h4>
+        </div>
+        <div class="modal-body">
+            <div class="step-content">
+                <assets-form asset="assetEditVm.asset" data-display-details="true"></assets-form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="assetEditVm.clear()">
+                    <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

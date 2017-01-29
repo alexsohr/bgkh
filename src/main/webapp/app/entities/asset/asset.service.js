@@ -2,9 +2,11 @@
     'use strict';
     angular
         .module('app')
-        .factory('Asset', Asset);
+        .factory('Asset', Asset)
+        .factory('AssetImport', AssetImport);
 
     Asset.$inject = ['$resource'];
+    AssetImport.$inject = ['$resource'];
 
     function Asset ($resource) {
         var resourceUrl =  'api/assets/:id';
@@ -23,6 +25,14 @@
             'save': {method: 'POST'},
             'update': { method:'PUT' },
             'delete': {method: 'DELETE'}
+        });
+    }
+
+    function AssetImport ($resource) {
+        var resourceUrl =  'api/allAssets';
+
+        return $resource(resourceUrl, {}, {
+            'save': {method: 'POST'}
         });
     }
 })();

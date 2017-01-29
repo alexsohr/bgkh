@@ -110,7 +110,7 @@ angular.module('app').directive('assetsImportWizardForm', function () {
                 return data;
             }
 
-            wizard.on('actionclicked.fu.wizard', function (evt, data) {
+            wizard.on('finished.fu.wizard', function (evt, data) {
                 console.log("Form finished");
 
                 $('.asset-import-form', $(evt.currentTarget)).triggerHandler('submit');
