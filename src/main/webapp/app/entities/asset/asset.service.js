@@ -29,7 +29,7 @@
     }
 
     function AssetImport ($resource) {
-        var resourceUrl =  'api/allAssets';
+        var resourceUrl =  '/api/assets/all';
 
         return $resource(resourceUrl, {}, {
             'save': {method: 'POST'}

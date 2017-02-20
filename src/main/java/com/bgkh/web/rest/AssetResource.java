@@ -54,9 +54,9 @@ public class AssetResource {
             .body(result);
     }
 
-    @PostMapping("/assets")
+    @PostMapping("/assets/all")
     @Timed
-    public ResponseEntity<AssetDTOs> createAssets(@Valid @RequestBody AssetDTOs assetDTOs) throws URISyntaxException {
+    public ResponseEntity<AssetDTOs> createAllAssets(@Valid @RequestBody AssetDTOs assetDTOs) throws URISyntaxException {
         log.debug("REST request to save Assets : {}", assetDTOs);
 
         AssetDTOs result = assetService.saveAll(assetDTOs);

@@ -15,10 +15,7 @@ public interface AssetMapper {
 
     AssetDTO assetToAssetDTO(Asset asset);
 
-    List<AssetDTO> assetsToAssetDTOs(List<Asset> assets);
-
     @Mapping(target = "workOrders", ignore = true)
     Asset assetDTOToAsset(AssetDTO assetDTO);
 
-    List<Asset> assetDTOsToAssets(List<AssetDTO> assetDTOs);
 }

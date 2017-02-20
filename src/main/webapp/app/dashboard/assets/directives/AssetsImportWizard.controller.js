@@ -6,6 +6,7 @@ angular
         var assetVm = this;
 
         assetVm.assetList = [];
+        assetVm.postObject = {"assetList": assetVm.assetList}
         assetVm.asset = entity;
         assetVm.clear = clear;
         assetVm.save = save;
@@ -19,8 +20,8 @@ angular
 
         function importAssets() {
             assetVm.isSaving = true;
-            console.log(assetVm.assetList);
-            AssetImport.save(assetVm.assetList, onSaveSuccess, onSaveError);
+            console.log(assetVm.postObject);
+            AssetImport.save(assetVm.postObject, onSaveSuccess, onSaveError);
         }
 
         function save () {

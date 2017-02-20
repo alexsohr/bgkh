@@ -6,14 +6,19 @@ angular.module('app').directive('assetsForm', function () {
         replace: true,
         templateUrl: 'app/dashboard/assets/directives/asset-form.tpl.html',
         scope: {
-            asset: '=asset',
+            asset: '=?asset',
             displayDetails: '=displayDetails',
             stepChange: '&',
             currentStep: '=currentStep',
-            parentStep: '=parentStep'
+            parentStep: '=parentStep',
+            parentId: '=parentId',
+            updateAssetCallback: '&'
         },
         controller: function ($scope) {
 
+            if (angular.isUndefinedOrNull($scope.currentStep)) {
+                $scope.currentStep = 1;
+            }
             $scope.state = "A";
             $scope.disableForm = false;
 
@@ -21,15 +26,23 @@ angular.module('app').directive('assetsForm', function () {
                 $scope.disableForm = true;
             }
 
-            $scope.hasSubTree = false;
-            $scope.assetType = '0';
-            if ($scope.asset) {
-                $scope.assetType = $scope.asset.formType;
+            if (angular.isFunction($scope.updateAssetCallback)) {
+                var index = {index: $scope.currentStep};
+                $scope.asset = $scope.updateAssetCallback(index);
+                console.log($scope.asset);
             }
 
+            $scope.hasSubTree = false;
+            $scope.assetType = 'ASSET_GROUP';
+            if (!angular.isUndefinedOrNull($scope.asset) && $scope.asset.assetType == null) {
+                $scope.asset.assetType = 'ASSET_GROUP';
+            }
+
+
+
             $scope.toggleAssetForm = function () {
-                console.log($scope.assetType);
-                if ('0' == $scope.assetType) {
+                console.log($scope.asset.assetType);
+                if ('ASSET_GROUP' == $scope.asset.assetType) {
                     $scope.hasSubTree = true;
                 }
                 else {

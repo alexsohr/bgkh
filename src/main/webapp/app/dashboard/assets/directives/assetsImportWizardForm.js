@@ -7,9 +7,8 @@ angular.module('app').directive('assetsImportWizardForm', function () {
         templateUrl: 'app/dashboard/assets/directives/asset-import-wizard-form.tpl.html',
         scope: true,
         controller: function ($scope, $compile, $rootScope, $element) {
-
             $scope.wizardStepFormBranch = [];
-            $scope.formBranchData = [];
+            $scope.assetList = [];
             $scope.duplicate = false;
             $scope.selectTreeElement = "root";
             $scope.duplicatedAsset;
@@ -68,15 +67,15 @@ angular.module('app').directive('assetsImportWizardForm', function () {
                     "hasNext": true,
                     "data": {"assetId": $scope.assetId}
                 };
-
+                $scope.assetList[index] = {};
 
                 var pane;
                 if (!angular.isObject(branch)) {
-                    pane = $compile('<assets-form data-parent-step="'+$scope.parentStep+'" data-current-step="'+index+'" step-change="addStep(value)"></assets-form>')($scope);
+                    pane = $compile('<assets-form update-asset-callback="getAsset(index)"  data-parent-step="'+$scope.parentStep+'" data-current-step="'+index+'" step-change="addStep(value)"></assets-form>')($scope);
                 }
                 else {
                     var newIndex = index - 2;
-                    pane = $compile('<assets-form data-parent-step="'+$scope.parentStep+'" data-current-step="'+index+'" step-change="addStep(value)" asset="wizardStepFormBranch[' + newIndex + ']" ></assets-form>')($scope);
+                    pane = $compile('<assets-form update-asset-callback="getAsset(index)" data-parent-step="'+$scope.parentStep+'" data-current-step="'+index+'" step-change="addStep(value)" asset="wizardStepFormBranch[' + newIndex + ']" ></assets-form>')($scope);
                 }
 
                 wizard.wizard('addSteps', index, [
@@ -87,6 +86,22 @@ angular.module('app').directive('assetsImportWizardForm', function () {
                     }
                 ]);
                 $scope.parentStep = index;
+            }
+
+            $scope.getAsset = function (index) {
+                console.log("index return: " + index);
+                if (!angular.isObject($scope.assetList[index])) {
+                    $scope.assetList[index] = {
+                        parentId: null,
+                        name: null,
+                        code: null,
+                        assetType: null,
+                        capacity: null,
+                        year: null,
+                        id: null
+                    };
+                }
+                return $scope.assetList[index];
             }
 
             function assetWizardStepRemove(index, howMany) {
