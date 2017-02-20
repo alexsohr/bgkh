@@ -1,0 +1,23 @@
+{
+    "app": {
+        "assetSpecificationTypeValue" : {
+            "home": {
+                "title": "Asset Specification Type Values",
+                "createLabel": "Maak een nieuwe Asset Specification Type Value",
+                "createOrEditLabel": "Maak of wijzig een Asset Specification Type Value",
+                "search": "Search for Asset Specification Type Value"
+            },
+            "created": "A new Asset Specification Type Value is created with identifier {{ param }}",
+            "updated": "A Asset Specification Type Value is updated with identifier {{ param }}",
+            "deleted": "A Asset Specification Type Value is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Bent u zeker dat u Asset Specification Type Value {{ id }} wilt verwijderen?"
+            },
+            "detail": {
+                "title": "Asset Specification Type Value"
+            },
+            "fieldValue": "Field Value",
+            "assetSpecificationTypeField": "Asset Specification Type Field"
+        }
+    }
+}

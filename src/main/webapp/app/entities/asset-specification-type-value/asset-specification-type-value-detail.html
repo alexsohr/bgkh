@@ -1,0 +1,27 @@
+
+<div>
+    <h2><span data-translate="app.assetSpecificationTypeValue.detail.title">Asset Specification Type Value</span> {{vm.assetSpecificationTypeValue.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="dl-horizontal jh-entity-details">
+        <dt><span data-translate="app.assetSpecificationTypeValue.fieldValue">Field Value</span></dt>
+        <dd>
+            <span>{{vm.assetSpecificationTypeValue.fieldValue}}</span>
+        </dd>
+        <dt><span data-translate="app.assetSpecificationTypeValue.assetSpecificationTypeField">Asset Specification Type Field</span></dt>
+        <dd>
+            <a ui-sref="asset-specification-type-field-detail({id:vm.assetSpecificationTypeValue.assetSpecificationTypeFieldId})">{{vm.assetSpecificationTypeValue.assetSpecificationTypeFieldId}}</a>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            ui-sref="{{ vm.previousState }}"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span data-translate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button" ui-sref="asset-specification-type-value-detail.edit({id:vm.assetSpecificationTypeValue.id})" class="btn btn-primary">
+        <span class="glyphicon glyphicon-pencil"></span>
+        <span class="hidden-xs hidden-sm" data-translate="entity.action.edit"> Edit</span>
+    </button>
+</div>

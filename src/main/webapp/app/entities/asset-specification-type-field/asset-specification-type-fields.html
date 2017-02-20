@@ -1,0 +1,62 @@
+<div>
+    <h2 data-translate="app.assetSpecificationTypeField.home.title">Asset Specification Type Fields</h2>
+    <jhi-alert></jhi-alert>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-4 no-padding-left">
+                <button class="btn btn-primary" ui-sref="asset-specification-type-field.new" >
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <span  data-translate="app.assetSpecificationTypeField.home.createLabel">
+                        Create new Asset Specification Type Field
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive">
+        <table class="jh-table table table-striped">
+            <thead>
+                <tr>
+                    <th><span data-translate="global.field.id">ID</span></th>
+                    <th><span data-translate="app.assetSpecificationTypeField.assetSpecificationType">Asset Specification Type</span></th>
+                    <th><span data-translate="app.assetSpecificationTypeField.fieldLable">Field Lable</span></th>
+                    <th><span data-translate="app.assetSpecificationTypeField.fieldName">Field Name</span></th>
+                    <th><span data-translate="app.assetSpecificationTypeField.fieldType">Field Type</span></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="assetSpecificationTypeField in vm.assetSpecificationTypeFields track by assetSpecificationTypeField.id">
+                    <td><a ui-sref="asset-specification-type-field-detail({id:assetSpecificationTypeField.id})">{{assetSpecificationTypeField.id}}</a></td>
+                    <td data-translate="{{'app.AssetSpecificationType.' + assetSpecificationTypeField.assetSpecificationType}}">{{assetSpecificationTypeField.assetSpecificationType}}</td>
+                    <td>{{assetSpecificationTypeField.fieldLable}}</td>
+                    <td>{{assetSpecificationTypeField.fieldName}}</td>
+                    <td>{{assetSpecificationTypeField.fieldType}}</td>
+                    <td class="text-right">
+                        <div class="btn-group flex-btn-group-container">
+                            <button type="submit"
+                                    ui-sref="asset-specification-type-field-detail({id:assetSpecificationTypeField.id})"
+                                    class="btn btn-info btn-sm">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                                <span class="hidden-xs hidden-sm" data-translate="entity.action.view"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="asset-specification-type-field.edit({id:assetSpecificationTypeField.id})"
+                                    class="btn btn-primary btn-sm">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="hidden-xs hidden-sm" data-translate="entity.action.edit"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="asset-specification-type-field.delete({id:assetSpecificationTypeField.id})"
+                                    class="btn btn-danger btn-sm">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                                <span class="hidden-xs hidden-sm" data-translate="entity.action.delete"></span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,6 +1,8 @@
 package com.bgkh.service;
 
 import com.bgkh.service.dto.AssetDTO;
+import com.bgkh.service.dto.AssetDTOs;
+
 import java.util.List;
 
 /**
@@ -17,8 +19,16 @@ public interface AssetService {
     AssetDTO save(AssetDTO assetDTO);
 
     /**
+     * Save all assets.
+     *
+     * @param assetDTOs the entities to save
+     * @return the persisted entity
+     */
+    AssetDTOs saveAll(AssetDTOs assetDTOs);
+
+    /**
      *  Get all the assets.
-     *  
+     *
      *  @return the list of entities
      */
     List<AssetDTO> findAll();

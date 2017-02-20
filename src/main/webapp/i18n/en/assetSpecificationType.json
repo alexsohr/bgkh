@@ -1,0 +1,17 @@
+{
+    "appApp": {
+        "AssetSpecificationType" : {
+            "null": "",
+            "BOILER": "BOILER",
+            "COSMETIC_BOILER": "COSMETIC_BOILER",
+            "CATHODIC_TRANS": "CATHODIC_TRANS",
+            "DEISEL_GENERATORE": "DEISEL_GENERATORE",
+            "DEISEL_PUMP": "DEISEL_PUMP",
+            "ELECTRO_MOTOR": "ELECTRO_MOTOR",
+            "TRANSFORMER": "TRANSFORMER",
+            "LOADING_ARM": "LOADING_ARM",
+            "PUMP": "PUMP",
+            "UPS": "UPS"
+        }
+    }
+}

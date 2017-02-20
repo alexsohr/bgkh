@@ -1,0 +1,27 @@
+{
+    "app": {
+        "assetSpecificationTypeField" : {
+            "home": {
+                "title": "Asset Specification Type Fields",
+                "createLabel": "Create a new Asset Specification Type Field",
+                "createOrEditLabel": "Create or edit a Asset Specification Type Field",
+                "search": "Search for Asset Specification Type Field"
+            },
+            "created": "A new Asset Specification Type Field is created with identifier {{ param }}",
+            "updated": "A Asset Specification Type Field is updated with identifier {{ param }}",
+            "deleted": "A Asset Specification Type Field is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Asset Specification Type Field {{ id }}?"
+            },
+            "detail": {
+                "title": "Asset Specification Type Field"
+            },
+            "assetSpecificationType": "Asset Specification Type",
+            "fieldLable": "Field Lable",
+            "fieldName": "Field Name",
+            "fieldType": "Field Type",
+            "field": "Field",
+            "assetSpecificationTypeField": "Asset Specification Type Field"
+        }
+    }
+}

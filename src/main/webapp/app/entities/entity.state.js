@@ -1,16 +1,10 @@
-(function() {
-    'use strict';
+'use strict';
 
-    angular
-        .module('app')
-        .config(stateConfig);
-
-    stateConfig.$inject = ['$stateProvider'];
-
-    function stateConfig($stateProvider) {
-        $stateProvider.state('entity', {
-            abstract: true,
-            parent: 'app'
-        });
-    }
-})();
+angular
+    .module('app.entity', ['ui.router'])
+    .config(function ($stateProvider) {
+        $stateProvider
+            .state('app.entity', {
+                abstract: true
+            });
+    });

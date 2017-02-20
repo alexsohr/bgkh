@@ -3,6 +3,7 @@ package com.bgkh.service.mapper;
 import com.bgkh.domain.*;
 import com.bgkh.service.dto.AssetDTO;
 
+import com.bgkh.service.dto.AssetDTOs;
 import org.mapstruct.*;
 import java.util.List;
 

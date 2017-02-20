@@ -54,26 +54,16 @@ public class AssetResource {
             .body(result);
     }
 
-
-    /**
-     * POST  /assets : Create a new asset.
-     *
-     * @param assetDTOs the assetDTOs to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new assetDTO, or with status 400 (Bad Request) if the asset has already an ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
-     */
-    @PostMapping("/allAssets")
+    @PostMapping("/assets")
     @Timed
-    public ResponseEntity<AssetDTO> createAssets(@RequestBody AssetDTOs assetDTOs) throws URISyntaxException {
+    public ResponseEntity<AssetDTOs> createAssets(@Valid @RequestBody AssetDTOs assetDTOs) throws URISyntaxException {
         log.debug("REST request to save Assets : {}", assetDTOs);
-        ResponseEntity<AssetDTO> asset = ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("asset", "internalError", "Unable to create assets")).body(null);;
-        for (int i = 0; i < assetDTOs.getAssetList().size(); i++) {
-            asset = createAsset(assetDTOs.getAssetList().get(i));
-        }
 
-        return asset;
+        AssetDTOs result = assetService.saveAll(assetDTOs);
+        return ResponseEntity.created(new URI("/api/assets/" + result.getAssetList().get(0).getId()))
+            .headers(HeaderUtil.createEntityCreationAlert("asset", result.getAssetList().get(0).getId().toString()))
+            .body(result);
     }
-
 
     /**
      * PUT  /assets : Updates an existing asset.

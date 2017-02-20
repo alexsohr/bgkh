@@ -9,6 +9,8 @@
                 "main": "Entities",
                 "asset": "Asset",
                 "workOrder": "Work Order",
+                "assetSpecificationTypeField": "Asset Specification Type Field",
+                "assetSpecificationTypeValue": "Asset Specification Type Value",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {

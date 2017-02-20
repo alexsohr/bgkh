@@ -13,6 +13,15 @@
         vm.asset = entity;
         vm.clear = clear;
         vm.save = save;
+        vm.assetspecificationtypefields = AssetSpecificationTypeField.query({filter: 'assetspecificationtypefield-is-null'});
+        $q.all([vm.asset.$promise, vm.assetspecificationtypefields.$promise]).then(function() {
+            if (!vm.asset.assetSpecificationTypeFieldId) {
+                return $q.reject();
+            }
+            return AssetSpecificationTypeField.get({id : vm.asset.assetSpecificationTypeFieldId}).$promise;
+        }).then(function(assetSpecificationTypeField) {
+            vm.assetspecificationtypefields.push(assetSpecificationTypeField);
+        });
         vm.workorders = WorkOrder.query();
 
         $timeout(function (){

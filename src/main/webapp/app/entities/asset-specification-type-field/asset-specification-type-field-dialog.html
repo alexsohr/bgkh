@@ -1,0 +1,83 @@
+
+<form name="editForm" role="form" novalidate ng-submit="vm.save()" show-validation>
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                ng-click="vm.clear()">&times;</button>
+        <h4 class="modal-title" id="myAssetSpecificationTypeFieldLabel" data-translate="app.assetSpecificationTypeField.home.createOrEditLabel">Create or edit a Asset Specification Type Field</h4>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" ng-show="vm.assetSpecificationTypeField.id">
+            <label for="id" data-translate="global.field.id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                    ng-model="vm.assetSpecificationTypeField.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="app.assetSpecificationTypeField.assetSpecificationType" for="field_assetSpecificationType">Asset Specification Type</label>
+            <select class="form-control" name="assetSpecificationType" ng-model="vm.assetSpecificationTypeField.assetSpecificationType" id="field_assetSpecificationType" required>
+                <option value="BOILER" data-translate="app.AssetSpecificationType.BOILER">BOILER</option>
+                <option value="COSMETIC_BOILER" data-translate="app.AssetSpecificationType.COSMETIC_BOILER">COSMETIC_BOILER</option>
+                <option value="CATHODIC_TRANS" data-translate="app.AssetSpecificationType.CATHODIC_TRANS">CATHODIC_TRANS</option>
+                <option value="DEISEL_GENERATORE" data-translate="app.AssetSpecificationType.DEISEL_GENERATORE">DEISEL_GENERATORE</option>
+                <option value="DEISEL_PUMP" data-translate="app.AssetSpecificationType.DEISEL_PUMP">DEISEL_PUMP</option>
+                <option value="ELECTRO_MOTOR" data-translate="app.AssetSpecificationType.ELECTRO_MOTOR">ELECTRO_MOTOR</option>
+                <option value="TRANSFORMER" data-translate="app.AssetSpecificationType.TRANSFORMER">TRANSFORMER</option>
+                <option value="LOADING_ARM" data-translate="app.AssetSpecificationType.LOADING_ARM">LOADING_ARM</option>
+                <option value="PUMP" data-translate="app.AssetSpecificationType.PUMP">PUMP</option>
+                <option value="UPS" data-translate="app.AssetSpecificationType.UPS">UPS</option>
+            </select>
+            <div ng-show="editForm.assetSpecificationType.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.assetSpecificationType.$error.required" data-translate="entity.validation.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="app.assetSpecificationTypeField.fieldLable" for="field_fieldLable">Field Lable</label>
+            <input type="text" class="form-control" name="fieldLable" id="field_fieldLable"
+                    ng-model="vm.assetSpecificationTypeField.fieldLable"
+                    required />
+            <div ng-show="editForm.fieldLable.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.fieldLable.$error.required" data-translate="entity.validation.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="app.assetSpecificationTypeField.fieldName" for="field_fieldName">Field Name</label>
+            <input type="text" class="form-control" name="fieldName" id="field_fieldName"
+                    ng-model="vm.assetSpecificationTypeField.fieldName"
+                    required />
+            <div ng-show="editForm.fieldName.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.fieldName.$error.required" data-translate="entity.validation.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="app.assetSpecificationTypeField.fieldType" for="field_fieldType">Field Type</label>
+            <input type="text" class="form-control" name="fieldType" id="field_fieldType"
+                    ng-model="vm.assetSpecificationTypeField.fieldType"
+                    required />
+            <div ng-show="editForm.fieldType.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.fieldType.$error.required" data-translate="entity.validation.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span data-translate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" ng-disabled="editForm.$invalid || vm.isSaving" class="btn btn-primary">
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span data-translate="entity.action.save">Save</span>
+        </button>
+    </div>
+</form>

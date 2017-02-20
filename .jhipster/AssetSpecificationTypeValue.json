@@ -1,0 +1,25 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "assetSpecificationTypeField",
+            "otherEntityName": "assetSpecificationTypeField",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "fieldValue",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20170219232039",
+    "entityTableName": "asset_specification_type_value",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl"
+}

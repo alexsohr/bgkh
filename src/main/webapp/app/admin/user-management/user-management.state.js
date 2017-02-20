@@ -12,7 +12,7 @@
             url: '/user-management',
             data: {
                 authorities: ['ROLE_ADMIN'],
-                title: 'userManagement.home.title'
+                pageTitle: 'userManagement.home.title'
             },
             views: {
                 'content@app': {

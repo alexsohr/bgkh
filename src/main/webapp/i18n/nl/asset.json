@@ -1,6 +1,6 @@
 {
     "app": {
-        "asset": {
+        "asset" : {
             "home": {
                 "title": "Assets",
                 "createLabel": "Maak een nieuwe Asset",
@@ -22,6 +22,7 @@
             "assetType": "Asset Type",
             "capacity": "Capacity",
             "year": "Year",
+            "assetSpecificationTypeField": "Asset Specification Type Field",
             "workOrder": "Work Order"
         }
     }

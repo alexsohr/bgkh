@@ -26,7 +26,11 @@
         </dd>
         <dt><span >Year</span></dt>
         <dd>
-            <span>{{vm.assetList.year}}</span>
+            <span>{{vm.asset.year}}</span>
+        </dd>
+        <dt><span>Asset Specification Type Field</span></dt>
+        <dd>
+            <a ui-sref="asset-specification-type-field-detail({id:vm.asset.assetSpecificationTypeFieldId})">{{vm.asset.assetSpecificationTypeFieldId}}</a>
         </dd>
     </dl>
 
