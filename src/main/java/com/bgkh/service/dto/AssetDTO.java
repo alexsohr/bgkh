@@ -22,6 +22,12 @@ public class AssetDTO implements Serializable {
     @Size(min = 3, max = 100)
     private String name;
 
+    @Size(min = 3, max = 250)
+    private String location;
+
+    @Size(min = 3, max = 500)
+    private String details;
+
     @NotNull
     @Size(min = 1, max = 50)
     private String code;
@@ -35,6 +41,10 @@ public class AssetDTO implements Serializable {
     private Integer year;
 
 
+    private Long mapsId;
+    
+    private Long otherFilesId;
+    
     public Long getId() {
         return id;
     }
@@ -55,6 +65,20 @@ public class AssetDTO implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
     }
     public String getCode() {
         return code;
@@ -85,6 +109,22 @@ public class AssetDTO implements Serializable {
         this.year = year;
     }
 
+    public Long getMapsId() {
+        return mapsId;
+    }
+
+    public void setMapsId(Long uploadFileId) {
+        this.mapsId = uploadFileId;
+    }
+
+    public Long getOtherFilesId() {
+        return otherFilesId;
+    }
+
+    public void setOtherFilesId(Long uploadFileId) {
+        this.otherFilesId = uploadFileId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -112,6 +152,8 @@ public class AssetDTO implements Serializable {
             "id=" + id +
             ", parentId='" + parentId + "'" +
             ", name='" + name + "'" +
+            ", location='" + location + "'" +
+            ", details='" + details + "'" +
             ", code='" + code + "'" +
             ", assetType='" + assetType + "'" +
             ", capacity='" + capacity + "'" +

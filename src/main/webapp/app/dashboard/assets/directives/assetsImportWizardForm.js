@@ -5,7 +5,9 @@ angular.module('app').directive('assetsImportWizardForm', function () {
         restrict: 'E',
         replace: true,
         templateUrl: 'app/dashboard/assets/directives/asset-import-wizard-form.tpl.html',
-        scope: true,
+        scope: {
+            'onSubmit': '&'
+        },
         controller: function ($scope, $compile, $rootScope, $element) {
             $scope.wizardStepFormBranch = [];
             $scope.assetList = [];
@@ -28,6 +30,7 @@ angular.module('app').directive('assetsImportWizardForm', function () {
             var wizard = $element.children().first();
             $scope.assetImportData = [];
             $scope.branch;
+            $scope.parentId = null;
             $scope.parentStep = null;
             $scope.assetId = null;
             $scope.assetImportData[0] = {"step": 1};
@@ -71,11 +74,12 @@ angular.module('app').directive('assetsImportWizardForm', function () {
 
                 var pane;
                 if (!angular.isObject(branch)) {
-                    pane = $compile('<assets-form update-asset-callback="getAsset(index)"  data-parent-step="'+$scope.parentStep+'" data-current-step="'+index+'" step-change="addStep(value)"></assets-form>')($scope);
+                    pane = $compile('<assets-form update-asset-callback="getAsset(index)" data-parent-id="'+$scope.branch.id+'" data-parent-step="'+$scope.parentStep+'" data-current-step="'+index+'" step-change="addStep(value)"></assets-form>')($scope);
                 }
                 else {
-                    var newIndex = index - 2;
-                    pane = $compile('<assets-form update-asset-callback="getAsset(index)" data-parent-step="'+$scope.parentStep+'" data-current-step="'+index+'" step-change="addStep(value)" asset="wizardStepFormBranch[' + newIndex + ']" ></assets-form>')($scope);
+                    $scope.parentId = branch.id;
+                    var newIndex = index - 1;
+                    pane = $compile('<assets-form update-asset-callback="getAsset(index)" data-parent-id="'+$scope.branch.id+'" data-parent-step="'+$scope.parentStep+'" data-current-step="'+index+'" step-change="addStep(value)" asset="wizardStepFormBranch[' + newIndex + ']" ></assets-form>')($scope);
                 }
 
                 wizard.wizard('addSteps', index, [
@@ -132,8 +136,13 @@ angular.module('app').directive('assetsImportWizardForm', function () {
             });
 
             $scope.wizard2CompleteCallback = function (wizardData) {
+
+                var data = {parentId: $scope.branch.id, assetList: $scope.assetList};
+                $scope.onSubmit({data: data});
+                console.log(data);
+
                 if ($scope.callbackWizardFinish) {
-                    $scope.callbackWizardFinish(wizardData);
+                    $scope.callbackWizardFinish(data);
                 }
                 $.smallBox({
                     title: $rootScope.getWord("Data submitted successfully!"),

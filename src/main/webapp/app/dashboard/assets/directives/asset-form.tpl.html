@@ -230,7 +230,7 @@
                 <label class="control-label">{{$root.getWord('Details')}}</label>
 
                 <div class="col-md-12 textarea textarea-expandable ">
-                    <textarea rows="3" class="custom-scroll form-control" ng-disabled="disableForm">{{assetList.details}}</textarea>
+                    <textarea rows="3" ng-model="asset.details" class="custom-scroll form-control" ng-disabled="disableForm">{{assetList.details}}</textarea>
                 </div>
             </div>
         </div>

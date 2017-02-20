@@ -55,11 +55,23 @@ public class AssetServiceImpl implements AssetService{
     public AssetDTOs saveAll(AssetDTOs assetDTOs) {
         log.debug("Request to save Assets : {}", assetDTOs);
         List<AssetDTO> response = new ArrayList<>();
+        int i=0;
+        Asset lastUpdatedAsset = null;
         for(AssetDTO assetDTO: assetDTOs.getAssetList()) {
             Asset asset = assetMapper.assetDTOToAsset(assetDTO);
+            Long parentId = assetDTOs.getParentId();
+            if (i==0) {
+                asset.setParentId(parentId);
+            }
+            else {
+                asset.setParentId(lastUpdatedAsset.getId());
+            }
+
             asset = assetRepository.save(asset);
             AssetDTO assetToAssetDTO = assetMapper.assetToAssetDTO(asset);
             response.add(assetToAssetDTO);
+            lastUpdatedAsset = asset;
+            i++;
         }
         assetDTOs.setAssetList(response);
         return assetDTOs;

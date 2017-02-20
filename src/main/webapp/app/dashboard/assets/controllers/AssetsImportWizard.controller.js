@@ -5,12 +5,12 @@ angular
     .controller('AssetImportWizardController', function ($scope, $compile, $rootScope, $timeout, $stateParams, $uibModalInstance, entity ,Asset, AssetImport) {
         var assetVm = this;
 
-        assetVm.assetList = [];
-        assetVm.postObject = {"assetList": assetVm.assetList}
+        assetVm.assetList = {};
         assetVm.asset = entity;
         assetVm.clear = clear;
         assetVm.save = save;
-        assetVm.importAssets = importAssets;
+        assetVm.submitWizard = submitWizard;
+
 
 
 
@@ -18,10 +18,20 @@ angular
             $uibModalInstance.dismiss('cancel');
         }
 
-        function importAssets() {
+        function submitWizard(data) {
+            assetVm.assetList.assetList = [];
+            if (!angular.isUndefined(data)) {
+                for(var i=0;i<data.assetList.length;i++) {
+                    if (!angular.isUndefinedOrNull(data.assetList[i])) {
+                        assetVm.assetList.assetList.push(data.assetList[i]);
+                    }
+                }
+                assetVm.assetList.parentId = data.parentId;
+            }
             assetVm.isSaving = true;
-            console.log(assetVm.postObject);
-            AssetImport.save(assetVm.postObject, onSaveSuccess, onSaveError);
+
+            console.log("submitWizard: " + assetVm.assetList);
+            AssetImport.save(assetVm.assetList, onSaveSuccess, onSaveError);
         }
 
         function save () {

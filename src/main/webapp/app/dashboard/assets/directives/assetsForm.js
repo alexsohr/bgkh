@@ -38,8 +38,6 @@ angular.module('app').directive('assetsForm', function () {
                 $scope.asset.assetType = 'ASSET_GROUP';
             }
 
-
-
             $scope.toggleAssetForm = function () {
                 console.log($scope.asset.assetType);
                 if ('ASSET_GROUP' == $scope.asset.assetType) {
@@ -60,7 +58,7 @@ angular.module('app').directive('assetsForm', function () {
             });
 
 
-            if (!angular.isUndefinedOrNull($scope.asset)) {
+            if (!angular.isUndefinedOrNull($scope.asset.id)) {
                 $scope.state = "E";
                 if (!angular.isUndefinedOrNull($scope.asset.children)) {
                     $scope.hasSubTree = $scope.asset.children.length > 0;

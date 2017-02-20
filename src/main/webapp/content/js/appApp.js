@@ -1519,7 +1519,6 @@ angular.module('app.chat', ['ngSanitize'])
 
 "use strict";
 
-
 angular
     .module('app.admin', ['ui.router'])
     .config(function ($stateProvider) {
@@ -1779,22 +1778,16 @@ angular.module('app.dashboard').controller('DashboardCtrl', function ($rootScope
     };
 
 });
-(function() {
-    'use strict';
+'use strict';
 
-    angular
-        .module('app')
-        .config(stateConfig);
-
-    stateConfig.$inject = ['$stateProvider'];
-
-    function stateConfig($stateProvider) {
-        $stateProvider.state('entity', {
-            abstract: true,
-            parent: 'app'
-        });
-    }
-})();
+angular
+    .module('app.entity', ['ui.router'])
+    .config(function ($stateProvider) {
+        $stateProvider
+            .state('app.entity', {
+                abstract: true
+            });
+    });
 
 'use strict'
 
@@ -2906,7 +2899,7 @@ $templateCache.put("app/layout/language/language-selector.tpl.html","<ul class=\
 $templateCache.put("app/layout/partials/dashboard-sub-header.tpl.html","<div class=\" col-xs-12 col-sm-12 col-md-12 col-lg-12\" data-sparkline-container>\r\n    <ul id=\"sparks\" class=\"pull-left\">\r\n        <li class=\"sparks-info\">\r\n            <h5> {{getWord(\'Schedule Compliance\')}} <span class=\"txt-color-blue\">{{notifications.scheduleCompliance}}%</span></h5>\r\n        </li>\r\n        <li class=\"sparks-info\">\r\n            <h5> {{getWord(\'High Priority Work Orders\')}} <span class=\"txt-color-green\"><i class=\"fa fa-arrow-circle-up\"></i>&nbsp;{{notifications.highPriorityWorkOrders}} </span></h5>\r\n        </li>\r\n        <li class=\"sparks-info hidden-mobile hidden-tablet\">\r\n            <h5> {{getWord(\'Open Work Orders\')}} <span class=\"txt-color-orange\">&nbsp;{{notifications.openWorkOrders}} </span></h5>\r\n        </li>\r\n        <li class=\"sparks-info\">\r\n            <h5> {{getWord(\'Total Overdue Work Orders\')}} <span class=\"txt-color-red\"> {{notifications.totalOverdueWorkOrders}} </span></h5>\r\n        </li>\r\n        <li class=\"sparks-info hidden-mobile hidden-tablet\">\r\n            <h5> {{getWord(\'Total Accepted Work Orders\')}} <span class=\"txt-color-blueLight\"> {{notifications.totalAcceptedWorkOrders}} </span></h5>\r\n        </li>\r\n    </ul>\r\n</div>\r\n			");
 $templateCache.put("app/layout/partials/footer.tpl.html","<div class=\"page-footer\">\r\n    <div class=\"row\">\r\n        <div class=\"col-xs-12 col-sm-6\">\r\n            <span class=\"txt-color-white\">Copyright © 2016</span>\r\n        </div>\r\n\r\n        <!--<div class=\"col-xs-6 col-sm-6 text-right hidden-xs\">-->\r\n            <!--<div class=\"txt-color-white inline-block\">-->\r\n                <!--<i class=\"txt-color-blueLight hidden-mobile\">Last account activity <i class=\"fa fa-clock-o\"></i>-->\r\n                    <!--<strong>52 mins ago &nbsp;</strong> </i>-->\r\n\r\n                <!--<div class=\"btn-group dropup\">-->\r\n                    <!--<button class=\"btn btn-xs dropdown-toggle bg-color-blue txt-color-white\" data-toggle=\"dropdown\">-->\r\n                        <!--<i class=\"fa fa-link\"></i> <span class=\"caret\"></span>-->\r\n                    <!--</button>-->\r\n                    <!--<ul class=\"dropdown-menu pull-right text-left\">-->\r\n                        <!--<li>-->\r\n                            <!--<div class=\"padding-5\">-->\r\n                                <!--<p class=\"txt-color-darken font-sm no-margin\">Download Progress</p>-->\r\n\r\n                                <!--<div class=\"progress progress-micro no-margin\">-->\r\n                                    <!--<div class=\"progress-bar progress-bar-success\" style=\"width: 50%;\"></div>-->\r\n                                <!--</div>-->\r\n                            <!--</div>-->\r\n                        <!--</li>-->\r\n                        <!--<li class=\"divider\"></li>-->\r\n                        <!--<li>-->\r\n                            <!--<div class=\"padding-5\">-->\r\n                                <!--<p class=\"txt-color-darken font-sm no-margin\">Server Load</p>-->\r\n\r\n                                <!--<div class=\"progress progress-micro no-margin\">-->\r\n                                    <!--<div class=\"progress-bar progress-bar-success\" style=\"width: 20%;\"></div>-->\r\n                                <!--</div>-->\r\n                            <!--</div>-->\r\n                        <!--</li>-->\r\n                        <!--<li class=\"divider\"></li>-->\r\n                        <!--<li>-->\r\n                            <!--<div class=\"padding-5\">-->\r\n                                <!--<p class=\"txt-color-darken font-sm no-margin\">Memory Load <span class=\"text-danger\">*critical*</span>-->\r\n                                <!--</p>-->\r\n\r\n                                <!--<div class=\"progress progress-micro no-margin\">-->\r\n                                    <!--<div class=\"progress-bar progress-bar-danger\" style=\"width: 70%;\"></div>-->\r\n                                <!--</div>-->\r\n                            <!--</div>-->\r\n                        <!--</li>-->\r\n                        <!--<li class=\"divider\"></li>-->\r\n                        <!--<li>-->\r\n                            <!--<div class=\"padding-5\">-->\r\n                                <!--<button class=\"btn btn-block btn-default\">refresh</button>-->\r\n                            <!--</div>-->\r\n                        <!--</li>-->\r\n                    <!--</ul>-->\r\n                <!--</div>-->\r\n            <!--</div>-->\r\n        <!--</div>-->\r\n    </div>\r\n</div>");
 $templateCache.put("app/layout/partials/header.tpl.html","<header id=\"header\">\n<div id=\"logo-group\">\n\n    <!-- PLACE YOUR LOGO HERE -->\n    <span id=\"logo\"> <img src=\"content/img/bgkhlogo.png\" alt=\"SmartAdmin\"> </span>\n    <!-- END LOGO PLACEHOLDER -->\n\n    <!-- Note: The activity badge color changes when clicked and resets the number to 0\n    Suggestion: You may want to set a flag when this happens to tick off all checked messages / notifications -->\n    <span id=\"activity\" class=\"activity-dropdown\" activities-dropdown-toggle>\n        <i class=\"fa fa-user\"></i>\n        <b class=\"badge bg-color-red\">21</b>\n    </span>\n    <div smart-include=\"app/dashboard/activities/activities.html\"></div>\n</div>\n\n<!-- pulled right: nav area -->\n<div class=\"pull-right\">\n\n    <!-- collapse menu button -->\n    <div id=\"hide-menu\" class=\"btn-header pull-right\">\n        <span> <a toggle-menu title=\"Collapse Menu\"><i\n                class=\"fa fa-reorder\"></i></a> </span>\n    </div>\n    <!-- end collapse menu -->\n\n    <!-- #MOBILE -->\n    <!-- Top menu profile link : this shows only when top menu is active -->\n    <ul id=\"mobile-profile-img\" class=\"header-dropdown-list hidden-xs padding-5\">\n        <li class=\"\">\n            <a data-ui-sref=\"app.account.settings\" class=\"no-margin userdropdown\">\n                <img src=\"content/img/avatars/male.png\" alt=\"John Doe\" class=\"online\"/>\n            </a>\n            <ul class=\"dropdown-menu pull-right\">\n                <li>\n                    <a href-void class=\"padding-10 padding-top-0 padding-bottom-0\"><i\n                            class=\"fa fa-cog\"></i> Setting</a>\n                </li>\n                <li class=\"divider\"></li>\n                <li>\n                    <a ui-sref=\"app.appViews.profileDemo\" class=\"padding-10 padding-top-0 padding-bottom-0\"> <i class=\"fa fa-user\"></i>\n                        <u>P</u>rofile</a>\n                </li>\n                <li class=\"divider\"></li>\n                <li>\n                    <a href-void class=\"padding-10 padding-top-0 padding-bottom-0\"\n                       data-action=\"toggleShortcut\"><i class=\"fa fa-arrow-down\"></i> <u>S</u>hortcut</a>\n                </li>\n                <li class=\"divider\"></li>\n                <li>\n                    <a href-void class=\"padding-10 padding-top-0 padding-bottom-0\"\n                       data-action=\"launchFullscreen\"><i class=\"fa fa-arrows-alt\"></i> Full <u>S</u>creen</a>\n                </li>\n                <li class=\"divider\"></li>\n                <li>\n                    <a href=\"#/login\" class=\"padding-10 padding-top-5 padding-bottom-5\" data-action=\"userLogout\"><i\n                            class=\"fa fa-sign-out fa-lg\"></i> <strong><u>L</u>ogout</strong></a>\n                </li>\n            </ul>\n        </li>\n    </ul>\n\n    <!-- logout button -->\n    <div id=\"logout\" class=\"btn-header transparent pull-right\">\n        <span> <a ui-sref=\"login\" title=\"Sign Out\" data-action=\"userLogout\"\n                  data-logout-msg=\"You can improve your security further after logging out by closing this opened browser\"><i\n                class=\"fa fa-sign-out\"></i></a> </span>\n    </div>\n    <!-- end logout button -->\n\n    <!-- search mobile button (this is hidden till mobile view port) -->\n    <div id=\"search-mobile\" class=\"btn-header transparent pull-right\" data-search-mobile>\n        <span> <a href=\"#\" title=\"Search\"><i class=\"fa fa-search\"></i></a> </span>\n    </div>\n    <!-- end search mobile button -->\n\n    <!-- input: search field -->\n    <form action=\"#/search\" class=\"header-search pull-right\">\n        <input id=\"search-fld\" type=\"text\" name=\"param\" placeholder=\"Find reports and more\" data-autocomplete=\'[\n					\"ActionScript\",\n					\"AppleScript\",\n					\"Asp\",\n					\"BASIC\",\n					\"C\",\n					\"C++\",\n					\"Clojure\",\n					\"COBOL\",\n					\"ColdFusion\",\n					\"Erlang\",\n					\"Fortran\",\n					\"Groovy\",\n					\"Haskell\",\n					\"Java\",\n					\"JavaScript\",\n					\"Lisp\",\n					\"Perl\",\n					\"PHP\",\n					\"Python\",\n					\"Ruby\",\n					\"Scala\",\n					\"Scheme\"]\'>\n        <button type=\"submit\">\n            <i class=\"fa fa-search\"></i>\n        </button>\n        <a href=\"$\" id=\"cancel-search-js\" title=\"Cancel Search\"><i class=\"fa fa-times\"></i></a>\n    </form>\n    <!-- end input: search field -->\n\n    <!-- fullscreen button -->\n    <div id=\"fullscreen\" class=\"btn-header transparent pull-right\">\n        <span> <a full-screen title=\"Full Screen\"><i\n                class=\"fa fa-arrows-alt\"></i></a> </span>\n    </div>\n    <!-- end fullscreen button -->\n\n    <!-- #Voice Command: Start Speech -->\n    <!--<div id=\"speech-btn\" class=\"btn-header transparent pull-right hidden-sm hidden-xs\">-->\n        <!--<div>-->\n            <!--<a title=\"Voice Command\" id=\"voice-command-btn\" speech-recognition><i class=\"fa fa-microphone\"></i></a>-->\n\n            <!--<div class=\"popover bottom\">-->\n                <!--<div class=\"arrow\"></div>-->\n                <!--<div class=\"popover-content\">-->\n                    <!--<h4 class=\"vc-title\">Voice command activated <br>-->\n                        <!--<small>Please speak clearly into the mic</small>-->\n                    <!--</h4>-->\n                    <!--<h4 class=\"vc-title-error text-center\">-->\n                        <!--<i class=\"fa fa-microphone-slash\"></i> Voice command failed-->\n                        <!--<br>-->\n                        <!--<small class=\"txt-color-red\">Must <strong>\"Allow\"</strong> Microphone</small>-->\n                        <!--<br>-->\n                        <!--<small class=\"txt-color-red\">Must have <strong>Internet Connection</strong></small>-->\n                    <!--</h4>-->\n                    <!--<a href-void class=\"btn btn-success\" id=\"speech-help-btn\">See Commands</a>-->\n                    <!--<a href-void class=\"btn bg-color-purple txt-color-white\"-->\n                       <!--onclick=\"$(\'#speech-btn .popover\').fadeOut(50);\">Close Popup</a>-->\n                <!--</div>-->\n            <!--</div>-->\n        <!--</div>-->\n    <!--</div>-->\n    <!-- end voice command -->\n\n\n\n    <!-- multiple lang dropdown : find all flags in the flags page -->\n    <!--<language-selector></language-selector>-->\n    <!-- end multiple lang -->\n\n</div>\n<!-- end pulled right: nav area -->\n\n</header>\n");
-$templateCache.put("app/layout/partials/navigation.tpl.html","<aside id=\"left-panel\">\n\n    <!-- User info -->\n    <div login-info></div>\n    <!-- end user info -->\n\n    <nav ng-controller=\"NavigationController as vm\">\n        <!-- NOTE: Notice the gaps after each icon usage <i></i>..\n        Please note that these links work a bit different than\n        traditional href=\"\" links. See documentation for details.\n        -->\n        <ul data-smart-menu ng-if=\"vm.isAuthenticated()\">\n            <li data-menu-collapse>\n                <a href=\"#\" title=\"{{getWord(\'Dashboard\')}}\">\n                    <i class=\"fa fa-lg fa-fw fa-home\"></i> <span\n                    class=\"menu-item-parent\">{{getWord(\'Dashboard\')}}</span></a>\n                <ul>\n                    <li>\n                        <a data-ui-sref-active=\"active\" data-ui-sref=\"app.dashboard\" title=\"{{getWord(\'Dashboard\')}}\"><i\n                            class=\"fa fa-clock-o\"></i>\n                            {{getWord(\'Dashboard\')}}</a>\n                    </li>\n                    <li>\n                        <a data-ui-sref=\"app.calendar\" title=\"{{getWord(\'Calendar\')}}\"><i\n                            class=\"fa fa-calendar\"></i>\n                            {{getWord(\'Calendar\')}}</a>\n                    </li>\n                    <li>\n                        <a data-ui-sref=\"#\" title=\"{{getWord(\'Assigned assets\')}}\"><i\n                            class=\"fa fa-cogs\"></i>\n                            {{getWord(\'Assigned assets\')}}</a>\n                    </li>\n                    <li>\n                        <a data-ui-sref=\"#\" title=\"{{getWord(\'Assigned work order\')}}\"><i\n                            class=\"fa fa-briefcase\"></i>\n                            {{getWord(\'Assigned work order\')}}</a>\n                    </li>\n                    <li>\n                        <a data-ui-sref=\"#\" title=\"{{getWord(\'Request work order\')}}\"><i\n                            class=\"fa fa-bullhorn\"></i>\n                            {{getWord(\'Request work order\')}}</a>\n                    </li>\n                </ul>\n            </li>\n\n            <li data-menu-collapse class=\"top-menu-invisible\">\n                <a href=\"#\" title=\"{{getWord(\'Assets\')}}\"><i\n                    class=\"fa fa-lg fa-fw fa-cogs\"></i>\n                    <span class=\"menu-item-parent\">{{getWord(\'Assets\')}}</span></a>\n                <ul>\n                    <li>\n                        <a data-ui-sref=\"#\" title=\"{{getWord(\'All assets\')}}\"><i\n                            class=\"fa fa-lg fa-fw fa-cogs\"></i>\n                            {{getWord(\'All assets\')}}</a>\n                    </li>\n                    <li>\n                        <a data-ui-sref=\"#\" title=\"{{getWord(\'Facilities\')}}\"><i\n                            class=\"fa fa-lg fa-fw fa-building\"></i>\n                            {{getWord(\'Facilities\')}}</a>\n                    </li>\n                    <li>\n                        <a data-ui-sref=\"#\" title=\"{{getWord(\'Equipments\')}}\"><i\n                            class=\"fa fa-lg fa-fw fa-gear\"></i>\n                            {{getWord(\'Equipments\')}}</a>\n                    </li>\n                </ul>\n            </li>\n            <li data-menu-collapse class=\"top-menu-invisible\">\n                <a href=\"#\" title=\"{{getWord(\'Maintenance\')}}\">\n                    <i class=\"fa fa-lg fa-fw fa-wrench\"></i> <span\n                    class=\"menu-item-parent\">{{getWord(\'Maintenance\')}}</span></a>\n                <ul>\n                    <li>\n                        <a data-ui-sref=\"#\" title=\"{{getWord(\'Work orders\')}}\"><i\n                            class=\"fa fa-lg fa-fw fa-briefcase\"></i>\n                            {{getWord(\'Work orders\')}}</a>\n                    </li>\n                    <li>\n                        <a data-ui-sref=\"#\" title=\"{{getWord(\'Scheduled maintenance\')}}\"><i\n                            class=\"fa fa-lg fa-fw fa-calendar\"></i>\n                            {{getWord(\'Scheduled maintenance\')}}</a>\n                    </li>\n                </ul>\n            </li>\n            <li>\n                <a data-ui-sref=\"app.home\" title=\"{{getWord(\'Alerts\')}}\">\n                    <i class=\"fa fa-lg fa-fw fa-bell\"></i> <span\n                    class=\"menu-item-parent\">{{getWord(\'Alerts\')}}</span></a>\n            </li>\n            <li>\n                <a data-ui-sref=\"app.home\" title=\"{{getWord(\'Reports\')}}\">\n                    <i class=\"fa fa-lg fa-fw fa-bar-chart\"></i> <span\n                    class=\"menu-item-parent\">{{getWord(\'Reports\')}}</span></a>\n            </li>\n            <li data-menu-collapse>\n                <a href=\"#\" title=\"{{getWord(\'Settings\')}}\">\n                    <i class=\"fa fa-lg fa-fw fa-sliders\"></i> <span\n                    class=\"menu-item-parent\">{{getWord(\'Settings\')}}</span></a>\n                <ul>\n\n                    <li>\n                        <a data-ui-sref=\"app.admin.user-management\" title=\"{{getWord(\'Users & permissions\')}}\">\n                            <i class=\"glyphicon glyphicon-user\"></i> <span\n                            class=\"menu-item-parent\">{{getWord(\'Users & permissions\')}}</span></a>\n                    </li>\n                    <li>\n                        <a data-ui-sref=\"app.admin.jhi-metrics\" title=\"{{getWord(\'Metrics\')}}\">\n                            <i class=\"glyphicon glyphicon-dashboard\"></i> <span\n                            class=\"menu-item-parent\">{{getWord(\'Metrics\')}}</span></a>\n                    </li>\n                    <li>\n                        <a data-ui-sref=\"app.admin.jhi-health\" title=\"{{getWord(\'Health\')}}\">\n                            <i class=\"glyphicon glyphicon-heart\"></i> <span\n                            class=\"menu-item-parent\">{{getWord(\'Health\')}}</span></a>\n                    </li>\n                    <li>\n                        <a data-ui-sref=\"app.admin.jhi-configuration\" title=\"{{getWord(\'Configuration\')}}\">\n                            <i class=\"glyphicon glyphicon-list-alt\"></i> <span\n                            class=\"menu-item-parent\">{{getWord(\'Configuration\')}}</span></a>\n                    </li>\n                    <li>\n                        <a data-ui-sref=\"app.admin.audits\" title=\"{{getWord(\'Audits\')}}\">\n                            <i class=\"glyphicon glyphicon-bell\"></i> <span\n                            class=\"menu-item-parent\">{{getWord(\'Audits\')}}</span></a>\n                    </li>\n                    <li>\n                        <a data-ui-sref=\"app.admin.logs\" title=\"{{getWord(\'Logs\')}}\">\n                            <i class=\"glyphicon glyphicon-tasks\"></i> <span\n                            class=\"menu-item-parent\">{{getWord(\'Logs\')}}</span></a>\n                    </li>\n                    <li>\n                        <a data-ui-sref=\"app.admin.docs\" title=\"{{getWord(\'API\')}}\">\n                            <i class=\"glyphicon glyphicon-book\"></i> <span\n                            class=\"menu-item-parent\">{{getWord(\'API\')}}</span></a>\n                    </li>\n                </ul>\n            </li>\n            <li data-menu-collapse>\n                <a href=\"#\" title=\"{{getWord(\'Account\')}}\">\n                    <i data-ui-sref-active=\"active\" class=\"fa fa-lg fa-fw fa-users\"></i> <span\n                    class=\"menu-item-parent\">{{getWord(\'Account\')}}</span></a>\n                <ul>\n\n                    <li>\n                        <a data-ui-sref=\"app.account.settings\" title=\"{{getWord(\'Settings\')}}\">\n                            <i class=\"glyphicon glyphicon-wrench\"></i> <span\n                            class=\"menu-item-parent\">{{getWord(\'Settings\')}}</span></a>\n                    </li>\n                    <li>\n                        <a data-ui-sref=\"app.account.password\" title=\"{{getWord(\'Password\')}}\">\n                            <i class=\"glyphicon glyphicon-lock\"></i> <span\n                            class=\"menu-item-parent\">{{getWord(\'Password\')}}</span></a>\n                    </li>\n                    <li>\n                        <a data-ui-sref=\"app.account.sessions\" title=\"{{getWord(\'Session\')}}\">\n                            <i class=\"glyphicon glyphicon-cloud\"></i> <span\n                            class=\"menu-item-parent\">{{getWord(\'Session\')}}</span></a>\n                    </li>\n                    <li>\n                        <a ng-click=\"vm.logout()\" title=\"{{getWord(\'Logout\')}}\">\n                            <i class=\"fa fa-lg fa-fw fa-user\"></i> <span\n                            class=\"menu-item-parent\">{{getWord(\'Logout\')}}</span></a>\n                    </li>\n                </ul>\n            </li>\n        </ul>\n        <!-- NOTE: This allows you to pull menu items from server -->\n        <!-- <ul data-smart-menu-items=\"/api/menu-items.json\"></ul> -->\n    </nav>\n\n    <span class=\"minifyme\" data-action=\"minifyMenu\" minify-menu>\n    <i class=\"fa fa-arrow-circle-left hit\"></i>\n  </span>\n\n</aside>\n");
+$templateCache.put("app/layout/partials/navigation.tpl.html","<aside id=\"left-panel\">\n\n    <!-- User info -->\n    <div login-info></div>\n    <!-- end user info -->\n\n    <nav ng-controller=\"NavigationController as vm\">\n        <!-- NOTE: Notice the gaps after each icon usage <i></i>..\n        Please note that these links work a bit different than\n        traditional href=\"\" links. See documentation for details.\n        -->\n        <ul data-smart-menu ng-if=\"vm.isAuthenticated()\">\n            <li data-menu-collapse>\n                <a href=\"#\" title=\"{{getWord(\'Dashboard\')}}\">\n                    <i class=\"fa fa-lg fa-fw fa-home\"></i> <span\n                    class=\"menu-item-parent\">{{getWord(\'Dashboard\')}}</span></a>\n                <ul>\n                    <li>\n                        <a data-ui-sref-active=\"active\" data-ui-sref=\"app.dashboard\" title=\"{{getWord(\'Dashboard\')}}\"><i\n                            class=\"fa fa-clock-o\"></i>\n                            {{getWord(\'Dashboard\')}}</a>\n                    </li>\n                    <li>\n                        <a data-ui-sref=\"app.calendar\" title=\"{{getWord(\'Calendar\')}}\"><i\n                            class=\"fa fa-calendar\"></i>\n                            {{getWord(\'Calendar\')}}</a>\n                    </li>\n                    <li>\n                        <a data-ui-sref=\"#\" title=\"{{getWord(\'Assigned assets\')}}\"><i\n                            class=\"fa fa-cogs\"></i>\n                            {{getWord(\'Assigned assets\')}}</a>\n                    </li>\n                    <li>\n                        <a data-ui-sref=\"#\" title=\"{{getWord(\'Assigned work order\')}}\"><i\n                            class=\"fa fa-briefcase\"></i>\n                            {{getWord(\'Assigned work order\')}}</a>\n                    </li>\n                    <li>\n                        <a data-ui-sref=\"#\" title=\"{{getWord(\'Request work order\')}}\"><i\n                            class=\"fa fa-bullhorn\"></i>\n                            {{getWord(\'Request work order\')}}</a>\n                    </li>\n                </ul>\n            </li>\n\n            <li data-menu-collapse class=\"top-menu-invisible\">\n                <a href=\"#\" title=\"{{getWord(\'Assets\')}}\"><i\n                    class=\"fa fa-lg fa-fw fa-cogs\"></i>\n                    <span class=\"menu-item-parent\">{{getWord(\'Assets\')}}</span></a>\n                <ul>\n                    <li>\n                        <a data-ui-sref=\"app.entity.assetsTable\" title=\"{{getWord(\'All assets\')}}\"><i\n                            class=\"fa fa-lg fa-fw fa-cogs\"></i>\n                            {{getWord(\'All assets\')}}</a>\n                    </li>\n                    <li>\n                        <a data-ui-sref=\"#\" title=\"{{getWord(\'Facilities\')}}\"><i\n                            class=\"fa fa-lg fa-fw fa-building\"></i>\n                            {{getWord(\'Facilities\')}}</a>\n                    </li>\n                    <li>\n                        <a data-ui-sref=\"#\" title=\"{{getWord(\'Equipments\')}}\"><i\n                            class=\"fa fa-lg fa-fw fa-gear\"></i>\n                            {{getWord(\'Equipments\')}}</a>\n                    </li>\n                </ul>\n            </li>\n            <li data-menu-collapse class=\"top-menu-invisible\">\n                <a href=\"#\" title=\"{{getWord(\'Maintenance\')}}\">\n                    <i class=\"fa fa-lg fa-fw fa-wrench\"></i> <span\n                    class=\"menu-item-parent\">{{getWord(\'Maintenance\')}}</span></a>\n                <ul>\n                    <li>\n                        <a data-ui-sref=\"#\" title=\"{{getWord(\'Work orders\')}}\"><i\n                            class=\"fa fa-lg fa-fw fa-briefcase\"></i>\n                            {{getWord(\'Work orders\')}}</a>\n                    </li>\n                    <li>\n                        <a data-ui-sref=\"#\" title=\"{{getWord(\'Scheduled maintenance\')}}\"><i\n                            class=\"fa fa-lg fa-fw fa-calendar\"></i>\n                            {{getWord(\'Scheduled maintenance\')}}</a>\n                    </li>\n                </ul>\n            </li>\n            <li>\n                <a data-ui-sref=\"app.home\" title=\"{{getWord(\'Alerts\')}}\">\n                    <i class=\"fa fa-lg fa-fw fa-bell\"></i> <span\n                    class=\"menu-item-parent\">{{getWord(\'Alerts\')}}</span></a>\n            </li>\n            <li>\n                <a data-ui-sref=\"app.home\" title=\"{{getWord(\'Reports\')}}\">\n                    <i class=\"fa fa-lg fa-fw fa-bar-chart\"></i> <span\n                    class=\"menu-item-parent\">{{getWord(\'Reports\')}}</span></a>\n            </li>\n            <li data-menu-collapse>\n                <a href=\"#\" title=\"{{getWord(\'Settings\')}}\">\n                    <i class=\"fa fa-lg fa-fw fa-sliders\"></i> <span\n                    class=\"menu-item-parent\">{{getWord(\'Settings\')}}</span></a>\n                <ul>\n\n                    <li>\n                        <a data-ui-sref=\"app.admin.user-management\" title=\"{{getWord(\'Users & permissions\')}}\">\n                            <i class=\"glyphicon glyphicon-user\"></i> <span\n                            class=\"menu-item-parent\">{{getWord(\'Users & permissions\')}}</span></a>\n                    </li>\n                    <li>\n                        <a data-ui-sref=\"app.admin.jhi-metrics\" title=\"{{getWord(\'Metrics\')}}\">\n                            <i class=\"glyphicon glyphicon-dashboard\"></i> <span\n                            class=\"menu-item-parent\">{{getWord(\'Metrics\')}}</span></a>\n                    </li>\n                    <li>\n                        <a data-ui-sref=\"app.admin.jhi-health\" title=\"{{getWord(\'Health\')}}\">\n                            <i class=\"glyphicon glyphicon-heart\"></i> <span\n                            class=\"menu-item-parent\">{{getWord(\'Health\')}}</span></a>\n                    </li>\n                    <li>\n                        <a data-ui-sref=\"app.admin.jhi-configuration\" title=\"{{getWord(\'Configuration\')}}\">\n                            <i class=\"glyphicon glyphicon-list-alt\"></i> <span\n                            class=\"menu-item-parent\">{{getWord(\'Configuration\')}}</span></a>\n                    </li>\n                    <li>\n                        <a data-ui-sref=\"app.admin.audits\" title=\"{{getWord(\'Audits\')}}\">\n                            <i class=\"glyphicon glyphicon-bell\"></i> <span\n                            class=\"menu-item-parent\">{{getWord(\'Audits\')}}</span></a>\n                    </li>\n                    <li>\n                        <a data-ui-sref=\"app.admin.logs\" title=\"{{getWord(\'Logs\')}}\">\n                            <i class=\"glyphicon glyphicon-tasks\"></i> <span\n                            class=\"menu-item-parent\">{{getWord(\'Logs\')}}</span></a>\n                    </li>\n                    <li>\n                        <a data-ui-sref=\"app.admin.docs\" title=\"{{getWord(\'API\')}}\">\n                            <i class=\"glyphicon glyphicon-book\"></i> <span\n                            class=\"menu-item-parent\">{{getWord(\'API\')}}</span></a>\n                    </li>\n                </ul>\n            </li>\n            <li data-menu-collapse>\n                <a href=\"#\" title=\"{{getWord(\'Account\')}}\">\n                    <i data-ui-sref-active=\"active\" class=\"fa fa-lg fa-fw fa-users\"></i> <span\n                    class=\"menu-item-parent\">{{getWord(\'Account\')}}</span></a>\n                <ul>\n\n                    <li>\n                        <a data-ui-sref=\"app.account.settings\" title=\"{{getWord(\'Settings\')}}\">\n                            <i class=\"glyphicon glyphicon-wrench\"></i> <span\n                            class=\"menu-item-parent\">{{getWord(\'Settings\')}}</span></a>\n                    </li>\n                    <li>\n                        <a data-ui-sref=\"app.account.password\" title=\"{{getWord(\'Password\')}}\">\n                            <i class=\"glyphicon glyphicon-lock\"></i> <span\n                            class=\"menu-item-parent\">{{getWord(\'Password\')}}</span></a>\n                    </li>\n                    <li>\n                        <a data-ui-sref=\"app.account.sessions\" title=\"{{getWord(\'Session\')}}\">\n                            <i class=\"glyphicon glyphicon-cloud\"></i> <span\n                            class=\"menu-item-parent\">{{getWord(\'Session\')}}</span></a>\n                    </li>\n                    <li>\n                        <a ng-click=\"vm.logout()\" title=\"{{getWord(\'Logout\')}}\">\n                            <i class=\"fa fa-lg fa-fw fa-user\"></i> <span\n                            class=\"menu-item-parent\">{{getWord(\'Logout\')}}</span></a>\n                    </li>\n                </ul>\n            </li>\n        </ul>\n        <!-- NOTE: This allows you to pull menu items from server -->\n        <!-- <ul data-smart-menu-items=\"/api/menu-items.json\"></ul> -->\n    </nav>\n\n    <span class=\"minifyme\" data-action=\"minifyMenu\" minify-menu>\n    <i class=\"fa fa-arrow-circle-left hit\"></i>\n  </span>\n\n</aside>\n");
 $templateCache.put("app/layout/partials/sub-header.tpl.html","<div class=\"col-xs-12 col-sm-5 col-md-5 col-lg-8\" data-sparkline-container>\r\n    <ul id=\"sparks\" class=\"\">\r\n        <li class=\"sparks-info\">\r\n            <h5> My Income <span class=\"txt-color-blue\">$47,171</span></h5>\r\n            <div class=\"sparkline txt-color-blue hidden-mobile hidden-md hidden-sm\">\r\n                1300, 1877, 2500, 2577, 2000, 2100, 3000, 2700, 3631, 2471, 2700, 3631, 2471\r\n            </div>\r\n        </li>\r\n        <li class=\"sparks-info\">\r\n            <h5> Site Traffic <span class=\"txt-color-purple\"><i class=\"fa fa-arrow-circle-up\"></i>&nbsp;45%</span></h5>\r\n            <div class=\"sparkline txt-color-purple hidden-mobile hidden-md hidden-sm\">\r\n                110,150,300,130,400,240,220,310,220,300, 270, 210\r\n            </div>\r\n        </li>\r\n        <li class=\"sparks-info\">\r\n            <h5> Site Orders <span class=\"txt-color-greenDark\"><i class=\"fa fa-shopping-cart\"></i>&nbsp;2447</span></h5>\r\n            <div class=\"sparkline txt-color-greenDark hidden-mobile hidden-md hidden-sm\">\r\n                110,150,300,130,400,240,220,310,220,300, 270, 210\r\n            </div>\r\n        </li>\r\n    </ul>\r\n</div>\r\n			");
 $templateCache.put("app/layout/partials/voice-commands.tpl.html","<!-- TRIGGER BUTTON:\r\n<a href=\"/my-ajax-page.html\" data-toggle=\"modal\" data-target=\"#remoteModal\" class=\"btn btn-default\">Open Modal</a>  -->\r\n\r\n<!-- MODAL PLACE HOLDER\r\n<div class=\"modal fade\" id=\"remoteModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"remoteModalLabel\" aria-hidden=\"true\">\r\n<div class=\"modal-dialog\">\r\n<div class=\"modal-content\"></div>\r\n</div>\r\n</div>   -->\r\n<!--////////////////////////////////////-->\r\n\r\n<!--<div class=\"modal-header\">\r\n<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">\r\n&times;\r\n</button>\r\n<h4 class=\"modal-title\" id=\"myModalLabel\">Command List</h4>\r\n</div>-->\r\n<div class=\"modal-body\">\r\n\r\n	<h1><i class=\"fa fa-microphone text-muted\"></i>&nbsp;&nbsp; SmartAdmin Voice Command</h1>\r\n	<hr class=\"simple\">\r\n	<h5>Instruction</h5>\r\n\r\n	Click <span class=\"text-success\">\"Allow\"</span> to access your microphone and activate Voice Command.\r\n	You will notice a <span class=\"text-primary\"><strong>BLUE</strong> Flash</span> on the microphone icon indicating activation.\r\n	The icon will appear <span class=\"text-danger\"><strong>RED</strong></span> <span class=\"label label-danger\"><i class=\"fa fa-microphone fa-lg\"></i></span> if you <span class=\"text-danger\">\"Deny\"</span> access or don\'t have any microphone installed.\r\n	<br>\r\n	<br>\r\n	As a security precaution, your browser will disconnect the microphone every 60 to 120 seconds (sooner if not being used). In which case Voice Command will prompt you again to <span class=\"text-success\">\"Allow\"</span> or <span class=\"text-danger\">\"Deny\"</span> access to your microphone.\r\n	<br>\r\n	<br>\r\n	If you host your page over <strong>http<span class=\"text-success\">s</span></strong> (secure socket layer) protocol you can wave this security measure and have an unintrupted Voice Command.\r\n	<br>\r\n	<br>\r\n	<h5>Commands</h5>\r\n	<ul>\r\n		<li>\r\n			<strong>\'show\' </strong> then say the <strong>*page*</strong> you want to go to. For example <strong>\"show inbox\"</strong> or <strong>\"show calendar\"</strong>\r\n		</li>\r\n		<li>\r\n			<strong>\'mute\' </strong> - mutes all sound effects for the theme.\r\n		</li>\r\n		<li>\r\n			<strong>\'sound on\'</strong> - unmutes all sound effects for the theme.\r\n		</li>\r\n		<li>\r\n			<span class=\"text-danger\"><strong>\'stop\'</strong></span> - deactivates voice command.\r\n		</li>\r\n		<li>\r\n			<span class=\"text-primary\"><strong>\'help\'</strong></span> - brings up the command list\r\n		</li>\r\n		<li>\r\n			<span class=\"text-danger\"><strong>\'got it\'</strong></span> - closes help modal\r\n		</li>\r\n		<li>\r\n			<strong>\'hide navigation\'</strong> - toggle navigation collapse\r\n		</li>\r\n		<li>\r\n			<strong>\'show navigation\'</strong> - toggle navigation to open (can be used again to close)\r\n		</li>\r\n		<li>\r\n			<strong>\'scroll up\'</strong> - scrolls to the top of the page\r\n		</li>\r\n		<li>\r\n			<strong>\'scroll down\'</strong> - scrollts to the bottom of the page\r\n		</li>\r\n		<li>\r\n			<strong>\'go back\' </strong> - goes back in history (history -1 click)\r\n		</li>\r\n		<li>\r\n			<strong>\'logout\'</strong> - logs you out\r\n		</li>\r\n	</ul>\r\n	<br>\r\n	<h5>Adding your own commands</h5>\r\n	Voice Command supports up to 80 languages. Adding your own commands is extreamly easy. All commands are stored inside <strong>app.config.js</strong> file under the <code>var commands = {...}</code>. \r\n\r\n	<hr class=\"simple\">\r\n	<div class=\"text-right\">\r\n		<button type=\"button\" class=\"btn btn-success btn-lg\" data-dismiss=\"modal\">\r\n			Got it!\r\n		</button>\r\n	</div>\r\n\r\n</div>\r\n<!--<div class=\"modal-footer\">\r\n<button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\">Got it!</button>\r\n</div> -->");
 $templateCache.put("app/layout/shortcut/shortcut.tpl.html","<div id=\"shortcut\">\r\n	<ul>\r\n		<li>\r\n			<a href=\"#/inbox/\" class=\"jarvismetro-tile big-cubes bg-color-blue\"> <span class=\"iconbox\"> <i class=\"fa fa-envelope fa-4x\"></i> <span>Mail <span class=\"label pull-right bg-color-darken\">14</span></span> </span> </a>\r\n		</li>\r\n		<li>\r\n			<a href=\"#/calendar\" class=\"jarvismetro-tile big-cubes bg-color-orangeDark\"> <span class=\"iconbox\"> <i class=\"fa fa-calendar fa-4x\"></i> <span>Calendar</span> </span> </a>\r\n		</li>\r\n		<li>\r\n			<a href=\"#/maps\" class=\"jarvismetro-tile big-cubes bg-color-purple\"> <span class=\"iconbox\"> <i class=\"fa fa-map-marker fa-4x\"></i> <span>Maps</span> </span> </a>\r\n		</li>\r\n		<li>\r\n			<a href=\"#/invoice\" class=\"jarvismetro-tile big-cubes bg-color-blueDark\"> <span class=\"iconbox\"> <i class=\"fa fa-book fa-4x\"></i> <span>Invoice <span class=\"label pull-right bg-color-darken\">99</span></span> </span> </a>\r\n		</li>\r\n		<li>\r\n			<a href=\"#/gallery\" class=\"jarvismetro-tile big-cubes bg-color-greenLight\"> <span class=\"iconbox\"> <i class=\"fa fa-picture-o fa-4x\"></i> <span>Gallery </span> </span> </a>\r\n		</li>\r\n		<li>\r\n			<a href=\"#/profile\" class=\"jarvismetro-tile big-cubes selected bg-color-pinkDark\"> <span class=\"iconbox\"> <i class=\"fa fa-user fa-4x\"></i> <span>My Profile </span> </span> </a>\r\n		</li>\r\n	</ul>\r\n</div>");
@@ -2914,9 +2907,9 @@ $templateCache.put("app/_common/modal/directives/reusable-modal.tpl.html","<div>
 $templateCache.put("app/dashboard/assets/directives/asset-copy-form.tpl.html","<div>\n    <form name=\"assetCopyForm\" class=\"asset-copy-form form-group\" role=\"form\" novalidate show-validation\n          ng-submit=\"assetCopyVm.save()\">\n\n        <div class=\"modal-header\">\n            <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\"\n                    ng-click=\"assetCopyVm.clear()\">&times;</button>\n            <h4 class=\"modal-title\" id=\"myAssetLabel\">Copy a Asset</h4>\n        </div>\n        <div class=\"modal-body\">\n            <div class=\"step-content\">\n                <input type=\"hidden\" ng-model=\"assetCopyVm.asset.id\" name=\"id\" />\n                <input type=\"hidden\" ng-model=\"assetCopyVm.asset.parentId\" name=\"parentId\" />\n                <assets-tree-grid-checkbox\n                    selected-tree-node=\"duplicatedAsset\"\n                    on-select=\"assetCopyVm.selectedParentTree(branch)\">\n                </assets-tree-grid-checkbox>\n            </div>\n            <div class=\"modal-footer\">\n                <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" ng-click=\"assetCopyVm.clear()\">\n                    <span class=\"glyphicon glyphicon-ban-circle\"></span>&nbsp;<span>Cancel</span>\n                </button>\n                <button type=\"submit\" ng-disabled=\"copyForm.$invalid || assetCopyVm.isSaving\" class=\"btn btn-primary\">\n                    <span class=\"glyphicon glyphicon-save\"></span>&nbsp;<span>Save</span>\n                </button>\n            </div>\n        </div>\n    </form>\n</div>\n");
 $templateCache.put("app/dashboard/assets/directives/asset-detail-form.tpl.html","<div>\n    <form name=\"assetDetailForm\" class=\"asset-detail-form form-group\" role=\"form\" novalidate show-validation>\n\n        <div class=\"modal-header\">\n            <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\"\n                    ng-click=\"assetEditVm.clear()\">&times;</button>\n            <h4 class=\"modal-title\" id=\"myAssetLabel\">Create or edit a Asset</h4>\n        </div>\n        <div class=\"modal-body\">\n            <div class=\"step-content\">\n                <assets-form asset=\"assetEditVm.asset\" data-display-details=\"true\"></assets-form>\n            </div>\n            <div class=\"modal-footer\">\n                <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" ng-click=\"assetEditVm.clear()\">\n                    <span class=\"glyphicon glyphicon-ban-circle\"></span>&nbsp;<span>Cancel</span>\n                </button>\n            </div>\n        </div>\n    </form>\n</div>\n");
 $templateCache.put("app/dashboard/assets/directives/asset-edit-form.tpl.html","<div>\n    <form name=\"assetEditForm\" class=\"asset-edit-form form-group\" role=\"form\" novalidate show-validation\n          ng-submit=\"assetEditVm.save()\">\n\n        <div class=\"modal-header\">\n            <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\"\n                    ng-click=\"assetEditVm.clear()\">&times;</button>\n            <h4 class=\"modal-title\" id=\"myAssetLabel\">Create or edit a Asset</h4>\n        </div>\n        <div class=\"modal-body\">\n            <div class=\"step-content\">\n                <assets-form asset=\"assetEditVm.asset\"></assets-form>\n            </div>\n            <div class=\"modal-footer\">\n                <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" ng-click=\"assetEditVm.clear()\">\n                    <span class=\"glyphicon glyphicon-ban-circle\"></span>&nbsp;<span>Cancel</span>\n                </button>\n                <button type=\"submit\" ng-disabled=\"editForm.$invalid || assetEditVm.isSaving\" class=\"btn btn-primary\">\n                    <span class=\"glyphicon glyphicon-save\"></span>&nbsp;<span>Save</span>\n                </button>\n            </div>\n        </div>\n    </form>\n</div>\n");
-$templateCache.put("app/dashboard/assets/directives/asset-form.tpl.html","<div class=\"form-horizontal\">\n    <header>\n        {{$root.getWord(\'Asset Details\')}}\n    </header>\n<input type=\"hidden\" name=\"assetParent[{{currentStep}}]\" value=\"{{parentStep}}\" />\n    <fieldset>\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <label class=\"control-label\">{{$root.getWord(\'Type\')}}</label>\n                <div class=\"col-md-12\">\n                    <select class=\"form-control\" ng-model=\"asset.assetType\" ng-disabled=\"disableForm\" ng-change=\"toggleAssetForm()\">\n                        <option value=\"ASSET_GROUP\">{{$root.getWord(\'Asset Group\')}}</option>\n                        <option value=\"ASSET\">{{$root.getWord(\'Asset\')}}</option>\n                        <option value=\"SUB_ASSET\">{{$root.getWord(\'Sub Asset\')}}</option>\n                    </select>\n                </div>\n            </div>\n        </div>\n    </fieldset>\n    <br>\n    <fieldset ng-show=\"hasSubTree\">\n        <div class=\"row\">\n            <div class=\"col-md-6 \">\n                <label class=\"control-label\">{{$root.getWord(\'Asset Group Name\')}}</label>\n                <div class=\"col-md-12\">\n                    <input type=\"text\" class=\"form-control\" ng-model=\"asset.name\" ng-disabled=\"disableForm\">\n                </div>\n            </div>\n\n\n            <div class=\"col-md-6\">\n                <label class=\"control-label\">{{$root.getWord(\'Asset Code\')}}</label>\n                <div class=\"col-md-12\">\n                    <input type=\"text\" class=\"form-control\" ng-model=\"asset.code\" ng-disabled=\"disableForm\">\n                </div>\n            </div>\n        </div>\n    </fieldset>\n    <fieldset ng-hide=\"hasSubTree\">\n        <div class=\"row\">\n            <div class=\"col-md-6 \">\n                <label class=\"control-label\">{{$root.getWord(\'Asset Name\')}}</label>\n                <div class=\"col-md-12\">\n                    <input type=\"text\" class=\"form-control\" ng-model=\"asset.name\" ng-disabled=\"disableForm\">\n                </div>\n            </div>\n\n            <div class=\"col-md-6 \">\n                <label class=\"control-label\">{{$root.getWord(\'Asset Code\')}}</label>\n                <div class=\"col-md-12\">\n                    <input type=\"text\" class=\"form-control\" ng-model=\"asset.code\" ng-disabled=\"disableForm\">\n                </div>\n            </div>\n        </div>\n\n        <div class=\"row\">\n\n            <div class=\"col-md-6 \">\n                <label class=\"control-label\">{{$root.getWord(\'Asset Type\')}}</label>\n                <div class=\"col-md-12\">\n                    <select class=\"form-control\" ng-model=\"asset.typeVal\" ng-disabled=\"disableForm\">\n                        <option value=\"0\">{{$root.getWord(\'Pump\')}}</option>\n                        <option value=\"1\">{{$root.getWord(\'Electromotor\')}}</option>\n                    </select> <i></i>\n                </div>\n            </div>\n\n            <div class=\"col-md-6 \">\n                <label class=\"control-label\">{{$root.getWord(\'Installation Location\')}}</label>\n                <div class=\"col-md-12\">\n                    <input type=\"text\" class=\"form-control\" ng-model=\"asset.location\" ng-disabled=\"disableForm\">\n                </div>\n            </div>\n        </div>\n\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <label class=\"control-label\">{{$root.getWord(\'Installation Map\')}}</label>\n\n                <div class=\"col-md-12\">\n                    <input type=\"file\" class=\"btn btn-default col-md-12 col-xs-12\"\n                           id=\"exampleInputFile2\" ng-disabled=\"disableForm\">\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <label class=\"control-label\">{{$root.getWord(\'Capacity\')}}</label>\n\n                <div class=\"col-md-12\">\n                    <span ng-if=\"disableForm\">\n                        <input class=\"form-control\" value=\"1\"\n                               min=\"1\" ng-model=\"asset.capacity\" ng-disabled=\"disableForm\">\n                    </span>\n                    <span ng-if=\"!disableForm\">\n                        <input class=\"form-control\" name=\"spinner\" value=\"1\"\n                               min=\"1\" ng-model=\"asset.capacity\">\n                    </span>\n\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <div class=\"col-md-6 \">\n                <label class=\"control-label\">{{$root.getWord(\'Manufacture\')}}</label>\n                <div class=\"col-md-12\">\n                    <input class=\"form-control\" placeholder=\"{{$root.getWord(\'Type something\')}}...\" type=\"text\"\n                           list=\"list\" ng-model=\"asset.manufacture\" ng-disabled=\"disableForm\">\n                    <datalist id=\"list\">\n                        <option value=\"Alexandra\">Alexandra</option>\n                        <option value=\"Alice\">Alice</option>\n                        <option value=\"Anastasia\">Anastasia</option>\n                        <option value=\"Avelina\">Avelina</option>\n                        <option value=\"Basilia\">Basilia</option>\n                        <option value=\"Beatrice\">Beatrice</option>\n                        <option value=\"Cassandra\">Cassandra</option>\n                        <option value=\"Cecil\">Cecil</option>\n                        <option value=\"Clemencia\">Clemencia</option>\n                        <option value=\"Desiderata\">Desiderata</option>\n                        <option value=\"Dionisia\">Dionisia</option>\n                        <option value=\"Edith\">Edith</option>\n                        <option value=\"Eleanora\">Eleanora</option>\n                        <option value=\"Elizabeth\">Elizabeth</option>\n                        <option value=\"Emma\">Emma</option>\n                        <option value=\"Felicia\">Felicia</option>\n                        <option value=\"Florence\">Florence</option>\n                        <option value=\"Galiana\">Galiana</option>\n                        <option value=\"Grecia\">Grecia</option>\n                        <option value=\"Helen\">Helen</option>\n                        <option value=\"Helewisa\">Helewisa</option>\n                        <option value=\"Idonea\">Idonea</option>\n                        <option value=\"Isabel\">Isabel</option>\n                        <option value=\"Joan\">Joan</option>\n                        <option value=\"Juliana\">Juliana</option>\n                        <option value=\"Karla\">Karla</option>\n                        <option value=\"Karyn\">Karyn</option>\n                        <option value=\"Kate\">Kate</option>\n                        <option value=\"Lakisha\">Lakisha</option>\n                        <option value=\"Lana\">Lana</option>\n                        <option value=\"Laura\">Laura</option>\n                        <option value=\"Leona\">Leona</option>\n                        <option value=\"Mandy\">Mandy</option>\n                        <option value=\"Margaret\">Margaret</option>\n                        <option value=\"Maria\">Maria</option>\n                        <option value=\"Nanacy\">Nanacy</option>\n                        <option value=\"Nicole\">Nicole</option>\n                        <option value=\"Olga\">Olga</option>\n                        <option value=\"Pamela\">Pamela</option>\n                        <option value=\"Patricia\">Patricia</option>\n                        <option value=\"Qiana\">Qiana</option>\n                        <option value=\"Rachel\">Rachel</option>\n                        <option value=\"Ramona\">Ramona</option>\n                        <option value=\"Samantha\">Samantha</option>\n                        <option value=\"Sandra\">Sandra</option>\n                        <option value=\"Tanya\">Tanya</option>\n                        <option value=\"Teresa\">Teresa</option>\n                        <option value=\"Ursula\">Ursula</option>\n                        <option value=\"Valerie\">Valerie</option>\n                        <option value=\"Veronica\">Veronica</option>\n                        <option value=\"Wilma\">Wilma</option>\n                        <option value=\"Yasmin\">Yasmin</option>\n                        <option value=\"Zelma\">Zelma</option>\n                    </datalist>\n                </div>\n\n            </div>\n\n            <div class=\"col-md-6 \">\n                <label class=\"control-label\">{{$root.getWord(\'Manufacture Year\')}}</label>\n                <div class=\"col-md-12\">\n                    <select class=\"form-control\" ng-model=\"asset.year\" ng-disabled=\"disableForm\">\n                        <option>1980</option>\n                        <option>1981</option>\n                        <option>1982</option>\n                        <option>1983</option>\n                        <option>1984</option>\n                        <option>1985</option>\n                        <option>1986</option>\n                        <option>1987</option>\n                        <option>1988</option>\n                        <option>1989</option>\n                        <option>1990</option>\n                        <option>1991</option>\n                        <option>1992</option>\n                        <option>1993</option>\n                        <option>1994</option>\n                        <option>1995</option>\n                        <option>1996</option>\n                        <option>1997</option>\n                        <option>1998</option>\n                        <option>1999</option>\n                        <option>2000</option>\n                        <option>200</option>\n                        <option>2001</option>\n                        <option>2002</option>\n                        <option>2003</option>\n                        <option>2004</option>\n                        <option>2005</option>\n                        <option>2006</option>\n                        <option>2007</option>\n                        <option>2008</option>\n                        <option>2009</option>\n                        <option>2010</option>\n                        <option>2011</option>\n                        <option>2012</option>\n                        <option>2013</option>\n                        <option>2014</option>\n                        <option>2015</option>\n                        <option>2016</option>\n                    </select> <i></i>\n                </div>\n            </div>\n        </div>\n    </fieldset>\n    <br>\n    <fieldset ng-hide=\"hasSubTree\">\n        <div class=\"row\">\n\n            <div class=\"col-md-12\">\n                <label class=\"control-label\">{{$root.getWord(\'Attachments\')}}</label>\n\n                <div class=\"col-md-12\">\n                    <input type=\"file\" class=\"btn btn-default col-md-12 col-xs-12\"\n                           id=\"exampleInputFile3\" ng-disabled=\"disableForm\">\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <label class=\"control-label\">{{$root.getWord(\'Details\')}}</label>\n\n                <div class=\"col-md-12 textarea textarea-expandable \">\n                    <textarea rows=\"3\" class=\"custom-scroll form-control\" ng-disabled=\"disableForm\">{{assetList.details}}</textarea>\n                </div>\n            </div>\n        </div>\n    </fieldset>\n    <br>\n    <fieldset ng-show=\"state == \'A\'\">\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <label class=\"col-md-2\">{{$root.getWord(\'Next Step Configuration\')}}</label>\n\n                    <div class=\"col-md-10\">\n                        <div class=\"checkbox\">\n                            <label>\n                                <input type=\"checkbox\" class=\"checkbox style-0\" name=\"hasNextStep\" ng-model=\"hasNextStep\" value=\"1\">\n                                <span>{{$root.getWord(\'Has Next Step\')}}</span>\n                            </label>\n                        </div>\n                    </div>\n            </div>\n        </div>\n    </fieldset>\n</div>\n");
-$templateCache.put("app/dashboard/assets/directives/asset-import-wizard-form.tpl.html","<div>\n    <div class=\"widget-body fuelux asset-import-wizard\" data-smart-fuelux-wizard\n         data-smart-wizard-callback=\"wizard2CompleteCallback\">\n        <form name=\"assetImportForm\" class=\"asset-import-form\" role=\"form\" novalidate show-validation ng-submit=\"assetVm.importAssets()\">\n\n            <div class=\"wizard\">\n                <ul class=\"steps\">\n                    <li data-step=\"1\" class=\"active\">\n                        <span class=\"badge badge-info\">1</span><span class=\"chevron\"></span>\n                    </li>\n                </ul>\n                <div class=\"actions\">\n                    <button type=\"button\" class=\"btn btn-sm btn-primary btn-prev\">\n                        <i class=\"fa fa-arrow-left\"></i>قبلی\n                    </button>\n                    <button type=\"button\" class=\"btn btn-sm btn-success btn-next\" data-last=\"ذخیره\">بعدی<i\n                        class=\"fa fa-arrow-right\"></i>\n                    </button>\n                </div>\n            </div>\n            <div class=\"step-content\">\n                <div smart-include=\"app/dashboard/assets/directives/assetTreeModalContent.tpl.html\"></div>\n            </div>\n        </form>\n    </div>\n    <div>&nbsp;</div>\n</div>\n");
-$templateCache.put("app/dashboard/assets/directives/asset-import-wizard.tpl.html","<div>\n    <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\"\n                ng-click=\"assetVm.clear()\">&times;</button>\n        <h4 class=\"modal-title\" id=\"myAssetLabel\" >Import Assets</h4>\n    </div>\n    <div class=\"padding-10\">\n        <assets-import-wizard-form></assets-import-wizard-form>\n    </div>\n</div>\n");
+$templateCache.put("app/dashboard/assets/directives/asset-form.tpl.html","<div class=\"form-horizontal\">\n    <header>\n        {{$root.getWord(\'Asset Details\')}}\n    </header>\n<input type=\"hidden\" name=\"assetParent[{{currentStep}}]\" value=\"{{parentStep}}\" />\n    <fieldset>\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <label class=\"control-label\">{{$root.getWord(\'Type\')}}</label>\n                <div class=\"col-md-12\">\n                    <select class=\"form-control\" ng-model=\"asset.assetType\" ng-disabled=\"disableForm\" ng-change=\"toggleAssetForm()\">\n                        <option value=\"ASSET_GROUP\">{{$root.getWord(\'Asset Group\')}}</option>\n                        <option value=\"ASSET\">{{$root.getWord(\'Asset\')}}</option>\n                        <option value=\"SUB_ASSET\">{{$root.getWord(\'Sub Asset\')}}</option>\n                    </select>\n                </div>\n            </div>\n        </div>\n    </fieldset>\n    <br>\n    <fieldset ng-show=\"hasSubTree\">\n        <div class=\"row\">\n            <div class=\"col-md-6 \">\n                <label class=\"control-label\">{{$root.getWord(\'Asset Group Name\')}}</label>\n                <div class=\"col-md-12\">\n                    <input type=\"text\" class=\"form-control\" ng-model=\"asset.name\" ng-disabled=\"disableForm\">\n                </div>\n            </div>\n\n\n            <div class=\"col-md-6\">\n                <label class=\"control-label\">{{$root.getWord(\'Asset Code\')}}</label>\n                <div class=\"col-md-12\">\n                    <input type=\"text\" class=\"form-control\" ng-model=\"asset.code\" ng-disabled=\"disableForm\">\n                </div>\n            </div>\n        </div>\n    </fieldset>\n    <fieldset ng-hide=\"hasSubTree\">\n        <div class=\"row\">\n            <div class=\"col-md-6 \">\n                <label class=\"control-label\">{{$root.getWord(\'Asset Name\')}}</label>\n                <div class=\"col-md-12\">\n                    <input type=\"text\" class=\"form-control\" ng-model=\"asset.name\" ng-disabled=\"disableForm\">\n                </div>\n            </div>\n\n            <div class=\"col-md-6 \">\n                <label class=\"control-label\">{{$root.getWord(\'Asset Code\')}}</label>\n                <div class=\"col-md-12\">\n                    <input type=\"text\" class=\"form-control\" ng-model=\"asset.code\" ng-disabled=\"disableForm\">\n                </div>\n            </div>\n        </div>\n\n        <div class=\"row\">\n\n            <div class=\"col-md-6 \">\n                <label class=\"control-label\">{{$root.getWord(\'Asset Type\')}}</label>\n                <div class=\"col-md-12\">\n                    <select class=\"form-control\" ng-model=\"asset.typeVal\" ng-disabled=\"disableForm\">\n                        <option value=\"0\">{{$root.getWord(\'Pump\')}}</option>\n                        <option value=\"1\">{{$root.getWord(\'Electromotor\')}}</option>\n                    </select> <i></i>\n                </div>\n            </div>\n\n            <div class=\"col-md-6 \">\n                <label class=\"control-label\">{{$root.getWord(\'Installation Location\')}}</label>\n                <div class=\"col-md-12\">\n                    <input type=\"text\" class=\"form-control\" ng-model=\"asset.location\" ng-disabled=\"disableForm\">\n                </div>\n            </div>\n        </div>\n\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <label class=\"control-label\">{{$root.getWord(\'Installation Map\')}}</label>\n\n                <div class=\"col-md-12\">\n                    <input type=\"file\" class=\"btn btn-default col-md-12 col-xs-12\"\n                           id=\"exampleInputFile2\" ng-disabled=\"disableForm\">\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <label class=\"control-label\">{{$root.getWord(\'Capacity\')}}</label>\n\n                <div class=\"col-md-12\">\n                    <span ng-if=\"disableForm\">\n                        <input class=\"form-control\" value=\"1\"\n                               min=\"1\" ng-model=\"asset.capacity\" ng-disabled=\"disableForm\">\n                    </span>\n                    <span ng-if=\"!disableForm\">\n                        <input class=\"form-control\" name=\"spinner\" value=\"1\"\n                               min=\"1\" ng-model=\"asset.capacity\">\n                    </span>\n\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <div class=\"col-md-6 \">\n                <label class=\"control-label\">{{$root.getWord(\'Manufacture\')}}</label>\n                <div class=\"col-md-12\">\n                    <input class=\"form-control\" placeholder=\"{{$root.getWord(\'Type something\')}}...\" type=\"text\"\n                           list=\"list\" ng-model=\"asset.manufacture\" ng-disabled=\"disableForm\">\n                    <datalist id=\"list\">\n                        <option value=\"Alexandra\">Alexandra</option>\n                        <option value=\"Alice\">Alice</option>\n                        <option value=\"Anastasia\">Anastasia</option>\n                        <option value=\"Avelina\">Avelina</option>\n                        <option value=\"Basilia\">Basilia</option>\n                        <option value=\"Beatrice\">Beatrice</option>\n                        <option value=\"Cassandra\">Cassandra</option>\n                        <option value=\"Cecil\">Cecil</option>\n                        <option value=\"Clemencia\">Clemencia</option>\n                        <option value=\"Desiderata\">Desiderata</option>\n                        <option value=\"Dionisia\">Dionisia</option>\n                        <option value=\"Edith\">Edith</option>\n                        <option value=\"Eleanora\">Eleanora</option>\n                        <option value=\"Elizabeth\">Elizabeth</option>\n                        <option value=\"Emma\">Emma</option>\n                        <option value=\"Felicia\">Felicia</option>\n                        <option value=\"Florence\">Florence</option>\n                        <option value=\"Galiana\">Galiana</option>\n                        <option value=\"Grecia\">Grecia</option>\n                        <option value=\"Helen\">Helen</option>\n                        <option value=\"Helewisa\">Helewisa</option>\n                        <option value=\"Idonea\">Idonea</option>\n                        <option value=\"Isabel\">Isabel</option>\n                        <option value=\"Joan\">Joan</option>\n                        <option value=\"Juliana\">Juliana</option>\n                        <option value=\"Karla\">Karla</option>\n                        <option value=\"Karyn\">Karyn</option>\n                        <option value=\"Kate\">Kate</option>\n                        <option value=\"Lakisha\">Lakisha</option>\n                        <option value=\"Lana\">Lana</option>\n                        <option value=\"Laura\">Laura</option>\n                        <option value=\"Leona\">Leona</option>\n                        <option value=\"Mandy\">Mandy</option>\n                        <option value=\"Margaret\">Margaret</option>\n                        <option value=\"Maria\">Maria</option>\n                        <option value=\"Nanacy\">Nanacy</option>\n                        <option value=\"Nicole\">Nicole</option>\n                        <option value=\"Olga\">Olga</option>\n                        <option value=\"Pamela\">Pamela</option>\n                        <option value=\"Patricia\">Patricia</option>\n                        <option value=\"Qiana\">Qiana</option>\n                        <option value=\"Rachel\">Rachel</option>\n                        <option value=\"Ramona\">Ramona</option>\n                        <option value=\"Samantha\">Samantha</option>\n                        <option value=\"Sandra\">Sandra</option>\n                        <option value=\"Tanya\">Tanya</option>\n                        <option value=\"Teresa\">Teresa</option>\n                        <option value=\"Ursula\">Ursula</option>\n                        <option value=\"Valerie\">Valerie</option>\n                        <option value=\"Veronica\">Veronica</option>\n                        <option value=\"Wilma\">Wilma</option>\n                        <option value=\"Yasmin\">Yasmin</option>\n                        <option value=\"Zelma\">Zelma</option>\n                    </datalist>\n                </div>\n\n            </div>\n\n            <div class=\"col-md-6 \">\n                <label class=\"control-label\">{{$root.getWord(\'Manufacture Year\')}}</label>\n                <div class=\"col-md-12\">\n                    <select class=\"form-control\" ng-model=\"asset.year\" ng-disabled=\"disableForm\">\n                        <option>1980</option>\n                        <option>1981</option>\n                        <option>1982</option>\n                        <option>1983</option>\n                        <option>1984</option>\n                        <option>1985</option>\n                        <option>1986</option>\n                        <option>1987</option>\n                        <option>1988</option>\n                        <option>1989</option>\n                        <option>1990</option>\n                        <option>1991</option>\n                        <option>1992</option>\n                        <option>1993</option>\n                        <option>1994</option>\n                        <option>1995</option>\n                        <option>1996</option>\n                        <option>1997</option>\n                        <option>1998</option>\n                        <option>1999</option>\n                        <option>2000</option>\n                        <option>200</option>\n                        <option>2001</option>\n                        <option>2002</option>\n                        <option>2003</option>\n                        <option>2004</option>\n                        <option>2005</option>\n                        <option>2006</option>\n                        <option>2007</option>\n                        <option>2008</option>\n                        <option>2009</option>\n                        <option>2010</option>\n                        <option>2011</option>\n                        <option>2012</option>\n                        <option>2013</option>\n                        <option>2014</option>\n                        <option>2015</option>\n                        <option>2016</option>\n                    </select> <i></i>\n                </div>\n            </div>\n        </div>\n    </fieldset>\n    <br>\n    <fieldset ng-hide=\"hasSubTree\">\n        <div class=\"row\">\n\n            <div class=\"col-md-12\">\n                <label class=\"control-label\">{{$root.getWord(\'Attachments\')}}</label>\n\n                <div class=\"col-md-12\">\n                    <input type=\"file\" class=\"btn btn-default col-md-12 col-xs-12\"\n                           id=\"exampleInputFile3\" ng-disabled=\"disableForm\">\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <label class=\"control-label\">{{$root.getWord(\'Details\')}}</label>\n\n                <div class=\"col-md-12 textarea textarea-expandable \">\n                    <textarea rows=\"3\" ng-model=\"asset.details\" class=\"custom-scroll form-control\" ng-disabled=\"disableForm\">{{assetList.details}}</textarea>\n                </div>\n            </div>\n        </div>\n    </fieldset>\n    <br>\n    <fieldset ng-show=\"state == \'A\'\">\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <label class=\"col-md-2\">{{$root.getWord(\'Next Step Configuration\')}}</label>\n\n                    <div class=\"col-md-10\">\n                        <div class=\"checkbox\">\n                            <label>\n                                <input type=\"checkbox\" class=\"checkbox style-0\" name=\"hasNextStep\" ng-model=\"hasNextStep\" value=\"1\">\n                                <span>{{$root.getWord(\'Has Next Step\')}}</span>\n                            </label>\n                        </div>\n                    </div>\n            </div>\n        </div>\n    </fieldset>\n</div>\n");
+$templateCache.put("app/dashboard/assets/directives/asset-import-wizard-form.tpl.html","<div>\n    <div class=\"widget-body fuelux asset-import-wizard\" data-smart-fuelux-wizard\n         data-smart-wizard-callback=\"wizard2CompleteCallback\">\n\n            <div class=\"wizard\">\n                <ul class=\"steps\">\n                    <li data-step=\"1\" class=\"active\">\n                        <span class=\"badge badge-info\">1</span><span class=\"chevron\"></span>\n                    </li>\n                </ul>\n                <div class=\"actions\">\n                    <button type=\"button\" class=\"btn btn-sm btn-primary btn-prev\">\n                        <i class=\"fa fa-arrow-left\"></i>قبلی\n                    </button>\n                    <button type=\"button\" class=\"btn btn-sm btn-success btn-next\" data-last=\"ذخیره\">بعدی<i\n                        class=\"fa fa-arrow-right\"></i>\n                    </button>\n                </div>\n            </div>\n            <div class=\"step-content\">\n                <div smart-include=\"app/dashboard/assets/directives/assetTreeModalContent.tpl.html\"></div>\n            </div>\n\n    </div>\n    <div>&nbsp;</div>\n</div>\n");
+$templateCache.put("app/dashboard/assets/directives/asset-import-wizard.tpl.html","<div>\n    <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\"\n                ng-click=\"assetVm.clear()\">&times;</button>\n        <h4 class=\"modal-title\" id=\"myAssetLabel\" >Import Assets</h4>\n    </div>\n    <div class=\"padding-10\">\n        <assets-import-wizard-form on-submit=\"assetVm.submitWizard(data)\"></assets-import-wizard-form>\n    </div>\n</div>\n");
 $templateCache.put("app/dashboard/assets/directives/asset-move-form.tpl.html","<div>\n    <form name=\"assetMoveForm\" class=\"asset-move-form form-group\" role=\"form\" novalidate show-validation\n          ng-submit=\"assetMoveVm.save()\">\n\n        <div class=\"modal-header\">\n            <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\"\n                    ng-click=\"assetMoveVm.clear()\">&times;</button>\n            <h4 class=\"modal-title\" id=\"myAssetLabel\">Move a Asset</h4>\n        </div>\n        <div class=\"modal-body\">\n            <div class=\"step-content\">\n                <input type=\"hidden\" ng-model=\"assetMoveVm.asset.id\" name=\"id\" />\n                <input type=\"hidden\" ng-model=\"assetMoveVm.asset.parentId\" name=\"parentId\" />\n                <assets-tree-grid-checkbox\n                    selected-tree-node=\"duplicatedAsset\"\n                    on-select=\"assetMoveVm.selectedParentTree(branch)\">\n                </assets-tree-grid-checkbox>\n            </div>\n            <div class=\"modal-footer\">\n                <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" ng-click=\"assetMoveVm.clear()\">\n                    <span class=\"glyphicon glyphicon-ban-circle\"></span>&nbsp;<span>Cancel</span>\n                </button>\n                <button type=\"submit\" ng-disabled=\"moveForm.$invalid || assetMoveVm.isSaving\" class=\"btn btn-primary\">\n                    <span class=\"glyphicon glyphicon-save\"></span>&nbsp;<span>Save</span>\n                </button>\n            </div>\n        </div>\n    </form>\n</div>\n");
 $templateCache.put("app/dashboard/assets/directives/assetTreeModalContent.tpl.html","<div class=\"step-pane active\" data-step=\"1\">\n                                <span class=\"smart-form\">\n                                <header>\n                                    {{$root.getWord(\'Chose a parent\')}}\n                                </header>\n                                </span>\n    <br>\n    <!-- wizard form starts here -->\n    <form class=\"form-horizontal\">\n        <fieldset>\n\n            <div class=\"form-group\">\n\n                <div class=\"col-md-12\">\n                    <div class=\"row\">\n                        <assets-tree-grid-checkbox\n                                selected-tree-node=\"duplicatedAsset\"\n                                on-select=\"selectedParentTree(branch)\">\n                        </assets-tree-grid-checkbox>\n                    </div>\n                </div>\n            </div>\n\n        </fieldset>\n    </form>\n\n</div>");
 $templateCache.put("app/dashboard/assets/directives/assets-tree-grid-checkbox.tpl.html","<div>\n    <div class=\"col-sm-12 col-md-12 col-lg-12\">\n        <tree-grid\n                icon-leaf=\"fa fa-gear\"\n                tree-control=\"assets_tree_check\"\n                tree-data=\"tree_data_check\"\n                expand-level=\"2\"\n                col-defs=\"col_defs_check\"\n                on-click=\"assetsTreeCheckboxClick(branch)\"\n                template-url=\"app/dashboard/assets/tree-grid-checkbox.tpl.html\"\n                expand-on=\"expanding_property_check\"></tree-grid>\n    </div>\n</div>");
@@ -3441,7 +3434,7 @@ $templateCache.put("app/_common/layout/directives/demo/demo-states.tpl.html","<d
             url: '/user-management',
             data: {
                 authorities: ['ROLE_ADMIN'],
-                title: 'userManagement.home.title'
+                pageTitle: 'userManagement.home.title'
             },
             views: {
                 'content@app': {
@@ -5160,6 +5153,15 @@ angular.module('app').controller('TodoCtrl', function ($scope, $timeout, Todo) {
         vm.asset = entity;
         vm.clear = clear;
         vm.save = save;
+        vm.assetspecificationtypefields = AssetSpecificationTypeField.query({filter: 'assetspecificationtypefield-is-null'});
+        $q.all([vm.asset.$promise, vm.assetspecificationtypefields.$promise]).then(function() {
+            if (!vm.asset.assetSpecificationTypeFieldId) {
+                return $q.reject();
+            }
+            return AssetSpecificationTypeField.get({id : vm.asset.assetSpecificationTypeFieldId}).$promise;
+        }).then(function(assetSpecificationTypeField) {
+            vm.assetspecificationtypefields.push(assetSpecificationTypeField);
+        });
         vm.workorders = WorkOrder.query();
 
         $timeout(function (){
@@ -5249,7 +5251,7 @@ angular.module('app').controller('TodoCtrl', function ($scope, $timeout, Todo) {
     }
 
     function AssetImport ($resource) {
-        var resourceUrl =  'api/allAssets';
+        var resourceUrl =  '/api/assets/all';
 
         return $resource(resourceUrl, {}, {
             'save': {method: 'POST'}
@@ -5257,183 +5259,1143 @@ angular.module('app').controller('TodoCtrl', function ($scope, $timeout, Todo) {
     }
 })();
 
-// (function() {
-//     'use strict';
-//
-//     angular
-//         .module('app')
-//         .config(stateConfig);
-//
-//     stateConfig.$inject = ['$stateProvider'];
-//
-//     function stateConfig($stateProvider) {
-//         $stateProvider
-//         .state('asset', {
-//             parent: 'entity',
-//             url: '/asset',
-//             data: {
-//                 authorities: ['ROLE_USER'],
-//                 title: 'app.asset.home.title'
-//             },
-//             views: {
-//                 'content@app': {
-//                     templateUrl: 'app/entities/asset/assets.html',
-//                     controller: 'AssetController',
-//                     controllerAs: 'vm'
-//                 }
-//             },
-//             resolve: {
-//                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
-//                     $translatePartialLoader.addPart('asset');
-//                     $translatePartialLoader.addPart('assetType');
-//                     $translatePartialLoader.addPart('global');
-//                     return $translate.refresh();
-//                 }]
-//             }
-//         })
-//         .state('asset-detail', {
-//             parent: 'entity',
-//             url: '/asset/{id}',
-//             data: {
-//                 authorities: ['ROLE_USER'],
-//                 title: 'app.asset.detail.title'
-//             },
-//             views: {
-//                 'content@app': {
-//                     templateUrl: 'app/entities/asset/asset-detail.html',
-//                     controller: 'AssetDetailController',
-//                     controllerAs: 'vm'
-//                 }
-//             },
-//             resolve: {
-//                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
-//                     $translatePartialLoader.addPart('asset');
-//                     $translatePartialLoader.addPart('assetType');
-//                     return $translate.refresh();
-//                 }],
-//                 entity: ['$stateParams', 'Asset', function($stateParams, Asset) {
-//                     return Asset.get({id : $stateParams.id}).$promise;
-//                 }],
-//                 previousState: ["$state", function ($state) {
-//                     var currentStateData = {
-//                         name: $state.current.name || 'asset',
-//                         params: $state.params,
-//                         url: $state.href($state.current.name, $state.params)
-//                     };
-//                     return currentStateData;
-//                 }]
-//             }
-//         })
-//         .state('asset-detail.edit', {
-//             parent: 'asset-detail',
-//             url: '/detail/edit',
-//             data: {
-//                 authorities: ['ROLE_USER']
-//             },
-//             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
-//                 $uibModal.open({
-//                     templateUrl: 'app/entities/asset/asset-dialog.html',
-//                     controller: 'AssetDialogController',
-//                     controllerAs: 'vm',
-//                     backdrop: 'static',
-//                     size: 'lg',
-//                     resolve: {
-//                         entity: ['Asset', function(Asset) {
-//                             return Asset.get({id : $stateParams.id}).$promise;
-//                         }]
-//                     }
-//                 }).result.then(function() {
-//                     $state.go('^', {}, { reload: false });
-//                 }, function() {
-//                     $state.go('^');
-//                 });
-//             }]
-//         })
-//         .state('asset.new', {
-//             parent: 'asset',
-//             url: '/new',
-//             data: {
-//                 authorities: ['ROLE_USER']
-//             },
-//             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
-//                 $uibModal.open({
-//                     templateUrl: 'app/entities/asset/asset-dialog.html',
-//                     controller: 'AssetDialogController',
-//                     controllerAs: 'vm',
-//                     backdrop: 'static',
-//                     size: 'lg',
-//                     resolve: {
-//                         entity: function () {
-//                             return {
-//                                 parentId: null,
-//                                 name: null,
-//                                 code: null,
-//                                 assetType: null,
-//                                 capacity: null,
-//                                 year: null,
-//                                 id: null
-//                             };
-//                         }
-//                     }
-//                 }).result.then(function() {
-//                     $state.go('asset', null, { reload: 'asset' });
-//                 }, function() {
-//                     $state.go('asset');
-//                 });
-//             }]
-//         })
-//         .state('asset.edit', {
-//             parent: 'asset',
-//             url: '/{id}/edit',
-//             data: {
-//                 authorities: ['ROLE_USER']
-//             },
-//             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
-//                 $uibModal.open({
-//                     templateUrl: 'app/entities/asset/asset-dialog.html',
-//                     controller: 'AssetDialogController',
-//                     controllerAs: 'vm',
-//                     backdrop: 'static',
-//                     size: 'lg',
-//                     resolve: {
-//                         entity: ['Asset', function(Asset) {
-//                             return Asset.get({id : $stateParams.id}).$promise;
-//                         }]
-//                     }
-//                 }).result.then(function() {
-//                     $state.go('asset', null, { reload: 'asset' });
-//                 }, function() {
-//                     $state.go('^');
-//                 });
-//             }]
-//         })
-//         .state('asset.delete', {
-//             parent: 'asset',
-//             url: '/{id}/delete',
-//             data: {
-//                 authorities: ['ROLE_USER']
-//             },
-//             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
-//                 $uibModal.open({
-//                     templateUrl: 'app/entities/asset/asset-delete-dialog.html',
-//                     controller: 'AssetDeleteController',
-//                     controllerAs: 'vm',
-//                     size: 'md',
-//                     resolve: {
-//                         entity: ['Asset', function(Asset) {
-//                             return Asset.get({id : $stateParams.id}).$promise;
-//                         }]
-//                     }
-//                 }).result.then(function() {
-//                     $state.go('asset', null, { reload: 'asset' });
-//                 }, function() {
-//                     $state.go('^');
-//                 });
-//             }]
-//         });
-//     }
-//
-// })();
+(function() {
+    'use strict';
+
+    angular
+        .module('app.entity')
+        .config(stateConfig);
+
+    stateConfig.$inject = ['$stateProvider'];
+
+    function stateConfig($stateProvider) {
+        $stateProvider.state('app.entity.assetsTable', {
+            url: '/asset',
+            data: {
+                authorities: ['ROLE_USER'],
+                pageTitle: 'app.asset.home.title'
+            },
+            views: {
+                'content@app': {
+                    templateUrl: 'app/entities/asset/assets.html',
+                    controller: 'AssetController',
+                    controllerAs: 'vm'
+                }
+            },
+            resolve: {
+            }
+        })
+        .state('asset-detail', {
+
+            url: '/asset/{id}',
+            data: {
+                authorities: ['ROLE_USER'],
+                title: 'app.asset.detail.title'
+            },
+            views: {
+                'content@app': {
+                    templateUrl: 'app/entities/asset/asset-detail.html',
+                    controller: 'AssetDetailController',
+                    controllerAs: 'vm'
+                }
+            },
+            resolve: {
+                entity: ['$stateParams', 'Asset', function($stateParams, Asset) {
+                    return Asset.get({id : $stateParams.id}).$promise;
+                }],
+                previousState: ["$state", function ($state) {
+                    var currentStateData = {
+                        name: $state.current.name || 'asset',
+                        params: $state.params,
+                        url: $state.href($state.current.name, $state.params)
+                    };
+                    return currentStateData;
+                }]
+            }
+        })
+        .state('asset-detail.edit', {
+            parent: 'asset-detail',
+            url: '/detail/edit',
+            data: {
+                authorities: ['ROLE_USER']
+            },
+            onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                $uibModal.open({
+                    templateUrl: 'app/entities/asset/asset-dialog.html',
+                    controller: 'AssetDialogController',
+                    controllerAs: 'vm',
+                    backdrop: 'static',
+                    size: 'lg',
+                    resolve: {
+                        entity: ['Asset', function(Asset) {
+                            return Asset.get({id : $stateParams.id}).$promise;
+                        }]
+                    }
+                }).result.then(function() {
+                    $state.go('^', {}, { reload: false });
+                }, function() {
+                    $state.go('^');
+                });
+            }]
+        })
+        .state('asset.new', {
+            parent: 'asset',
+            url: '/new',
+            data: {
+                authorities: ['ROLE_USER']
+            },
+            onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                $uibModal.open({
+                    templateUrl: 'app/entities/asset/asset-dialog.html',
+                    controller: 'AssetDialogController',
+                    controllerAs: 'vm',
+                    backdrop: 'static',
+                    size: 'lg',
+                    resolve: {
+                        entity: function () {
+                            return {
+                                parentId: null,
+                                name: null,
+                                code: null,
+                                assetType: null,
+                                capacity: null,
+                                year: null,
+                                id: null
+                            };
+                        }
+                    }
+                }).result.then(function() {
+                    $state.go('asset', null, { reload: 'asset' });
+                }, function() {
+                    $state.go('asset');
+                });
+            }]
+        })
+        .state('asset.edit', {
+            parent: 'asset',
+            url: '/{id}/edit',
+            data: {
+                authorities: ['ROLE_USER']
+            },
+            onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                $uibModal.open({
+                    templateUrl: 'app/entities/asset/asset-dialog.html',
+                    controller: 'AssetDialogController',
+                    controllerAs: 'vm',
+                    backdrop: 'static',
+                    size: 'lg',
+                    resolve: {
+                        entity: ['Asset', function(Asset) {
+                            return Asset.get({id : $stateParams.id}).$promise;
+                        }]
+                    }
+                }).result.then(function() {
+                    $state.go('asset', null, { reload: 'asset' });
+                }, function() {
+                    $state.go('^');
+                });
+            }]
+        })
+        .state('asset.delete', {
+            parent: 'asset',
+            url: '/{id}/delete',
+            data: {
+                authorities: ['ROLE_USER']
+            },
+            onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                $uibModal.open({
+                    templateUrl: 'app/entities/asset/asset-delete-dialog.html',
+                    controller: 'AssetDeleteController',
+                    controllerAs: 'vm',
+                    size: 'md',
+                    resolve: {
+                        entity: ['Asset', function(Asset) {
+                            return Asset.get({id : $stateParams.id}).$promise;
+                        }]
+                    }
+                }).result.then(function() {
+                    $state.go('asset', null, { reload: 'asset' });
+                }, function() {
+                    $state.go('^');
+                });
+            }]
+        });
+    }
+
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app')
+        .controller('AssetSpecificationTypeFieldDeleteController',AssetSpecificationTypeFieldDeleteController);
+
+    AssetSpecificationTypeFieldDeleteController.$inject = ['$uibModalInstance', 'entity', 'AssetSpecificationTypeField'];
+
+    function AssetSpecificationTypeFieldDeleteController($uibModalInstance, entity, AssetSpecificationTypeField) {
+        var vm = this;
+
+        vm.assetSpecificationTypeField = entity;
+        vm.clear = clear;
+        vm.confirmDelete = confirmDelete;
+
+        function clear () {
+            $uibModalInstance.dismiss('cancel');
+        }
+
+        function confirmDelete (id) {
+            AssetSpecificationTypeField.delete({id: id},
+                function () {
+                    $uibModalInstance.close(true);
+                });
+        }
+    }
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app')
+        .controller('AssetSpecificationTypeFieldDetailController', AssetSpecificationTypeFieldDetailController);
+
+    AssetSpecificationTypeFieldDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'AssetSpecificationTypeField', 'AssetSpecificationTypeValue', 'Asset'];
+
+    function AssetSpecificationTypeFieldDetailController($scope, $rootScope, $stateParams, previousState, entity, AssetSpecificationTypeField, AssetSpecificationTypeValue, Asset) {
+        var vm = this;
+
+        vm.assetSpecificationTypeField = entity;
+        vm.previousState = previousState.name;
+
+        var unsubscribe = $rootScope.$on('app:assetSpecificationTypeFieldUpdate', function(event, result) {
+            vm.assetSpecificationTypeField = result;
+        });
+        $scope.$on('$destroy', unsubscribe);
+    }
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app')
+        .controller('AssetSpecificationTypeFieldDialogController', AssetSpecificationTypeFieldDialogController);
+
+    AssetSpecificationTypeFieldDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'AssetSpecificationTypeField', 'AssetSpecificationTypeValue', 'Asset'];
+
+    function AssetSpecificationTypeFieldDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, AssetSpecificationTypeField, AssetSpecificationTypeValue, Asset) {
+        var vm = this;
+
+        vm.assetSpecificationTypeField = entity;
+        vm.clear = clear;
+        vm.save = save;
+        vm.assetspecificationtypevalues = AssetSpecificationTypeValue.query();
+        vm.assets = Asset.query();
+
+        $timeout(function (){
+            angular.element('.form-group:eq(1)>input').focus();
+        });
+
+        function clear () {
+            $uibModalInstance.dismiss('cancel');
+        }
+
+        function save () {
+            vm.isSaving = true;
+            if (vm.assetSpecificationTypeField.id !== null) {
+                AssetSpecificationTypeField.update(vm.assetSpecificationTypeField, onSaveSuccess, onSaveError);
+            } else {
+                AssetSpecificationTypeField.save(vm.assetSpecificationTypeField, onSaveSuccess, onSaveError);
+            }
+        }
+
+        function onSaveSuccess (result) {
+            $scope.$emit('app:assetSpecificationTypeFieldUpdate', result);
+            $uibModalInstance.close(result);
+            vm.isSaving = false;
+        }
+
+        function onSaveError () {
+            vm.isSaving = false;
+        }
+
+
+    }
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app')
+        .controller('AssetSpecificationTypeFieldController', AssetSpecificationTypeFieldController);
+
+    AssetSpecificationTypeFieldController.$inject = ['$scope', '$state', 'AssetSpecificationTypeField'];
+
+    function AssetSpecificationTypeFieldController ($scope, $state, AssetSpecificationTypeField) {
+        var vm = this;
+
+        vm.assetSpecificationTypeFields = [];
+
+        loadAll();
+
+        function loadAll() {
+            AssetSpecificationTypeField.query(function(result) {
+                vm.assetSpecificationTypeFields = result;
+                vm.searchQuery = null;
+            });
+        }
+    }
+})();
+
+(function() {
+    'use strict';
+    angular
+        .module('app')
+        .factory('AssetSpecificationTypeField', AssetSpecificationTypeField);
+
+    AssetSpecificationTypeField.$inject = ['$resource'];
+
+    function AssetSpecificationTypeField ($resource) {
+        var resourceUrl =  'api/asset-specification-type-fields/:id';
+
+        return $resource(resourceUrl, {}, {
+            'query': { method: 'GET', isArray: true},
+            'get': {
+                method: 'GET',
+                transformResponse: function (data) {
+                    if (data) {
+                        data = angular.fromJson(data);
+                    }
+                    return data;
+                }
+            },
+            'update': { method:'PUT' }
+        });
+    }
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app')
+        .config(stateConfig);
+
+    stateConfig.$inject = ['$stateProvider'];
+
+    function stateConfig($stateProvider) {
+        $stateProvider
+        .state('asset-specification-type-field', {
+            parent: 'entity',
+            url: '/asset-specification-type-field',
+            data: {
+                authorities: ['ROLE_USER'],
+                pageTitle: 'app.assetSpecificationTypeField.home.title'
+            },
+            views: {
+                'content@': {
+                    templateUrl: 'app/entities/asset-specification-type-field/asset-specification-type-fields.html',
+                    controller: 'AssetSpecificationTypeFieldController',
+                    controllerAs: 'vm'
+                }
+            },
+            resolve: {
+                translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                    $translatePartialLoader.addPart('assetSpecificationTypeField');
+                    $translatePartialLoader.addPart('assetSpecificationType');
+                    $translatePartialLoader.addPart('global');
+                    return $translate.refresh();
+                }]
+            }
+        })
+        .state('asset-specification-type-field-detail', {
+            parent: 'entity',
+            url: '/asset-specification-type-field/{id}',
+            data: {
+                authorities: ['ROLE_USER'],
+                pageTitle: 'app.assetSpecificationTypeField.detail.title'
+            },
+            views: {
+                'content@': {
+                    templateUrl: 'app/entities/asset-specification-type-field/asset-specification-type-field-detail.html',
+                    controller: 'AssetSpecificationTypeFieldDetailController',
+                    controllerAs: 'vm'
+                }
+            },
+            resolve: {
+                translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                    $translatePartialLoader.addPart('assetSpecificationTypeField');
+                    $translatePartialLoader.addPart('assetSpecificationType');
+                    return $translate.refresh();
+                }],
+                entity: ['$stateParams', 'AssetSpecificationTypeField', function($stateParams, AssetSpecificationTypeField) {
+                    return AssetSpecificationTypeField.get({id : $stateParams.id}).$promise;
+                }],
+                previousState: ["$state", function ($state) {
+                    var currentStateData = {
+                        name: $state.current.name || 'asset-specification-type-field',
+                        params: $state.params,
+                        url: $state.href($state.current.name, $state.params)
+                    };
+                    return currentStateData;
+                }]
+            }
+        })
+        .state('asset-specification-type-field-detail.edit', {
+            parent: 'asset-specification-type-field-detail',
+            url: '/detail/edit',
+            data: {
+                authorities: ['ROLE_USER']
+            },
+            onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                $uibModal.open({
+                    templateUrl: 'app/entities/asset-specification-type-field/asset-specification-type-field-dialog.html',
+                    controller: 'AssetSpecificationTypeFieldDialogController',
+                    controllerAs: 'vm',
+                    backdrop: 'static',
+                    size: 'lg',
+                    resolve: {
+                        entity: ['AssetSpecificationTypeField', function(AssetSpecificationTypeField) {
+                            return AssetSpecificationTypeField.get({id : $stateParams.id}).$promise;
+                        }]
+                    }
+                }).result.then(function() {
+                    $state.go('^', {}, { reload: false });
+                }, function() {
+                    $state.go('^');
+                });
+            }]
+        })
+        .state('asset-specification-type-field.new', {
+            parent: 'asset-specification-type-field',
+            url: '/new',
+            data: {
+                authorities: ['ROLE_USER']
+            },
+            onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                $uibModal.open({
+                    templateUrl: 'app/entities/asset-specification-type-field/asset-specification-type-field-dialog.html',
+                    controller: 'AssetSpecificationTypeFieldDialogController',
+                    controllerAs: 'vm',
+                    backdrop: 'static',
+                    size: 'lg',
+                    resolve: {
+                        entity: function () {
+                            return {
+                                assetSpecificationType: null,
+                                fieldLable: null,
+                                fieldName: null,
+                                fieldType: null,
+                                id: null
+                            };
+                        }
+                    }
+                }).result.then(function() {
+                    $state.go('asset-specification-type-field', null, { reload: 'asset-specification-type-field' });
+                }, function() {
+                    $state.go('asset-specification-type-field');
+                });
+            }]
+        })
+        .state('asset-specification-type-field.edit', {
+            parent: 'asset-specification-type-field',
+            url: '/{id}/edit',
+            data: {
+                authorities: ['ROLE_USER']
+            },
+            onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                $uibModal.open({
+                    templateUrl: 'app/entities/asset-specification-type-field/asset-specification-type-field-dialog.html',
+                    controller: 'AssetSpecificationTypeFieldDialogController',
+                    controllerAs: 'vm',
+                    backdrop: 'static',
+                    size: 'lg',
+                    resolve: {
+                        entity: ['AssetSpecificationTypeField', function(AssetSpecificationTypeField) {
+                            return AssetSpecificationTypeField.get({id : $stateParams.id}).$promise;
+                        }]
+                    }
+                }).result.then(function() {
+                    $state.go('asset-specification-type-field', null, { reload: 'asset-specification-type-field' });
+                }, function() {
+                    $state.go('^');
+                });
+            }]
+        })
+        .state('asset-specification-type-field.delete', {
+            parent: 'asset-specification-type-field',
+            url: '/{id}/delete',
+            data: {
+                authorities: ['ROLE_USER']
+            },
+            onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                $uibModal.open({
+                    templateUrl: 'app/entities/asset-specification-type-field/asset-specification-type-field-delete-dialog.html',
+                    controller: 'AssetSpecificationTypeFieldDeleteController',
+                    controllerAs: 'vm',
+                    size: 'md',
+                    resolve: {
+                        entity: ['AssetSpecificationTypeField', function(AssetSpecificationTypeField) {
+                            return AssetSpecificationTypeField.get({id : $stateParams.id}).$promise;
+                        }]
+                    }
+                }).result.then(function() {
+                    $state.go('asset-specification-type-field', null, { reload: 'asset-specification-type-field' });
+                }, function() {
+                    $state.go('^');
+                });
+            }]
+        });
+    }
+
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app')
+        .controller('AssetSpecificationTypeValueDeleteController',AssetSpecificationTypeValueDeleteController);
+
+    AssetSpecificationTypeValueDeleteController.$inject = ['$uibModalInstance', 'entity', 'AssetSpecificationTypeValue'];
+
+    function AssetSpecificationTypeValueDeleteController($uibModalInstance, entity, AssetSpecificationTypeValue) {
+        var vm = this;
+
+        vm.assetSpecificationTypeValue = entity;
+        vm.clear = clear;
+        vm.confirmDelete = confirmDelete;
+
+        function clear () {
+            $uibModalInstance.dismiss('cancel');
+        }
+
+        function confirmDelete (id) {
+            AssetSpecificationTypeValue.delete({id: id},
+                function () {
+                    $uibModalInstance.close(true);
+                });
+        }
+    }
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app')
+        .controller('AssetSpecificationTypeValueDetailController', AssetSpecificationTypeValueDetailController);
+
+    AssetSpecificationTypeValueDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'AssetSpecificationTypeValue', 'AssetSpecificationTypeField'];
+
+    function AssetSpecificationTypeValueDetailController($scope, $rootScope, $stateParams, previousState, entity, AssetSpecificationTypeValue, AssetSpecificationTypeField) {
+        var vm = this;
+
+        vm.assetSpecificationTypeValue = entity;
+        vm.previousState = previousState.name;
+
+        var unsubscribe = $rootScope.$on('app:assetSpecificationTypeValueUpdate', function(event, result) {
+            vm.assetSpecificationTypeValue = result;
+        });
+        $scope.$on('$destroy', unsubscribe);
+    }
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app')
+        .controller('AssetSpecificationTypeValueDialogController', AssetSpecificationTypeValueDialogController);
+
+    AssetSpecificationTypeValueDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'AssetSpecificationTypeValue', 'AssetSpecificationTypeField'];
+
+    function AssetSpecificationTypeValueDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, AssetSpecificationTypeValue, AssetSpecificationTypeField) {
+        var vm = this;
+
+        vm.assetSpecificationTypeValue = entity;
+        vm.clear = clear;
+        vm.save = save;
+        vm.assetspecificationtypefields = AssetSpecificationTypeField.query();
+
+        $timeout(function (){
+            angular.element('.form-group:eq(1)>input').focus();
+        });
+
+        function clear () {
+            $uibModalInstance.dismiss('cancel');
+        }
+
+        function save () {
+            vm.isSaving = true;
+            if (vm.assetSpecificationTypeValue.id !== null) {
+                AssetSpecificationTypeValue.update(vm.assetSpecificationTypeValue, onSaveSuccess, onSaveError);
+            } else {
+                AssetSpecificationTypeValue.save(vm.assetSpecificationTypeValue, onSaveSuccess, onSaveError);
+            }
+        }
+
+        function onSaveSuccess (result) {
+            $scope.$emit('app:assetSpecificationTypeValueUpdate', result);
+            $uibModalInstance.close(result);
+            vm.isSaving = false;
+        }
+
+        function onSaveError () {
+            vm.isSaving = false;
+        }
+
+
+    }
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app')
+        .controller('AssetSpecificationTypeValueController', AssetSpecificationTypeValueController);
+
+    AssetSpecificationTypeValueController.$inject = ['$scope', '$state', 'AssetSpecificationTypeValue'];
+
+    function AssetSpecificationTypeValueController ($scope, $state, AssetSpecificationTypeValue) {
+        var vm = this;
+
+        vm.assetSpecificationTypeValues = [];
+
+        loadAll();
+
+        function loadAll() {
+            AssetSpecificationTypeValue.query(function(result) {
+                vm.assetSpecificationTypeValues = result;
+                vm.searchQuery = null;
+            });
+        }
+    }
+})();
+
+(function() {
+    'use strict';
+    angular
+        .module('app')
+        .factory('AssetSpecificationTypeValue', AssetSpecificationTypeValue);
+
+    AssetSpecificationTypeValue.$inject = ['$resource'];
+
+    function AssetSpecificationTypeValue ($resource) {
+        var resourceUrl =  'api/asset-specification-type-values/:id';
+
+        return $resource(resourceUrl, {}, {
+            'query': { method: 'GET', isArray: true},
+            'get': {
+                method: 'GET',
+                transformResponse: function (data) {
+                    if (data) {
+                        data = angular.fromJson(data);
+                    }
+                    return data;
+                }
+            },
+            'update': { method:'PUT' }
+        });
+    }
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app')
+        .config(stateConfig);
+
+    stateConfig.$inject = ['$stateProvider'];
+
+    function stateConfig($stateProvider) {
+        $stateProvider
+        .state('asset-specification-type-value', {
+            parent: 'entity',
+            url: '/asset-specification-type-value',
+            data: {
+                authorities: ['ROLE_USER'],
+                pageTitle: 'app.assetSpecificationTypeValue.home.title'
+            },
+            views: {
+                'content@': {
+                    templateUrl: 'app/entities/asset-specification-type-value/asset-specification-type-values.html',
+                    controller: 'AssetSpecificationTypeValueController',
+                    controllerAs: 'vm'
+                }
+            },
+            resolve: {
+                translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                    $translatePartialLoader.addPart('assetSpecificationTypeValue');
+                    $translatePartialLoader.addPart('global');
+                    return $translate.refresh();
+                }]
+            }
+        })
+        .state('asset-specification-type-value-detail', {
+            parent: 'entity',
+            url: '/asset-specification-type-value/{id}',
+            data: {
+                authorities: ['ROLE_USER'],
+                pageTitle: 'app.assetSpecificationTypeValue.detail.title'
+            },
+            views: {
+                'content@': {
+                    templateUrl: 'app/entities/asset-specification-type-value/asset-specification-type-value-detail.html',
+                    controller: 'AssetSpecificationTypeValueDetailController',
+                    controllerAs: 'vm'
+                }
+            },
+            resolve: {
+                translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                    $translatePartialLoader.addPart('assetSpecificationTypeValue');
+                    return $translate.refresh();
+                }],
+                entity: ['$stateParams', 'AssetSpecificationTypeValue', function($stateParams, AssetSpecificationTypeValue) {
+                    return AssetSpecificationTypeValue.get({id : $stateParams.id}).$promise;
+                }],
+                previousState: ["$state", function ($state) {
+                    var currentStateData = {
+                        name: $state.current.name || 'asset-specification-type-value',
+                        params: $state.params,
+                        url: $state.href($state.current.name, $state.params)
+                    };
+                    return currentStateData;
+                }]
+            }
+        })
+        .state('asset-specification-type-value-detail.edit', {
+            parent: 'asset-specification-type-value-detail',
+            url: '/detail/edit',
+            data: {
+                authorities: ['ROLE_USER']
+            },
+            onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                $uibModal.open({
+                    templateUrl: 'app/entities/asset-specification-type-value/asset-specification-type-value-dialog.html',
+                    controller: 'AssetSpecificationTypeValueDialogController',
+                    controllerAs: 'vm',
+                    backdrop: 'static',
+                    size: 'lg',
+                    resolve: {
+                        entity: ['AssetSpecificationTypeValue', function(AssetSpecificationTypeValue) {
+                            return AssetSpecificationTypeValue.get({id : $stateParams.id}).$promise;
+                        }]
+                    }
+                }).result.then(function() {
+                    $state.go('^', {}, { reload: false });
+                }, function() {
+                    $state.go('^');
+                });
+            }]
+        })
+        .state('asset-specification-type-value.new', {
+            parent: 'asset-specification-type-value',
+            url: '/new',
+            data: {
+                authorities: ['ROLE_USER']
+            },
+            onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                $uibModal.open({
+                    templateUrl: 'app/entities/asset-specification-type-value/asset-specification-type-value-dialog.html',
+                    controller: 'AssetSpecificationTypeValueDialogController',
+                    controllerAs: 'vm',
+                    backdrop: 'static',
+                    size: 'lg',
+                    resolve: {
+                        entity: function () {
+                            return {
+                                fieldValue: null,
+                                id: null
+                            };
+                        }
+                    }
+                }).result.then(function() {
+                    $state.go('asset-specification-type-value', null, { reload: 'asset-specification-type-value' });
+                }, function() {
+                    $state.go('asset-specification-type-value');
+                });
+            }]
+        })
+        .state('asset-specification-type-value.edit', {
+            parent: 'asset-specification-type-value',
+            url: '/{id}/edit',
+            data: {
+                authorities: ['ROLE_USER']
+            },
+            onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                $uibModal.open({
+                    templateUrl: 'app/entities/asset-specification-type-value/asset-specification-type-value-dialog.html',
+                    controller: 'AssetSpecificationTypeValueDialogController',
+                    controllerAs: 'vm',
+                    backdrop: 'static',
+                    size: 'lg',
+                    resolve: {
+                        entity: ['AssetSpecificationTypeValue', function(AssetSpecificationTypeValue) {
+                            return AssetSpecificationTypeValue.get({id : $stateParams.id}).$promise;
+                        }]
+                    }
+                }).result.then(function() {
+                    $state.go('asset-specification-type-value', null, { reload: 'asset-specification-type-value' });
+                }, function() {
+                    $state.go('^');
+                });
+            }]
+        })
+        .state('asset-specification-type-value.delete', {
+            parent: 'asset-specification-type-value',
+            url: '/{id}/delete',
+            data: {
+                authorities: ['ROLE_USER']
+            },
+            onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                $uibModal.open({
+                    templateUrl: 'app/entities/asset-specification-type-value/asset-specification-type-value-delete-dialog.html',
+                    controller: 'AssetSpecificationTypeValueDeleteController',
+                    controllerAs: 'vm',
+                    size: 'md',
+                    resolve: {
+                        entity: ['AssetSpecificationTypeValue', function(AssetSpecificationTypeValue) {
+                            return AssetSpecificationTypeValue.get({id : $stateParams.id}).$promise;
+                        }]
+                    }
+                }).result.then(function() {
+                    $state.go('asset-specification-type-value', null, { reload: 'asset-specification-type-value' });
+                }, function() {
+                    $state.go('^');
+                });
+            }]
+        });
+    }
+
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app')
+        .controller('UploadFileDeleteController',UploadFileDeleteController);
+
+    UploadFileDeleteController.$inject = ['$uibModalInstance', 'entity', 'UploadFile'];
+
+    function UploadFileDeleteController($uibModalInstance, entity, UploadFile) {
+        var vm = this;
+
+        vm.uploadFile = entity;
+        vm.clear = clear;
+        vm.confirmDelete = confirmDelete;
+
+        function clear () {
+            $uibModalInstance.dismiss('cancel');
+        }
+
+        function confirmDelete (id) {
+            UploadFile.delete({id: id},
+                function () {
+                    $uibModalInstance.close(true);
+                });
+        }
+    }
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app')
+        .controller('UploadFileDetailController', UploadFileDetailController);
+
+    UploadFileDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'UploadFile', 'Asset'];
+
+    function UploadFileDetailController($scope, $rootScope, $stateParams, previousState, entity, UploadFile, Asset) {
+        var vm = this;
+
+        vm.uploadFile = entity;
+        vm.previousState = previousState.name;
+
+        var unsubscribe = $rootScope.$on('app:uploadFileUpdate', function(event, result) {
+            vm.uploadFile = result;
+        });
+        $scope.$on('$destroy', unsubscribe);
+    }
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app')
+        .controller('UploadFileDialogController', UploadFileDialogController);
+
+    UploadFileDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'UploadFile', 'Asset'];
+
+    function UploadFileDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, UploadFile, Asset) {
+        var vm = this;
+
+        vm.uploadFile = entity;
+        vm.clear = clear;
+        vm.save = save;
+        vm.assets = Asset.query();
+
+        $timeout(function (){
+            angular.element('.form-group:eq(1)>input').focus();
+        });
+
+        function clear () {
+            $uibModalInstance.dismiss('cancel');
+        }
+
+        function save () {
+            vm.isSaving = true;
+            if (vm.uploadFile.id !== null) {
+                UploadFile.update(vm.uploadFile, onSaveSuccess, onSaveError);
+            } else {
+                UploadFile.save(vm.uploadFile, onSaveSuccess, onSaveError);
+            }
+        }
+
+        function onSaveSuccess (result) {
+            $scope.$emit('app:uploadFileUpdate', result);
+            $uibModalInstance.close(result);
+            vm.isSaving = false;
+        }
+
+        function onSaveError () {
+            vm.isSaving = false;
+        }
+
+
+    }
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app')
+        .controller('UploadFileController', UploadFileController);
+
+    UploadFileController.$inject = ['$scope', '$state', 'UploadFile'];
+
+    function UploadFileController ($scope, $state, UploadFile) {
+        var vm = this;
+
+        vm.uploadFiles = [];
+
+        loadAll();
+
+        function loadAll() {
+            UploadFile.query(function(result) {
+                vm.uploadFiles = result;
+                vm.searchQuery = null;
+            });
+        }
+    }
+})();
+
+(function() {
+    'use strict';
+    angular
+        .module('app')
+        .factory('UploadFile', UploadFile);
+
+    UploadFile.$inject = ['$resource'];
+
+    function UploadFile ($resource) {
+        var resourceUrl =  'api/upload-files/:id';
+
+        return $resource(resourceUrl, {}, {
+            'query': { method: 'GET', isArray: true},
+            'get': {
+                method: 'GET',
+                transformResponse: function (data) {
+                    if (data) {
+                        data = angular.fromJson(data);
+                    }
+                    return data;
+                }
+            },
+            'update': { method:'PUT' }
+        });
+    }
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app')
+        .config(stateConfig);
+
+    stateConfig.$inject = ['$stateProvider'];
+
+    function stateConfig($stateProvider) {
+        $stateProvider
+        .state('upload-file', {
+            parent: 'entity',
+            url: '/upload-file',
+            data: {
+                authorities: ['ROLE_USER'],
+                pageTitle: 'app.uploadFile.home.title'
+            },
+            views: {
+                'content@': {
+                    templateUrl: 'app/entities/upload-file/upload-files.html',
+                    controller: 'UploadFileController',
+                    controllerAs: 'vm'
+                }
+            },
+            resolve: {
+                translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                    $translatePartialLoader.addPart('uploadFile');
+                    $translatePartialLoader.addPart('global');
+                    return $translate.refresh();
+                }]
+            }
+        })
+        .state('upload-file-detail', {
+            parent: 'entity',
+            url: '/upload-file/{id}',
+            data: {
+                authorities: ['ROLE_USER'],
+                pageTitle: 'app.uploadFile.detail.title'
+            },
+            views: {
+                'content@': {
+                    templateUrl: 'app/entities/upload-file/upload-file-detail.html',
+                    controller: 'UploadFileDetailController',
+                    controllerAs: 'vm'
+                }
+            },
+            resolve: {
+                translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                    $translatePartialLoader.addPart('uploadFile');
+                    return $translate.refresh();
+                }],
+                entity: ['$stateParams', 'UploadFile', function($stateParams, UploadFile) {
+                    return UploadFile.get({id : $stateParams.id}).$promise;
+                }],
+                previousState: ["$state", function ($state) {
+                    var currentStateData = {
+                        name: $state.current.name || 'upload-file',
+                        params: $state.params,
+                        url: $state.href($state.current.name, $state.params)
+                    };
+                    return currentStateData;
+                }]
+            }
+        })
+        .state('upload-file-detail.edit', {
+            parent: 'upload-file-detail',
+            url: '/detail/edit',
+            data: {
+                authorities: ['ROLE_USER']
+            },
+            onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                $uibModal.open({
+                    templateUrl: 'app/entities/upload-file/upload-file-dialog.html',
+                    controller: 'UploadFileDialogController',
+                    controllerAs: 'vm',
+                    backdrop: 'static',
+                    size: 'lg',
+                    resolve: {
+                        entity: ['UploadFile', function(UploadFile) {
+                            return UploadFile.get({id : $stateParams.id}).$promise;
+                        }]
+                    }
+                }).result.then(function() {
+                    $state.go('^', {}, { reload: false });
+                }, function() {
+                    $state.go('^');
+                });
+            }]
+        })
+        .state('upload-file.new', {
+            parent: 'upload-file',
+            url: '/new',
+            data: {
+                authorities: ['ROLE_USER']
+            },
+            onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                $uibModal.open({
+                    templateUrl: 'app/entities/upload-file/upload-file-dialog.html',
+                    controller: 'UploadFileDialogController',
+                    controllerAs: 'vm',
+                    backdrop: 'static',
+                    size: 'lg',
+                    resolve: {
+                        entity: function () {
+                            return {
+                                location: null,
+                                deleted: false,
+                                id: null
+                            };
+                        }
+                    }
+                }).result.then(function() {
+                    $state.go('upload-file', null, { reload: 'upload-file' });
+                }, function() {
+                    $state.go('upload-file');
+                });
+            }]
+        })
+        .state('upload-file.edit', {
+            parent: 'upload-file',
+            url: '/{id}/edit',
+            data: {
+                authorities: ['ROLE_USER']
+            },
+            onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                $uibModal.open({
+                    templateUrl: 'app/entities/upload-file/upload-file-dialog.html',
+                    controller: 'UploadFileDialogController',
+                    controllerAs: 'vm',
+                    backdrop: 'static',
+                    size: 'lg',
+                    resolve: {
+                        entity: ['UploadFile', function(UploadFile) {
+                            return UploadFile.get({id : $stateParams.id}).$promise;
+                        }]
+                    }
+                }).result.then(function() {
+                    $state.go('upload-file', null, { reload: 'upload-file' });
+                }, function() {
+                    $state.go('^');
+                });
+            }]
+        })
+        .state('upload-file.delete', {
+            parent: 'upload-file',
+            url: '/{id}/delete',
+            data: {
+                authorities: ['ROLE_USER']
+            },
+            onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                $uibModal.open({
+                    templateUrl: 'app/entities/upload-file/upload-file-delete-dialog.html',
+                    controller: 'UploadFileDeleteController',
+                    controllerAs: 'vm',
+                    size: 'md',
+                    resolve: {
+                        entity: ['UploadFile', function(UploadFile) {
+                            return UploadFile.get({id : $stateParams.id}).$promise;
+                        }]
+                    }
+                }).result.then(function() {
+                    $state.go('upload-file', null, { reload: 'upload-file' });
+                }, function() {
+                    $state.go('^');
+                });
+            }]
+        });
+    }
+
+})();
 
 (function() {
     'use strict';
@@ -9834,6 +10796,169 @@ angular.module('app.auth').directive('googleSignin', function ($rootScope, Googl
     }
 })();
 
+(function () {
+    'use strict';
+
+    angular
+        .module('app')
+        .controller('AssetCopyController', AssetCopyController);
+
+    AssetCopyController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'Asset', 'AssetImportModalService'];
+
+    function AssetCopyController($timeout, $scope, $stateParams, $uibModalInstance, entity, Asset, AssetImportModalService) {
+        var vm = this;
+
+        vm.asset = entity;
+        vm.clear = clear;
+        vm.save = save;
+        vm.selectedParentTree = selectedParentTree;
+
+        $timeout(function () {
+            angular.element('.form-group:eq(1)>input').focus();
+        });
+
+        function clear() {
+            $uibModalInstance.dismiss('cancel');
+        }
+
+        function save() {
+            vm.isSaving = true;
+            if (vm.asset.id !== null) {
+                Asset.update(vm.asset, onSaveSuccess, onSaveError);
+            } else {
+                Asset.save(vm.asset, onSaveSuccess, onSaveError);
+            }
+        }
+
+        function onSaveSuccess(result) {
+            $scope.$emit('app:assetUpdate', result);
+            $uibModalInstance.close(result);
+            vm.isSaving = false;
+            AssetImportModalService.openEdit(result.id);
+        }
+
+        function onSaveError() {
+            vm.isSaving = false;
+        }
+
+        function selectedParentTree(branch) {
+            if (!angular.isUndefinedOrNull(branch)) {
+                vm.asset.id = null;
+                vm.asset.parentId = branch.id;
+            }
+        }
+    }
+})();
+
+'use strict';
+
+angular
+    .module('app')
+    .controller('AssetImportWizardController', function ($scope, $compile, $rootScope, $timeout, $stateParams, $uibModalInstance, entity ,Asset, AssetImport) {
+        var assetVm = this;
+
+        assetVm.assetList = {};
+        assetVm.asset = entity;
+        assetVm.clear = clear;
+        assetVm.save = save;
+        assetVm.submitWizard = submitWizard;
+
+
+
+
+        function clear () {
+            $uibModalInstance.dismiss('cancel');
+        }
+
+        function submitWizard(data) {
+            assetVm.assetList.assetList = [];
+            if (!angular.isUndefined(data)) {
+                for(var i=0;i<data.assetList.length;i++) {
+                    if (!angular.isUndefinedOrNull(data.assetList[i])) {
+                        assetVm.assetList.assetList.push(data.assetList[i]);
+                    }
+                }
+                assetVm.assetList.parentId = data.parentId;
+            }
+            assetVm.isSaving = true;
+
+            console.log("submitWizard: " + assetVm.assetList);
+            AssetImport.save(assetVm.assetList, onSaveSuccess, onSaveError);
+        }
+
+        function save () {
+            assetVm.isSaving = true;
+            if (assetVm.asset.id !== null) {
+                Asset.update(assetVm.asset, onSaveSuccess, onSaveError);
+            } else {
+                Asset.save(assetVm.asset, onSaveSuccess, onSaveError);
+            }
+        }
+
+        function onSaveSuccess (result) {
+            console.log("Form data saved");
+            $scope.$emit('app:assetUpdate', result);
+            $uibModalInstance.close(result);
+            assetVm.isSaving = false;
+        }
+
+        function onSaveError () {
+            assetVm.isSaving = false;
+        }
+    });
+
+(function () {
+    'use strict';
+
+    angular
+        .module('app')
+        .controller('AssetMoveController', AssetMoveController);
+
+    AssetMoveController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'Asset', 'AssetImportModalService'];
+
+    function AssetMoveController($timeout, $scope, $stateParams, $uibModalInstance, entity, Asset, AssetImportModalService) {
+        var vm = this;
+
+        vm.asset = entity;
+        vm.clear = clear;
+        vm.save = save;
+        vm.selectedParentTree = selectedParentTree;
+
+        $timeout(function () {
+            angular.element('.form-group:eq(1)>input').focus();
+        });
+
+        function clear() {
+            $uibModalInstance.dismiss('cancel');
+        }
+
+        function save() {
+            vm.isSaving = true;
+            if (vm.asset.id !== null) {
+                Asset.update(vm.asset, onSaveSuccess, onSaveError);
+            } else {
+                Asset.save(vm.asset, onSaveSuccess, onSaveError);
+            }
+        }
+
+        function onSaveSuccess(result) {
+            $scope.$emit('app:assetUpdate', result);
+            $uibModalInstance.close(result);
+            vm.isSaving = false;
+        }
+
+        function onSaveError() {
+            vm.isSaving = false;
+        }
+
+        function selectedParentTree(branch) {
+            if (!angular.isUndefinedOrNull(branch)) {
+                vm.asset.parentId = branch.id;
+            }
+        }
+    }
+})();
+
 angular
     .module('app').service('AssetImportModalService', function ($uibModal, Asset) {
     var open = false,
@@ -9996,158 +11121,6 @@ angular
     }
 });
 
-(function () {
-    'use strict';
-
-    angular
-        .module('app')
-        .controller('AssetCopyController', AssetCopyController);
-
-    AssetCopyController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'Asset', 'AssetImportModalService'];
-
-    function AssetCopyController($timeout, $scope, $stateParams, $uibModalInstance, entity, Asset, AssetImportModalService) {
-        var vm = this;
-
-        vm.asset = entity;
-        vm.clear = clear;
-        vm.save = save;
-        vm.selectedParentTree = selectedParentTree;
-
-        $timeout(function () {
-            angular.element('.form-group:eq(1)>input').focus();
-        });
-
-        function clear() {
-            $uibModalInstance.dismiss('cancel');
-        }
-
-        function save() {
-            vm.isSaving = true;
-            if (vm.asset.id !== null) {
-                Asset.update(vm.asset, onSaveSuccess, onSaveError);
-            } else {
-                Asset.save(vm.asset, onSaveSuccess, onSaveError);
-            }
-        }
-
-        function onSaveSuccess(result) {
-            $scope.$emit('app:assetUpdate', result);
-            $uibModalInstance.close(result);
-            vm.isSaving = false;
-            AssetImportModalService.openEdit(result.id);
-        }
-
-        function onSaveError() {
-            vm.isSaving = false;
-        }
-
-        function selectedParentTree(branch) {
-            if (!angular.isUndefinedOrNull(branch)) {
-                vm.asset.id = null;
-                vm.asset.parentId = branch.id;
-            }
-        }
-    }
-})();
-
-'use strict';
-
-angular
-    .module('app')
-    .controller('AssetImportWizardController', function ($scope, $compile, $rootScope, $timeout, $stateParams, $uibModalInstance, entity ,Asset, AssetImport) {
-        var assetVm = this;
-
-        assetVm.assetList = [];
-        assetVm.asset = entity;
-        assetVm.clear = clear;
-        assetVm.save = save;
-        assetVm.importAssets = importAssets;
-
-
-
-        function clear () {
-            $uibModalInstance.dismiss('cancel');
-        }
-
-        function importAssets() {
-            assetVm.isSaving = true;
-            console.log(assetVm.assetList);
-            AssetImport.save(assetVm.assetList, onSaveSuccess, onSaveError);
-        }
-
-        function save () {
-            assetVm.isSaving = true;
-            if (assetVm.asset.id !== null) {
-                Asset.update(assetVm.asset, onSaveSuccess, onSaveError);
-            } else {
-                Asset.save(assetVm.asset, onSaveSuccess, onSaveError);
-            }
-        }
-
-        function onSaveSuccess (result) {
-            console.log("Form data saved");
-            $scope.$emit('app:assetUpdate', result);
-            $uibModalInstance.close(result);
-            assetVm.isSaving = false;
-        }
-
-        function onSaveError () {
-            assetVm.isSaving = false;
-        }
-    });
-
-(function () {
-    'use strict';
-
-    angular
-        .module('app')
-        .controller('AssetMoveController', AssetMoveController);
-
-    AssetMoveController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'Asset', 'AssetImportModalService'];
-
-    function AssetMoveController($timeout, $scope, $stateParams, $uibModalInstance, entity, Asset, AssetImportModalService) {
-        var vm = this;
-
-        vm.asset = entity;
-        vm.clear = clear;
-        vm.save = save;
-        vm.selectedParentTree = selectedParentTree;
-
-        $timeout(function () {
-            angular.element('.form-group:eq(1)>input').focus();
-        });
-
-        function clear() {
-            $uibModalInstance.dismiss('cancel');
-        }
-
-        function save() {
-            vm.isSaving = true;
-            if (vm.asset.id !== null) {
-                Asset.update(vm.asset, onSaveSuccess, onSaveError);
-            } else {
-                Asset.save(vm.asset, onSaveSuccess, onSaveError);
-            }
-        }
-
-        function onSaveSuccess(result) {
-            $scope.$emit('app:assetUpdate', result);
-            $uibModalInstance.close(result);
-            vm.isSaving = false;
-        }
-
-        function onSaveError() {
-            vm.isSaving = false;
-        }
-
-        function selectedParentTree(branch) {
-            if (!angular.isUndefinedOrNull(branch)) {
-                vm.asset.parentId = branch.id;
-            }
-        }
-    }
-})();
-
 "use strict";
 
 angular.module('app').directive('assetsForm', function () {
@@ -10156,14 +11129,19 @@ angular.module('app').directive('assetsForm', function () {
         replace: true,
         templateUrl: 'app/dashboard/assets/directives/asset-form.tpl.html',
         scope: {
-            asset: '=asset',
+            asset: '=?asset',
             displayDetails: '=displayDetails',
             stepChange: '&',
             currentStep: '=currentStep',
-            parentStep: '=parentStep'
+            parentStep: '=parentStep',
+            parentId: '=parentId',
+            updateAssetCallback: '&'
         },
         controller: function ($scope) {
 
+            if (angular.isUndefinedOrNull($scope.currentStep)) {
+                $scope.currentStep = 1;
+            }
             $scope.state = "A";
             $scope.disableForm = false;
 
@@ -10171,15 +11149,21 @@ angular.module('app').directive('assetsForm', function () {
                 $scope.disableForm = true;
             }
 
+            if (angular.isFunction($scope.updateAssetCallback)) {
+                var index = {index: $scope.currentStep};
+                $scope.asset = $scope.updateAssetCallback(index);
+                console.log($scope.asset);
+            }
+
             $scope.hasSubTree = false;
-            $scope.assetType = '0';
-            if ($scope.asset) {
-                $scope.assetType = $scope.asset.formType;
+            $scope.assetType = 'ASSET_GROUP';
+            if (!angular.isUndefinedOrNull($scope.asset) && $scope.asset.assetType == null) {
+                $scope.asset.assetType = 'ASSET_GROUP';
             }
 
             $scope.toggleAssetForm = function () {
-                console.log($scope.assetType);
-                if ('0' == $scope.assetType) {
+                console.log($scope.asset.assetType);
+                if ('ASSET_GROUP' == $scope.asset.assetType) {
                     $scope.hasSubTree = true;
                 }
                 else {
@@ -10197,7 +11181,7 @@ angular.module('app').directive('assetsForm', function () {
             });
 
 
-            if (!angular.isUndefinedOrNull($scope.asset)) {
+            if (!angular.isUndefinedOrNull($scope.asset.id)) {
                 $scope.state = "E";
                 if (!angular.isUndefinedOrNull($scope.asset.children)) {
                     $scope.hasSubTree = $scope.asset.children.length > 0;
@@ -10217,11 +11201,12 @@ angular.module('app').directive('assetsImportWizardForm', function () {
         restrict: 'E',
         replace: true,
         templateUrl: 'app/dashboard/assets/directives/asset-import-wizard-form.tpl.html',
-        scope: true,
+        scope: {
+            'onSubmit': '&'
+        },
         controller: function ($scope, $compile, $rootScope, $element) {
-
             $scope.wizardStepFormBranch = [];
-            $scope.formBranchData = [];
+            $scope.assetList = [];
             $scope.duplicate = false;
             $scope.selectTreeElement = "root";
             $scope.duplicatedAsset;
@@ -10241,6 +11226,7 @@ angular.module('app').directive('assetsImportWizardForm', function () {
             var wizard = $element.children().first();
             $scope.assetImportData = [];
             $scope.branch;
+            $scope.parentId = null;
             $scope.parentStep = null;
             $scope.assetId = null;
             $scope.assetImportData[0] = {"step": 1};
@@ -10280,15 +11266,16 @@ angular.module('app').directive('assetsImportWizardForm', function () {
                     "hasNext": true,
                     "data": {"assetId": $scope.assetId}
                 };
-
+                $scope.assetList[index] = {};
 
                 var pane;
                 if (!angular.isObject(branch)) {
-                    pane = $compile('<assets-form data-parent-step="'+$scope.parentStep+'" data-current-step="'+index+'" step-change="addStep(value)"></assets-form>')($scope);
+                    pane = $compile('<assets-form update-asset-callback="getAsset(index)" data-parent-id="'+$scope.branch.id+'" data-parent-step="'+$scope.parentStep+'" data-current-step="'+index+'" step-change="addStep(value)"></assets-form>')($scope);
                 }
                 else {
-                    var newIndex = index - 2;
-                    pane = $compile('<assets-form data-parent-step="'+$scope.parentStep+'" data-current-step="'+index+'" step-change="addStep(value)" asset="wizardStepFormBranch[' + newIndex + ']" ></assets-form>')($scope);
+                    $scope.parentId = branch.id;
+                    var newIndex = index - 1;
+                    pane = $compile('<assets-form update-asset-callback="getAsset(index)" data-parent-id="'+$scope.branch.id+'" data-parent-step="'+$scope.parentStep+'" data-current-step="'+index+'" step-change="addStep(value)" asset="wizardStepFormBranch[' + newIndex + ']" ></assets-form>')($scope);
                 }
 
                 wizard.wizard('addSteps', index, [
@@ -10299,6 +11286,22 @@ angular.module('app').directive('assetsImportWizardForm', function () {
                     }
                 ]);
                 $scope.parentStep = index;
+            }
+
+            $scope.getAsset = function (index) {
+                console.log("index return: " + index);
+                if (!angular.isObject($scope.assetList[index])) {
+                    $scope.assetList[index] = {
+                        parentId: null,
+                        name: null,
+                        code: null,
+                        assetType: null,
+                        capacity: null,
+                        year: null,
+                        id: null
+                    };
+                }
+                return $scope.assetList[index];
             }
 
             function assetWizardStepRemove(index, howMany) {
@@ -10329,8 +11332,13 @@ angular.module('app').directive('assetsImportWizardForm', function () {
             });
 
             $scope.wizard2CompleteCallback = function (wizardData) {
+
+                var data = {parentId: $scope.branch.id, assetList: $scope.assetList};
+                $scope.onSubmit({data: data});
+                console.log(data);
+
                 if ($scope.callbackWizardFinish) {
-                    $scope.callbackWizardFinish(wizardData);
+                    $scope.callbackWizardFinish(data);
                 }
                 $.smallBox({
                     title: $rootScope.getWord("Data submitted successfully!"),

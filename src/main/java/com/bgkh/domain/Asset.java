@@ -36,6 +36,14 @@ public class Asset implements Serializable {
     @Column(name = "name", length = 100, nullable = false)
     private String name;
 
+    @Size(min = 3, max = 250)
+    @Column(name = "location", length = 250)
+    private String location;
+
+    @Size(min = 3, max = 500)
+    @Column(name = "details", length = 500)
+    private String details;
+
     @NotNull
     @Size(min = 1, max = 50)
     @Column(name = "code", length = 50, nullable = false)
@@ -57,6 +65,12 @@ public class Asset implements Serializable {
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<WorkOrder> workOrders = new HashSet<>();
+
+    @ManyToOne
+    private UploadFile maps;
+
+    @ManyToOne
+    private UploadFile otherFiles;
 
     public Long getId() {
         return id;
@@ -90,6 +104,32 @@ public class Asset implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public Asset location(String location) {
+        this.location = location;
+        return this;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public Asset details(String details) {
+        this.details = details;
+        return this;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
     }
 
     public String getCode() {
@@ -169,6 +209,32 @@ public class Asset implements Serializable {
         this.workOrders = workOrders;
     }
 
+    public UploadFile getMaps() {
+        return maps;
+    }
+
+    public Asset maps(UploadFile uploadFile) {
+        this.maps = uploadFile;
+        return this;
+    }
+
+    public void setMaps(UploadFile uploadFile) {
+        this.maps = uploadFile;
+    }
+
+    public UploadFile getOtherFiles() {
+        return otherFiles;
+    }
+
+    public Asset otherFiles(UploadFile uploadFile) {
+        this.otherFiles = uploadFile;
+        return this;
+    }
+
+    public void setOtherFiles(UploadFile uploadFile) {
+        this.otherFiles = uploadFile;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -195,6 +261,8 @@ public class Asset implements Serializable {
             "id=" + id +
             ", parentId='" + parentId + "'" +
             ", name='" + name + "'" +
+            ", location='" + location + "'" +
+            ", details='" + details + "'" +
             ", code='" + code + "'" +
             ", assetType='" + assetType + "'" +
             ", capacity='" + capacity + "'" +

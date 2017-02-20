@@ -6,6 +6,18 @@
             "relationshipName": "workOrder",
             "otherEntityName": "workOrder",
             "otherEntityRelationshipName": "asset"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "maps",
+            "otherEntityName": "uploadFile",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "otherFiles",
+            "otherEntityName": "uploadFile",
+            "otherEntityField": "id"
         }
     ],
     "fields": [
@@ -26,6 +38,26 @@
             ],
             "fieldValidateRulesMinlength": 3,
             "fieldValidateRulesMaxlength": 100
+        },
+        {
+            "fieldName": "location",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "minlength",
+                "maxlength"
+            ],
+            "fieldValidateRulesMinlength": 3,
+            "fieldValidateRulesMaxlength": 250
+        },
+        {
+            "fieldName": "details",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "minlength",
+                "maxlength"
+            ],
+            "fieldValidateRulesMinlength": 3,
+            "fieldValidateRulesMaxlength": 500
         },
         {
             "fieldName": "code",

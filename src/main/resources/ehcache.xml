@@ -32,5 +32,9 @@
 
     <cache alias="com.bgkh.domain.AssetSpecificationTypeValue" uses-template="simple"/>
 
+    <cache alias="com.bgkh.domain.UploadFile" uses-template="simple"/>
+
+    <cache alias="com.bgkh.domain.UploadFile.assets" uses-template="simple"/>
+
     <!-- jhipster-needle-ehcache-add-entry -->
 </config>
