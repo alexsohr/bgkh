@@ -34,6 +34,12 @@ public class AssetDTO implements Serializable {
 
     private AssetType assetType;
 
+    @Size(min = 3, max = 250)
+    private String manufacture;
+
+    @Size(min = 3, max = 250)
+    private String typeVal;
+
     @Min(value = 0)
     private Integer capacity;
 
@@ -42,9 +48,9 @@ public class AssetDTO implements Serializable {
 
 
     private Long mapsId;
-    
+
     private Long otherFilesId;
-    
+
     public Long getId() {
         return id;
     }
@@ -125,6 +131,22 @@ public class AssetDTO implements Serializable {
         this.otherFilesId = uploadFileId;
     }
 
+    public String getManufacture() {
+        return manufacture;
+    }
+
+    public void setManufacture(String manufacture) {
+        this.manufacture = manufacture;
+    }
+
+    public String getTypeVal() {
+        return typeVal;
+    }
+
+    public void setTypeVal(String typeVal) {
+        this.typeVal = typeVal;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -156,6 +178,8 @@ public class AssetDTO implements Serializable {
             ", details='" + details + "'" +
             ", code='" + code + "'" +
             ", assetType='" + assetType + "'" +
+            ", manufacture='" + manufacture + "'" +
+            ", typeVal='" + typeVal + "'" +
             ", capacity='" + capacity + "'" +
             ", year='" + year + "'" +
             '}';

@@ -139,6 +139,8 @@ angular
                         code: null,
                         assetType: null,
                         capacity: null,
+                        manufacture: null,
+                        typeVal: null,
                         year: null,
                         id: null
                     };

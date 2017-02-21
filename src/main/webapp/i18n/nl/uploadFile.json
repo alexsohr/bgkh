@@ -1,0 +1,25 @@
+{
+    "app": {
+        "uploadFile" : {
+            "home": {
+                "title": "Upload Files",
+                "createLabel": "Maak een nieuwe Upload File",
+                "createOrEditLabel": "Maak of wijzig een Upload File",
+                "search": "Search for Upload File"
+            },
+            "created": "A new Upload File is created with identifier {{ param }}",
+            "updated": "A Upload File is updated with identifier {{ param }}",
+            "deleted": "A Upload File is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Bent u zeker dat u Upload File {{ id }} wilt verwijderen?"
+            },
+            "detail": {
+                "title": "Upload File"
+            },
+            "location": "Location",
+            "deleted": "Deleted",
+            "asset": "Asset",
+            "asset": "Asset"
+        }
+    }
+}

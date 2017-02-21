@@ -53,6 +53,14 @@ public class Asset implements Serializable {
     @Column(name = "asset_type")
     private AssetType assetType;
 
+    @Size(min = 3, max = 250)
+    @Column(name = "manufacture", length = 250)
+    private String manufacture;
+
+    @Size(min = 3, max = 250)
+    @Column(name = "typeVal", length = 250)
+    private String typeVal;
+
     @Min(value = 0)
     @Column(name = "capacity")
     private Integer capacity;
@@ -235,6 +243,22 @@ public class Asset implements Serializable {
         this.otherFiles = uploadFile;
     }
 
+    public String getManufacture() {
+        return manufacture;
+    }
+
+    public void setManufacture(String manufacture) {
+        this.manufacture = manufacture;
+    }
+
+    public String getTypeVal() {
+        return typeVal;
+    }
+
+    public void setTypeVal(String typeVal) {
+        this.typeVal = typeVal;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -265,6 +289,8 @@ public class Asset implements Serializable {
             ", details='" + details + "'" +
             ", code='" + code + "'" +
             ", assetType='" + assetType + "'" +
+            ", manufacture='" + manufacture + "'" +
+            ", typeVal='" + typeVal + "'" +
             ", capacity='" + capacity + "'" +
             ", year='" + year + "'" +
             '}';

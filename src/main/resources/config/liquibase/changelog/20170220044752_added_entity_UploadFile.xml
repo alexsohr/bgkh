@@ -17,63 +17,23 @@
     <property name="floatType" value="float" dbms="mysql, oracle, mssql"/>
 
     <!--
-        Added the entity Asset.
+        Added the entity UploadFile.
     -->
-    <changeSet id="20170107053105-1" author="jhipster">
-        <createTable tableName="asset">
+    <changeSet id="20170220044752-1" author="jhipster">
+        <createTable tableName="upload_file">
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="parent_id" type="bigint">
-                <constraints nullable="false" />
-            </column>
-
-            <column name="name" type="varchar(100)">
-                <constraints nullable="false" />
-            </column>
-
             <column name="location" type="varchar(250)">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="details" type="varchar(500)">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="code" type="varchar(50)">
                 <constraints nullable="false" />
             </column>
-
-            <column name="asset_type" type="varchar(255)">
-                <constraints nullable="true" />
+            
+            <column name="deleted" type="bit">
+                <constraints nullable="false" />
             </column>
-
-            <column name="manufacture" type="varchar(255)">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="typeVal" type="varchar(255)">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="capacity" type="integer">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="year" type="integer">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="maps_id" type="bigint">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="other_files_id" type="bigint">
-                <constraints nullable="true" />
-            </column>
-
+            
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
-
+        
     </changeSet>
 </databaseChangeLog>

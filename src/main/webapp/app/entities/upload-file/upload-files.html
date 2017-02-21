@@ -1,0 +1,58 @@
+<div>
+    <h2 data-translate="app.uploadFile.home.title">Upload Files</h2>
+    <jhi-alert></jhi-alert>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-4 no-padding-left">
+                <button class="btn btn-primary" ui-sref="upload-file.new" >
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <span  data-translate="app.uploadFile.home.createLabel">
+                        Create new Upload File
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive">
+        <table class="jh-table table table-striped">
+            <thead>
+                <tr>
+                    <th><span data-translate="global.field.id">ID</span></th>
+                    <th><span data-translate="app.uploadFile.location">Location</span></th>
+                    <th><span data-translate="app.uploadFile.deleted">Deleted</span></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="uploadFile in vm.uploadFiles track by uploadFile.id">
+                    <td><a ui-sref="upload-file-detail({id:uploadFile.id})">{{uploadFile.id}}</a></td>
+                    <td>{{uploadFile.location}}</td>
+                    <td>{{uploadFile.deleted}}</td>
+                    <td class="text-right">
+                        <div class="btn-group flex-btn-group-container">
+                            <button type="submit"
+                                    ui-sref="upload-file-detail({id:uploadFile.id})"
+                                    class="btn btn-info btn-sm">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                                <span class="hidden-xs hidden-sm" data-translate="entity.action.view"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="upload-file.edit({id:uploadFile.id})"
+                                    class="btn btn-primary btn-sm">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="hidden-xs hidden-sm" data-translate="entity.action.edit"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="upload-file.delete({id:uploadFile.id})"
+                                    class="btn btn-danger btn-sm">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                                <span class="hidden-xs hidden-sm" data-translate="entity.action.delete"></span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

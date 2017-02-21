@@ -1,0 +1,42 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "asset",
+            "otherEntityName": "asset",
+            "otherEntityRelationshipName": "maps"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "asset",
+            "otherEntityName": "asset",
+            "otherEntityRelationshipName": "otherFiles"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "location",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "minlength",
+                "maxlength"
+            ],
+            "fieldValidateRulesMinlength": 3,
+            "fieldValidateRulesMaxlength": 250
+        },
+        {
+            "fieldName": "deleted",
+            "fieldType": "Boolean",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20170220044752",
+    "entityTableName": "upload_file",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl"
+}

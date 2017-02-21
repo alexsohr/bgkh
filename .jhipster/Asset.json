@@ -76,6 +76,26 @@
             "fieldValues": "ASSET_GROUP,ASSET,SUB_ASSET"
         },
         {
+            "fieldName": "manufacture",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "minlength",
+                "maxlength"
+            ],
+            "fieldValidateRulesMinlength": 1,
+            "fieldValidateRulesMaxlength": 250
+        },
+        {
+            "fieldName": "typeVal",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "minlength",
+                "maxlength"
+            ],
+            "fieldValidateRulesMinlength": 1,
+            "fieldValidateRulesMaxlength": 250
+        },
+        {
             "fieldName": "capacity",
             "fieldType": "Integer",
             "fieldValidateRules": [

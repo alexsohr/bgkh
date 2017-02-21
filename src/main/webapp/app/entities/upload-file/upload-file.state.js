@@ -2,49 +2,60 @@
     'use strict';
 
     angular
-        .module('app.entity')
+        .module('app')
         .config(stateConfig);
 
     stateConfig.$inject = ['$stateProvider'];
 
     function stateConfig($stateProvider) {
-        $stateProvider.state('app.entity.assetsTable', {
-            url: '/asset',
+        $stateProvider
+        .state('upload-file', {
+            parent: 'entity',
+            url: '/upload-file',
             data: {
                 authorities: ['ROLE_USER'],
-                pageTitle: 'app.asset.home.title'
+                pageTitle: 'app.uploadFile.home.title'
             },
             views: {
-                'content@app': {
-                    templateUrl: 'app/entities/asset/assets.html',
-                    controller: 'AssetController',
+                'content@': {
+                    templateUrl: 'app/entities/upload-file/upload-files.html',
+                    controller: 'UploadFileController',
                     controllerAs: 'vm'
                 }
             },
             resolve: {
+                translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                    $translatePartialLoader.addPart('uploadFile');
+                    $translatePartialLoader.addPart('global');
+                    return $translate.refresh();
+                }]
             }
         })
-        .state('asset-detail', {
-
-            url: '/asset/{id}',
+        .state('upload-file-detail', {
+            parent: 'entity',
+            url: '/upload-file/{id}',
             data: {
                 authorities: ['ROLE_USER'],
-                title: 'app.asset.detail.title'
+                pageTitle: 'app.uploadFile.detail.title'
             },
             views: {
-                'content@app': {
-                    templateUrl: 'app/entities/asset/asset-detail.html',
-                    controller: 'AssetDetailController',
+                'content@': {
+                    templateUrl: 'app/entities/upload-file/upload-file-detail.html',
+                    controller: 'UploadFileDetailController',
                     controllerAs: 'vm'
                 }
             },
             resolve: {
-                entity: ['$stateParams', 'Asset', function($stateParams, Asset) {
-                    return Asset.get({id : $stateParams.id}).$promise;
+                translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                    $translatePartialLoader.addPart('uploadFile');
+                    return $translate.refresh();
+                }],
+                entity: ['$stateParams', 'UploadFile', function($stateParams, UploadFile) {
+                    return UploadFile.get({id : $stateParams.id}).$promise;
                 }],
                 previousState: ["$state", function ($state) {
                     var currentStateData = {
-                        name: $state.current.name || 'asset',
+                        name: $state.current.name || 'upload-file',
                         params: $state.params,
                         url: $state.href($state.current.name, $state.params)
                     };
@@ -52,22 +63,22 @@
                 }]
             }
         })
-        .state('asset-detail.edit', {
-            parent: 'asset-detail',
+        .state('upload-file-detail.edit', {
+            parent: 'upload-file-detail',
             url: '/detail/edit',
             data: {
                 authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/asset/asset-dialog.html',
-                    controller: 'AssetDialogController',
+                    templateUrl: 'app/entities/upload-file/upload-file-dialog.html',
+                    controller: 'UploadFileDialogController',
                     controllerAs: 'vm',
                     backdrop: 'static',
                     size: 'lg',
                     resolve: {
-                        entity: ['Asset', function(Asset) {
-                            return Asset.get({id : $stateParams.id}).$promise;
+                        entity: ['UploadFile', function(UploadFile) {
+                            return UploadFile.get({id : $stateParams.id}).$promise;
                         }]
                     }
                 }).result.then(function() {
@@ -77,85 +88,79 @@
                 });
             }]
         })
-        .state('asset.new', {
-            parent: 'asset',
+        .state('upload-file.new', {
+            parent: 'upload-file',
             url: '/new',
             data: {
                 authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/asset/asset-dialog.html',
-                    controller: 'AssetDialogController',
+                    templateUrl: 'app/entities/upload-file/upload-file-dialog.html',
+                    controller: 'UploadFileDialogController',
                     controllerAs: 'vm',
                     backdrop: 'static',
                     size: 'lg',
                     resolve: {
                         entity: function () {
                             return {
-                                parentId: null,
-                                name: null,
-                                code: null,
-                                assetType: null,
-                                capacity: null,
-                                manufacture: null,
-                                typeVal: null,
-                                year: null,
+                                location: null,
+                                deleted: false,
                                 id: null
                             };
                         }
                     }
                 }).result.then(function() {
-                    $state.go('asset', null, { reload: 'asset' });
+                    $state.go('upload-file', null, { reload: 'upload-file' });
                 }, function() {
-                    $state.go('asset');
+                    $state.go('upload-file');
                 });
             }]
         })
-        .state('asset.edit', {
-            parent: 'asset',
+        .state('upload-file.edit', {
+            parent: 'upload-file',
             url: '/{id}/edit',
             data: {
                 authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/asset/asset-dialog.html',
-                    controller: 'AssetDialogController',
+                    templateUrl: 'app/entities/upload-file/upload-file-dialog.html',
+                    controller: 'UploadFileDialogController',
                     controllerAs: 'vm',
                     backdrop: 'static',
                     size: 'lg',
                     resolve: {
-                        entity: ['Asset', function(Asset) {
-                            return Asset.get({id : $stateParams.id}).$promise;
+                        entity: ['UploadFile', function(UploadFile) {
+                            return UploadFile.get({id : $stateParams.id}).$promise;
                         }]
                     }
                 }).result.then(function() {
-                    $state.go('asset', null, { reload: 'asset' });
+                    $state.go('upload-file', null, { reload: 'upload-file' });
                 }, function() {
                     $state.go('^');
                 });
             }]
         })
-        .state('asset.delete', {
-            parent: 'asset',
+        .state('upload-file.delete', {
+            parent: 'upload-file',
             url: '/{id}/delete',
             data: {
                 authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/asset/asset-delete-dialog.html',
-                    controller: 'AssetDeleteController',
+                    templateUrl: 'app/entities/upload-file/upload-file-delete-dialog.html',
+                    controller: 'UploadFileDeleteController',
                     controllerAs: 'vm',
                     size: 'md',
                     resolve: {
-                        entity: ['Asset', function(Asset) {
-                            return Asset.get({id : $stateParams.id}).$promise;
+                        entity: ['UploadFile', function(UploadFile) {
+                            return UploadFile.get({id : $stateParams.id}).$promise;
                         }]
                     }
                 }).result.then(function() {
-                    $state.go('asset', null, { reload: 'asset' });
+                    $state.go('upload-file', null, { reload: 'upload-file' });
                 }, function() {
                     $state.go('^');
                 });

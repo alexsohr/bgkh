@@ -9,10 +9,10 @@ angular.module('app').directive('assetsForm', function () {
             asset: '=?asset',
             displayDetails: '=displayDetails',
             stepChange: '&',
-            currentStep: '=currentStep',
+            currentStep: '=?currentStep',
             parentStep: '=parentStep',
             parentId: '=parentId',
-            updateAssetCallback: '&'
+            updateAssetCallback: '&?'
         },
         controller: function ($scope) {
 
@@ -22,11 +22,13 @@ angular.module('app').directive('assetsForm', function () {
             $scope.state = "A";
             $scope.disableForm = false;
 
+
+
             if (!angular.isUndefinedOrNull($scope.displayDetails)) {
                 $scope.disableForm = true;
             }
 
-            if (angular.isFunction($scope.updateAssetCallback)) {
+            if ($scope.updateAssetCallback !== undefined) {
                 var index = {index: $scope.currentStep};
                 $scope.asset = $scope.updateAssetCallback(index);
                 console.log($scope.asset);
@@ -38,6 +40,18 @@ angular.module('app').directive('assetsForm', function () {
                 $scope.asset.assetType = 'ASSET_GROUP';
             }
 
+            $scope.years = [];
+            $scope.selectedYear = 0;
+            var j = 0;
+            for (var i = 1970; i <= new Date().getFullYear(); i++) {
+                $scope.years.push(i);
+                if ($scope.asset.year == i) {
+                    $scope.selectedYear = j;
+                }
+                j++;
+            }
+
+            console.log($scope.asset);
             $scope.toggleAssetForm = function () {
                 console.log($scope.asset.assetType);
                 if ('ASSET_GROUP' == $scope.asset.assetType) {
@@ -67,6 +81,19 @@ angular.module('app').directive('assetsForm', function () {
         },
         link: function (scope, rootScope, element, attrs) {
 
+        }
+    }
+})
+.directive('convertToString', function () {
+    return {
+        require: 'ngModel',
+        link: function (scope, element, attrs, ngModel) {
+            ngModel.$parsers.push(function (val) {
+                return '' + val;
+            });
+            ngModel.$formatters.push(function (val) {
+                return parseInt(val, 10);
+            });
         }
     }
 });
