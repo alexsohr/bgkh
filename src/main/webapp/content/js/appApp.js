@@ -5225,10 +5225,12 @@ angular.module('app').controller('TodoCtrl', function ($scope, $timeout, Todo) {
     angular
         .module('app')
         .factory('Asset', Asset)
-        .factory('AssetImport', AssetImport);
+        .factory('AssetImport', AssetImport)
+        .factory('AssetCopy', AssetCopy);
 
     Asset.$inject = ['$resource'];
     AssetImport.$inject = ['$resource'];
+    AssetCopy.$inject = ['$resource'];
 
     function Asset ($resource) {
         var resourceUrl =  'api/assets/:id';
@@ -5258,8 +5260,12 @@ angular.module('app').controller('TodoCtrl', function ($scope, $timeout, Todo) {
         });
     }
 
-
-
+    function AssetCopy($resource) {
+        var resourceUrl = '/api/assets/copy';
+        return $resource(resourceUrl, {}, {
+            'save': {method: 'POST'}
+        });
+    }
 })();
 
 (function() {
@@ -10808,12 +10814,14 @@ angular.module('app.auth').directive('googleSignin', function ($rootScope, Googl
         .module('app')
         .controller('AssetCopyController', AssetCopyController);
 
-    AssetCopyController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'Asset', 'AssetImportModalService'];
+    AssetCopyController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'Asset', 'AssetCopy', 'AssetImportModalService'];
 
-    function AssetCopyController($timeout, $scope, $stateParams, $uibModalInstance, entity, Asset, AssetImportModalService) {
+    function AssetCopyController($timeout, $scope, $stateParams, $uibModalInstance, entity, Asset, AssetCopy, AssetImportModalService) {
         var vm = this;
 
         vm.asset = entity;
+        vm.assetList = {};
+        vm.assetList.assetList = [];
         vm.clear = clear;
         vm.save = save;
         vm.selectedParentTree = selectedParentTree;
@@ -10828,11 +10836,9 @@ angular.module('app.auth').directive('googleSignin', function ($rootScope, Googl
 
         function save() {
             vm.isSaving = true;
-            if (vm.asset.id !== null) {
-                Asset.update(vm.asset, onSaveSuccess, onSaveError);
-            } else {
-                Asset.save(vm.asset, onSaveSuccess, onSaveError);
-            }
+            vm.assetList.assetList.push(vm.asset);
+            vm.assetList.parentId = vm.asset.parentId;
+            AssetCopy.save(vm.assetList, onSaveSuccess, onSaveError);
         }
 
         function onSaveSuccess(result) {
@@ -10848,7 +10854,6 @@ angular.module('app.auth').directive('googleSignin', function ($rootScope, Googl
 
         function selectedParentTree(branch) {
             if (!angular.isUndefinedOrNull(branch)) {
-                vm.asset.id = null;
                 vm.asset.parentId = branch.id;
             }
         }
@@ -11418,7 +11423,7 @@ angular.module('app').directive('assetsTreeGrid', function () {
             };
             $scope.col_defs = [
                 {field: "code", displayName: $rootScope.getWord('Asset Code'), sortable: true, filterable: true},
-                {field: "type", displayName: $rootScope.getWord('Asset Type')},
+                {field: "assetType", displayName: $rootScope.getWord('Asset Type')},
                 {field: "supervisor", displayName: $rootScope.getWord('Asset Supervisor')},
                 {field: "capacity", displayName: $rootScope.getWord('Asset Capacity')},
                 {field: "user", displayName: $rootScope.getWord('Asset User')},
@@ -15324,6 +15329,98 @@ angular.module('app.tables').directive('jqGrid', function ($compile) {
         }
     }
 });
+'use strict';
+
+angular.module('SmartAdmin.Forms').directive('smartCkEditor', function () {
+    return {
+        restrict: 'A',
+        compile: function ( tElement) {
+            tElement.removeAttr('smart-ck-editor data-smart-ck-editor');
+            //CKEDITOR.basePath = 'bower_components/ckeditor/';
+
+            CKEDITOR.replace( tElement.attr('name'), { height: '380px', startupFocus : true} );
+        }
+    }
+});
+'use strict';
+
+angular.module('SmartAdmin.Forms').directive('smartDestroySummernote', function () {
+    return {
+        restrict: 'A',
+        compile: function (tElement, tAttributes) {
+            tElement.removeAttr('smart-destroy-summernote data-smart-destroy-summernote')
+            tElement.on('click', function() {
+                angular.element(tAttributes.smartDestroySummernote).destroy();
+            })
+        }
+    }
+});
+
+'use strict';
+
+angular.module('SmartAdmin.Forms').directive('smartEditSummernote', function () {
+    return {
+        restrict: 'A',
+        compile: function (tElement, tAttributes) {
+            tElement.removeAttr('smart-edit-summernote data-smart-edit-summernote');
+            tElement.on('click', function(){
+                angular.element(tAttributes.smartEditSummernote).summernote({
+                    focus : true
+                });  
+            });
+        }
+    }
+});
+
+'use strict';
+
+angular.module('SmartAdmin.Forms').directive('smartMarkdownEditor', function () {
+    return {
+        restrict: 'A',
+        compile: function (element, attributes) {
+            element.removeAttr('smart-markdown-editor data-smart-markdown-editor')
+
+            var options = {
+                autofocus:false,
+                savable:true,
+                fullscreen: {
+                    enable: false
+                }
+            };
+
+            if(attributes.height){
+                options.height = parseInt(attributes.height);
+            }
+
+            element.markdown(options);
+        }
+    }
+});
+
+'use strict';
+
+angular.module('SmartAdmin.Forms').directive('smartSummernoteEditor', function (lazyScript) {
+    return {
+        restrict: 'A',
+        compile: function (tElement, tAttributes) {
+            tElement.removeAttr('smart-summernote-editor data-smart-summernote-editor');
+
+            var options = {
+                focus : true,
+                tabsize : 2
+            };
+
+            if(tAttributes.height){
+                options.height = tAttributes.height;
+            }
+
+            lazyScript.register('content/js/vendor.ui.js').then(function(){
+                tElement.summernote(options);
+            });
+        }
+    }
+});
+
 "use strict";
 
 
@@ -15762,98 +15859,6 @@ angular.module('SmartAdmin.Forms').directive('bootstrapTogglingForm', function()
 
 
 });
-'use strict';
-
-angular.module('SmartAdmin.Forms').directive('smartCkEditor', function () {
-    return {
-        restrict: 'A',
-        compile: function ( tElement) {
-            tElement.removeAttr('smart-ck-editor data-smart-ck-editor');
-            //CKEDITOR.basePath = 'bower_components/ckeditor/';
-
-            CKEDITOR.replace( tElement.attr('name'), { height: '380px', startupFocus : true} );
-        }
-    }
-});
-'use strict';
-
-angular.module('SmartAdmin.Forms').directive('smartDestroySummernote', function () {
-    return {
-        restrict: 'A',
-        compile: function (tElement, tAttributes) {
-            tElement.removeAttr('smart-destroy-summernote data-smart-destroy-summernote')
-            tElement.on('click', function() {
-                angular.element(tAttributes.smartDestroySummernote).destroy();
-            })
-        }
-    }
-});
-
-'use strict';
-
-angular.module('SmartAdmin.Forms').directive('smartEditSummernote', function () {
-    return {
-        restrict: 'A',
-        compile: function (tElement, tAttributes) {
-            tElement.removeAttr('smart-edit-summernote data-smart-edit-summernote');
-            tElement.on('click', function(){
-                angular.element(tAttributes.smartEditSummernote).summernote({
-                    focus : true
-                });  
-            });
-        }
-    }
-});
-
-'use strict';
-
-angular.module('SmartAdmin.Forms').directive('smartMarkdownEditor', function () {
-    return {
-        restrict: 'A',
-        compile: function (element, attributes) {
-            element.removeAttr('smart-markdown-editor data-smart-markdown-editor')
-
-            var options = {
-                autofocus:false,
-                savable:true,
-                fullscreen: {
-                    enable: false
-                }
-            };
-
-            if(attributes.height){
-                options.height = parseInt(attributes.height);
-            }
-
-            element.markdown(options);
-        }
-    }
-});
-
-'use strict';
-
-angular.module('SmartAdmin.Forms').directive('smartSummernoteEditor', function (lazyScript) {
-    return {
-        restrict: 'A',
-        compile: function (tElement, tAttributes) {
-            tElement.removeAttr('smart-summernote-editor data-smart-summernote-editor');
-
-            var options = {
-                focus : true,
-                tabsize : 2
-            };
-
-            if(tAttributes.height){
-                options.height = tAttributes.height;
-            }
-
-            lazyScript.register('content/js/vendor.ui.js').then(function(){
-                tElement.summernote(options);
-            });
-        }
-    }
-});
-
 'use strict';
 
 angular.module('SmartAdmin.Forms').directive('smartCheckoutForm', function (formsCommon, lazyScript) {

@@ -1,14 +1,13 @@
 package com.bgkh.web.rest;
 
-import com.bgkh.service.dto.AssetDTOs;
-import com.codahale.metrics.annotation.Timed;
 import com.bgkh.service.AssetService;
-import com.bgkh.web.rest.util.HeaderUtil;
 import com.bgkh.service.dto.AssetDTO;
-
+import com.bgkh.service.dto.AssetDTOs;
+import com.bgkh.service.mapper.AssetMapper;
+import com.bgkh.web.rest.util.HeaderUtil;
+import com.codahale.metrics.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,10 +16,8 @@ import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * REST controller for managing Asset.
@@ -33,6 +30,8 @@ public class AssetResource {
 
     @Inject
     private AssetService assetService;
+    @Inject
+    private AssetMapper assetMapper;
 
     /**
      * POST  /assets : Create a new asset.
@@ -48,6 +47,30 @@ public class AssetResource {
         if (assetDTO.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("asset", "idexists", "A new asset cannot already have an ID")).body(null);
         }
+        AssetDTO result = assetService.save(assetDTO);
+        return ResponseEntity.created(new URI("/api/assets/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert("asset", result.getId().toString()))
+            .body(result);
+    }
+
+    @PostMapping("/assets/copy")
+    @Timed
+    public ResponseEntity<AssetDTOs> copyAsset(@Valid @RequestBody AssetDTOs assetDTOs) throws URISyntaxException {
+        log.debug("REST request to copy Assets : {}", assetDTOs);
+
+        AssetDTOs result = assetService.copy(assetDTOs);
+        return ResponseEntity.created(new URI("/api/assets/" + result.getAssetList().get(0).getId()))
+            .headers(HeaderUtil.createEntityCreationAlert("asset", result.getAssetList().get(0).getId().toString()))
+            .body(result);
+    }
+
+    @PostMapping("/assets/move/{id}")
+    @Timed
+    public ResponseEntity<AssetDTO> moveAsset(@Valid @RequestBody Long parentId, @PathVariable Long id) throws URISyntaxException {
+        log.debug("REST request to move Asset with id : {}", id);
+
+        AssetDTO assetDTO = assetService.findOne(id);
+
         AssetDTO result = assetService.save(assetDTO);
         return ResponseEntity.created(new URI("/api/assets/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert("asset", result.getId().toString()))

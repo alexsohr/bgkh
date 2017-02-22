@@ -5,12 +5,14 @@
         .module('app')
         .controller('AssetCopyController', AssetCopyController);
 
-    AssetCopyController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'Asset', 'AssetImportModalService'];
+    AssetCopyController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'Asset', 'AssetCopy', 'AssetImportModalService'];
 
-    function AssetCopyController($timeout, $scope, $stateParams, $uibModalInstance, entity, Asset, AssetImportModalService) {
+    function AssetCopyController($timeout, $scope, $stateParams, $uibModalInstance, entity, Asset, AssetCopy, AssetImportModalService) {
         var vm = this;
 
         vm.asset = entity;
+        vm.assetList = {};
+        vm.assetList.assetList = [];
         vm.clear = clear;
         vm.save = save;
         vm.selectedParentTree = selectedParentTree;
@@ -25,11 +27,9 @@
 
         function save() {
             vm.isSaving = true;
-            if (vm.asset.id !== null) {
-                Asset.update(vm.asset, onSaveSuccess, onSaveError);
-            } else {
-                Asset.save(vm.asset, onSaveSuccess, onSaveError);
-            }
+            vm.assetList.assetList.push(vm.asset);
+            vm.assetList.parentId = vm.asset.parentId;
+            AssetCopy.save(vm.assetList, onSaveSuccess, onSaveError);
         }
 
         function onSaveSuccess(result) {
@@ -45,7 +45,6 @@
 
         function selectedParentTree(branch) {
             if (!angular.isUndefinedOrNull(branch)) {
-                vm.asset.id = null;
                 vm.asset.parentId = branch.id;
             }
         }

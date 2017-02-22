@@ -3,10 +3,12 @@
     angular
         .module('app')
         .factory('Asset', Asset)
-        .factory('AssetImport', AssetImport);
+        .factory('AssetImport', AssetImport)
+        .factory('AssetCopy', AssetCopy);
 
     Asset.$inject = ['$resource'];
     AssetImport.$inject = ['$resource'];
+    AssetCopy.$inject = ['$resource'];
 
     function Asset ($resource) {
         var resourceUrl =  'api/assets/:id';
@@ -36,6 +38,10 @@
         });
     }
 
-
-
+    function AssetCopy($resource) {
+        var resourceUrl = '/api/assets/copy';
+        return $resource(resourceUrl, {}, {
+            'save': {method: 'POST'}
+        });
+    }
 })();

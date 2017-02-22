@@ -24,7 +24,7 @@ angular.module('app').directive('assetsTreeGrid', function () {
             };
             $scope.col_defs = [
                 {field: "code", displayName: $rootScope.getWord('Asset Code'), sortable: true, filterable: true},
-                {field: "type", displayName: $rootScope.getWord('Asset Type')},
+                {field: "assetType", displayName: $rootScope.getWord('Asset Type')},
                 {field: "supervisor", displayName: $rootScope.getWord('Asset Supervisor')},
                 {field: "capacity", displayName: $rootScope.getWord('Asset Capacity')},
                 {field: "user", displayName: $rootScope.getWord('Asset User')},

@@ -8,6 +8,8 @@ import com.bgkh.service.dto.AssetDTOs;
 import com.bgkh.service.mapper.AssetMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Example;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +46,53 @@ public class AssetServiceImpl implements AssetService{
         asset = assetRepository.save(asset);
         AssetDTO result = assetMapper.assetToAssetDTO(asset);
         return result;
+    }
+
+    @Override
+    @Transactional
+    public AssetDTOs copy(AssetDTOs assetDTOs) {
+        log.debug("Request to copy Assets : {}", assetDTOs);
+        ArrayList<AssetDTO> response = new ArrayList<>();
+        for(AssetDTO assetDTO: assetDTOs.getAssetList()) {
+            Asset asset = assetMapper.assetDTOToAsset(assetDTO);
+//
+//            AssetDTO newAssetDTO = saveNewAsset(asset, assetDTOs.getParentId());
+//            response.add(newAssetDTO);
+
+            findAndCopyChildren(asset, assetDTOs.getParentId(), response);
+        }
+        assetDTOs.setAssetList(response);
+        return assetDTOs;
+    }
+
+    private AssetDTO saveNewAsset(Asset asset, Long parentId) {
+        Asset newAssetEntity = new Asset();
+
+        BeanUtils.copyProperties(asset, newAssetEntity);
+        newAssetEntity.setWorkOrders(null);
+        newAssetEntity.setMaps(null);
+        newAssetEntity.setOtherFiles(null);
+
+        newAssetEntity.setParentId(parentId);
+        newAssetEntity.setId(null);
+        newAssetEntity.setName(asset.getName() + "_NEW");
+        Asset newAsset = assetRepository.save(newAssetEntity);
+        AssetDTO assetDTO = assetMapper.assetToAssetDTO(newAsset);
+        return assetDTO;
+    }
+
+    private void findAndCopyChildren(Asset asset, Long parentId, List<AssetDTO> response) {
+
+        AssetDTO newAssetDTO = saveNewAsset(asset, parentId);
+        response.add(newAssetDTO);
+
+        Long assetId = asset.getId();
+        Asset assetExample = new Asset();
+        assetExample.setParentId(assetId);
+        List<Asset> allChileAssets = assetRepository.findAll(Example.of(assetExample));
+        for(Asset child: allChileAssets) {
+            findAndCopyChildren(child, newAssetDTO.getId(), response);
+        }
     }
 
     /**

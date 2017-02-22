@@ -19,6 +19,14 @@ public interface AssetService {
     AssetDTO save(AssetDTO assetDTO);
 
     /**
+     * Copy a asset.
+     *
+     * @param assetDTOs the entities to copy
+     * @return the persisted entity
+     */
+    AssetDTOs copy(AssetDTOs assetDTOs);
+
+    /**
      * Save all assets.
      *
      * @param assetDTOs the entities to save
