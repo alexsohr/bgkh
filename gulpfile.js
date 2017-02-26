@@ -140,7 +140,7 @@ gulp.task('vendor', function(){
 });
 
 gulp.task('prod', ['build']);
-gulp.task('dev', ['clean', 'js', 'vendor', 'watch']);
+gulp.task('dev', ['clean', 'js', 'vendor', 'combine-template-app', 'watch']);
 gulp.task('default', ['dev']);
 
 var swallowError = function(error){
@@ -149,7 +149,7 @@ var swallowError = function(error){
 };
 
 var getTemplateStream = function () {
-    return gulp.src(source.js.tpl)
+    return gulp.src([source.js.tpl, source.js.html])
         .pipe(htmlmin({collapseWhitespace: true}))
         .pipe(templateCache({
             root: 'app/',

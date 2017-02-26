@@ -9,11 +9,17 @@ import java.util.List;
 /**
  * Mapper for the entity Asset and its DTO AssetDTO.
  */
-@Mapper(componentModel = "spring", uses = {})
+@Mapper(componentModel = "spring", uses = {UserMapper.class, UserMapper.class, })
 public interface AssetMapper {
 
     @Mapping(source = "maps.id", target = "mapsId")
     @Mapping(source = "otherFiles.id", target = "otherFilesId")
+    @Mapping(source = "supervisor.id", target = "supervisorId")
+    @Mapping(source = "technician.id", target = "technicianId")
+    @Mapping(source = "technician.firstName", target = "technicianFirstName")
+    @Mapping(source = "technician.lastName", target = "technicianLastName")
+    @Mapping(source = "supervisor.firstName", target = "supervisorFirstName")
+    @Mapping(source = "supervisor.lastName", target = "supervisorLastName")
     AssetDTO assetToAssetDTO(Asset asset);
 
     List<AssetDTO> assetsToAssetDTOs(List<Asset> assets);
@@ -21,6 +27,8 @@ public interface AssetMapper {
     @Mapping(target = "workOrders", ignore = true)
     @Mapping(source = "mapsId", target = "maps")
     @Mapping(source = "otherFilesId", target = "otherFiles")
+    @Mapping(source = "supervisorId", target = "supervisor")
+    @Mapping(source = "technicianId", target = "technician")
     Asset assetDTOToAsset(AssetDTO assetDTO);
 
     List<Asset> assetDTOsToAssets(List<AssetDTO> assetDTOs);

@@ -4,12 +4,20 @@
         .module('app')
         .factory('Asset', Asset)
         .factory('AssetImport', AssetImport)
-        .factory('AssetCopy', AssetCopy);
+        .factory('AssetCopy', AssetCopy)
+        .factory('AssetManufacture', AssetManufacture);
 
     Asset.$inject = ['$resource'];
     AssetImport.$inject = ['$resource'];
     AssetCopy.$inject = ['$resource'];
+    AssetManufacture.$inject = ['$resource'];
 
+    function AssetManufacture($resource) {
+        var resourceUrl = 'api/assets/manufactures';
+        return $resource(resourceUrl, {}, {
+            'query': { method: 'GET', isArray: true}
+        });
+    }
     function Asset ($resource) {
         var resourceUrl =  'api/assets/:id';
 
@@ -25,7 +33,7 @@
                 }
             },
             'save': {method: 'POST'},
-            'update': { method:'PUT' },
+            'update': { method:'PUT'},
             'delete': {method: 'DELETE'}
         });
     }

@@ -2,8 +2,6 @@ package com.bgkh.service.dto;
 
 import javax.validation.constraints.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
 
 import com.bgkh.domain.enumeration.AssetType;
@@ -50,6 +48,18 @@ public class AssetDTO implements Serializable {
     private Long mapsId;
 
     private Long otherFilesId;
+
+    private Long supervisorId;
+
+    private Long technicianId;
+
+    private String supervisorFirstName;
+
+    private String technicianFirstName;
+
+    private String supervisorLastName;
+
+    private String technicianLastName;
 
     public Long getId() {
         return id;
@@ -100,6 +110,20 @@ public class AssetDTO implements Serializable {
     public void setAssetType(AssetType assetType) {
         this.assetType = assetType;
     }
+    public String getManufacture() {
+        return manufacture;
+    }
+
+    public void setManufacture(String manufacture) {
+        this.manufacture = manufacture;
+    }
+    public String getTypeVal() {
+        return typeVal;
+    }
+
+    public void setTypeVal(String typeVal) {
+        this.typeVal = typeVal;
+    }
     public Integer getCapacity() {
         return capacity;
     }
@@ -131,20 +155,52 @@ public class AssetDTO implements Serializable {
         this.otherFilesId = uploadFileId;
     }
 
-    public String getManufacture() {
-        return manufacture;
+    public Long getSupervisorId() {
+        return supervisorId;
     }
 
-    public void setManufacture(String manufacture) {
-        this.manufacture = manufacture;
+    public void setSupervisorId(Long userId) {
+        this.supervisorId = userId;
     }
 
-    public String getTypeVal() {
-        return typeVal;
+    public Long getTechnicianId() {
+        return technicianId;
     }
 
-    public void setTypeVal(String typeVal) {
-        this.typeVal = typeVal;
+    public void setTechnicianId(Long userId) {
+        this.technicianId = userId;
+    }
+
+    public String getSupervisorLastName() {
+        return supervisorLastName;
+    }
+
+    public void setSupervisorLastName(String supervisorLastName) {
+        this.supervisorLastName = supervisorLastName;
+    }
+
+    public String getTechnicianLastName() {
+        return technicianLastName;
+    }
+
+    public void setTechnicianLastName(String technicianLastName) {
+        this.technicianLastName = technicianLastName;
+    }
+
+    public String getSupervisorFirstName() {
+        return supervisorFirstName;
+    }
+
+    public void setSupervisorFirstName(String supervisorFirstName) {
+        this.supervisorFirstName = supervisorFirstName;
+    }
+
+    public String getTechnicianFirstName() {
+        return technicianFirstName;
+    }
+
+    public void setTechnicianFirstName(String technicianFirstName) {
+        this.technicianFirstName = technicianFirstName;
     }
 
     @Override
@@ -182,6 +238,12 @@ public class AssetDTO implements Serializable {
             ", typeVal='" + typeVal + "'" +
             ", capacity='" + capacity + "'" +
             ", year='" + year + "'" +
+            ", supervisorId='" + supervisorId + "'" +
+            ", technicianId='" + technicianId + "'" +
+            ", supervisorFirstName='" + supervisorFirstName + "'" +
+            ", technicianFirstName='" + technicianFirstName + "'" +
+            ", supervisorLastName='" + supervisorLastName + "'" +
+            ", technicianLastName='" + technicianLastName + "'" +
             '}';
     }
 }

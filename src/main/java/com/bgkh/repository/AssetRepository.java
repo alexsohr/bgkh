@@ -12,4 +12,12 @@ import java.util.List;
 @SuppressWarnings("unused")
 public interface AssetRepository extends JpaRepository<Asset,Long> {
 
+    @Query("select asset from Asset asset where asset.supervisor.login = ?#{principal.username}")
+    List<Asset> findBySupervisorIsCurrentUser();
+
+    @Query("select asset from Asset asset where asset.technician.login = ?#{principal.username}")
+    List<Asset> findByTechnicianIsCurrentUser();
+
+    @Query("select asset.manufacture from Asset asset where asset.manufacture <> '' AND asset.manufacture is not null group by asset.manufacture")
+    List<String> findAllManufactures();
 }

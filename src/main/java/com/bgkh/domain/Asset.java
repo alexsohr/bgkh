@@ -53,12 +53,12 @@ public class Asset implements Serializable {
     @Column(name = "asset_type")
     private AssetType assetType;
 
-    @Size(min = 3, max = 250)
+    @Size(min = 1, max = 250)
     @Column(name = "manufacture", length = 250)
     private String manufacture;
 
-    @Size(min = 3, max = 250)
-    @Column(name = "typeVal", length = 250)
+    @Size(min = 1, max = 250)
+    @Column(name = "type_val", length = 250)
     private String typeVal;
 
     @Min(value = 0)
@@ -79,6 +79,12 @@ public class Asset implements Serializable {
 
     @ManyToOne
     private UploadFile otherFiles;
+
+    @ManyToOne
+    private User supervisor;
+
+    @ManyToOne
+    private User technician;
 
     public Long getId() {
         return id;
@@ -166,6 +172,32 @@ public class Asset implements Serializable {
         this.assetType = assetType;
     }
 
+    public String getManufacture() {
+        return manufacture;
+    }
+
+    public Asset manufacture(String manufacture) {
+        this.manufacture = manufacture;
+        return this;
+    }
+
+    public void setManufacture(String manufacture) {
+        this.manufacture = manufacture;
+    }
+
+    public String getTypeVal() {
+        return typeVal;
+    }
+
+    public Asset typeVal(String typeVal) {
+        this.typeVal = typeVal;
+        return this;
+    }
+
+    public void setTypeVal(String typeVal) {
+        this.typeVal = typeVal;
+    }
+
     public Integer getCapacity() {
         return capacity;
     }
@@ -243,20 +275,30 @@ public class Asset implements Serializable {
         this.otherFiles = uploadFile;
     }
 
-    public String getManufacture() {
-        return manufacture;
+    public User getSupervisor() {
+        return supervisor;
     }
 
-    public void setManufacture(String manufacture) {
-        this.manufacture = manufacture;
+    public Asset supervisor(User user) {
+        this.supervisor = user;
+        return this;
     }
 
-    public String getTypeVal() {
-        return typeVal;
+    public void setSupervisor(User user) {
+        this.supervisor = user;
     }
 
-    public void setTypeVal(String typeVal) {
-        this.typeVal = typeVal;
+    public User getTechnician() {
+        return technician;
+    }
+
+    public Asset technician(User user) {
+        this.technician = user;
+        return this;
+    }
+
+    public void setTechnician(User user) {
+        this.technician = user;
     }
 
     @Override

@@ -25,9 +25,13 @@ angular.module('app').directive('assetsTreeGrid', function () {
             $scope.col_defs = [
                 {field: "code", displayName: $rootScope.getWord('Asset Code'), sortable: true, filterable: true},
                 {field: "assetType", displayName: $rootScope.getWord('Asset Type')},
-                {field: "supervisor", displayName: $rootScope.getWord('Asset Supervisor')},
                 {field: "capacity", displayName: $rootScope.getWord('Asset Capacity')},
-                {field: "user", displayName: $rootScope.getWord('Asset User')},
+                {field: "supervisor", displayName: $rootScope.getWord('Asset Supervisor'),
+                    cellTemplate: "<span>{{row.branch.supervisorFirstName}} {{row.branch.supervisorLastName}}</span>"
+                },
+                {field: "technician", displayName: $rootScope.getWord('Asset User'),
+                    cellTemplate: "<span>{{row.branch.technicianFirstName}} {{row.branch.technicianLastName}}</span>"
+                },
                 {
                     field: "demographicId",
                     displayName: $rootScope.getWord('Action'),

@@ -122,6 +122,13 @@ public class AssetResource {
         return assetService.findAll();
     }
 
+    @GetMapping("/assets/manufactures")
+    @Timed
+    public List<String> getAllManufactures() {
+        log.debug("REST request to get all Assets Manufactures");
+        return assetService.findAllManufactures();
+    }
+
     /**
      * GET  /assets/:id : get the "id" asset.
      *

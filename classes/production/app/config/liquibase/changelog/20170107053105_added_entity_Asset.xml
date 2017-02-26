@@ -27,43 +27,43 @@
             <column name="parent_id" type="bigint">
                 <constraints nullable="false" />
             </column>
-
+            
             <column name="name" type="varchar(100)">
                 <constraints nullable="false" />
             </column>
-
+            
             <column name="location" type="varchar(250)">
                 <constraints nullable="true" />
             </column>
-
+            
             <column name="details" type="varchar(500)">
                 <constraints nullable="true" />
             </column>
-
+            
             <column name="code" type="varchar(50)">
                 <constraints nullable="false" />
             </column>
-
+            
             <column name="asset_type" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-
-            <column name="manufacture" type="varchar(255)">
+            
+            <column name="manufacture" type="varchar(250)">
                 <constraints nullable="true" />
             </column>
-
-            <column name="type_val" type="varchar(255)">
+            
+            <column name="type_val" type="varchar(250)">
                 <constraints nullable="true" />
             </column>
-
+            
             <column name="capacity" type="integer">
                 <constraints nullable="true" />
             </column>
-
+            
             <column name="year" type="integer">
                 <constraints nullable="true" />
             </column>
-
+            
             <column name="maps_id" type="bigint">
                 <constraints nullable="true" />
             </column>
@@ -72,8 +72,16 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="supervisor_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="technician_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
-
+        
     </changeSet>
 </databaseChangeLog>

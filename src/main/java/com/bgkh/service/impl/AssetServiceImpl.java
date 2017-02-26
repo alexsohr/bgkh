@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @Transactional
-public class AssetServiceImpl implements AssetService{
+class AssetServiceImpl implements AssetService{
 
     private final Logger log = LoggerFactory.getLogger(AssetServiceImpl.class);
 
@@ -139,6 +139,12 @@ public class AssetServiceImpl implements AssetService{
             .collect(Collectors.toCollection(LinkedList::new));
 
         return result;
+    }
+
+    @Override
+    public List<String> findAllManufactures() {
+        List<String> allManufactures = assetRepository.findAllManufactures();
+        return allManufactures;
     }
 
     /**

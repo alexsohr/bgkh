@@ -41,6 +41,9 @@ public interface AssetService {
      */
     List<AssetDTO> findAll();
 
+
+    List<String> findAllManufactures();
+
     /**
      *  Get the "id" asset.
      *

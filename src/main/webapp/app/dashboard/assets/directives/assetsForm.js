@@ -14,15 +14,46 @@ angular.module('app').directive('assetsForm', function () {
             parentId: '=parentId',
             updateAssetCallback: '&?'
         },
-        controller: function ($scope) {
+        controller: function ($scope, User, AssetManufacture) {
 
             if (angular.isUndefinedOrNull($scope.currentStep)) {
                 $scope.currentStep = 1;
             }
             $scope.state = "A";
             $scope.disableForm = false;
+            $scope.users = [];
+            $scope.manufactures = [];
 
+            loadAllManufactures();
+            loadAllUsers();
 
+            function loadAllManufactures() {
+                AssetManufacture.query({}, onSuccessManufacture, onError);
+            }
+
+            function loadAllUsers() {
+                User.query({}, onSuccess, onError);
+            }
+
+            function onSuccessManufacture(data) {
+                $scope.manufactures = data;
+            }
+
+            function onSuccess(data) {
+                for(var i=0; i < data.length; i++) {
+                    if (angular.isUndefinedOrNull(data[i].firstName) && angular.isUndefinedOrNull(data[i].lastName)) {
+                        data[i].name = data[i].login;
+                    }
+                    else {
+                        data[i].name = data[i].firstName + ' ' + data[i].lastName;
+                    }
+                }
+                $scope.users = data;
+            }
+
+            function onError(error) {
+                AlertService.error(error.data.message);
+            }
 
             if (!angular.isUndefinedOrNull($scope.displayDetails)) {
                 $scope.disableForm = true;
@@ -33,6 +64,10 @@ angular.module('app').directive('assetsForm', function () {
                 $scope.asset = $scope.updateAssetCallback(index);
                 console.log($scope.asset);
             }
+
+            $scope.$watch('asset', function(newValue, oldValue) {
+                console.log(newValue);
+            });
 
             $scope.hasSubTree = false;
             $scope.assetType = 'ASSET_GROUP';
