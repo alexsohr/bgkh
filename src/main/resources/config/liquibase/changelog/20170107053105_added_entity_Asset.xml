@@ -64,14 +64,6 @@
                 <constraints nullable="true" />
             </column>
             
-            <column name="maps_id" type="bigint">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="other_files_id" type="bigint">
-                <constraints nullable="true" />
-            </column>
-
             <column name="supervisor_id" type="bigint">
                 <constraints nullable="true" />
             </column>

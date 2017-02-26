@@ -1,16 +1,12 @@
 package com.bgkh.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * A UploadFile.
@@ -34,11 +30,6 @@ public class UploadFile implements Serializable {
     @NotNull
     @Column(name = "deleted", nullable = false)
     private Boolean deleted;
-
-    @OneToMany(mappedBy = "otherFiles")
-    @JsonIgnore
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Set<Asset> assets = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -73,7 +64,6 @@ public class UploadFile implements Serializable {
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
     }
-
 
     @Override
     public boolean equals(Object o) {

@@ -2,43 +2,56 @@
     'use strict';
 
     angular
-        .module('app.entity')
+        .module('appApp')
         .config(stateConfig);
 
     stateConfig.$inject = ['$stateProvider'];
 
     function stateConfig($stateProvider) {
-        $stateProvider.state('app.entity.assetsTable', {
+        $stateProvider
+        .state('asset', {
+            parent: 'entity',
             url: '/asset',
             data: {
                 authorities: ['ROLE_USER'],
-                pageTitle: 'app.asset.home.title'
+                pageTitle: 'appApp.asset.home.title'
             },
             views: {
-                'content@app': {
+                'content@': {
                     templateUrl: 'app/entities/asset/assets.html',
                     controller: 'AssetController',
                     controllerAs: 'vm'
                 }
             },
             resolve: {
+                translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                    $translatePartialLoader.addPart('asset');
+                    $translatePartialLoader.addPart('assetType');
+                    $translatePartialLoader.addPart('global');
+                    return $translate.refresh();
+                }]
             }
         })
         .state('asset-detail', {
-
+            parent: 'entity',
             url: '/asset/{id}',
             data: {
                 authorities: ['ROLE_USER'],
-                title: 'app.asset.detail.title'
+                pageTitle: 'appApp.asset.detail.title'
             },
             views: {
-                'content@app': {
+                'content@': {
                     templateUrl: 'app/entities/asset/asset-detail.html',
                     controller: 'AssetDetailController',
                     controllerAs: 'vm'
                 }
             },
             resolve: {
+                translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                    $translatePartialLoader.addPart('asset');
+                    $translatePartialLoader.addPart('assetType');
+                    return $translate.refresh();
+                }],
                 entity: ['$stateParams', 'Asset', function($stateParams, Asset) {
                     return Asset.get({id : $stateParams.id}).$promise;
                 }],
@@ -95,13 +108,13 @@
                             return {
                                 parentId: null,
                                 name: null,
+                                location: null,
+                                details: null,
                                 code: null,
                                 assetType: null,
-                                capacity: null,
                                 manufacture: null,
-                                supervisorId: null,
-                                technicianId: null,
                                 typeVal: null,
+                                capacity: null,
                                 year: null,
                                 id: null
                             };

@@ -11,6 +11,7 @@
                 "workOrder": "Work Order",
                 "assetSpecificationTypeField": "Asset Specification Type Field",
                 "assetSpecificationTypeValue": "Asset Specification Type Value",
+                "uploadFile": "Upload File",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {

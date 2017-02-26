@@ -2,27 +2,19 @@
     'use strict';
 
     angular
-        .module('app')
+        .module('appApp')
         .controller('AssetDialogController', AssetDialogController);
 
-    AssetDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'Asset', 'WorkOrder'];
+    AssetDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'Asset', 'WorkOrder', 'User'];
 
-    function AssetDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, Asset, WorkOrder) {
+    function AssetDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, Asset, WorkOrder, User) {
         var vm = this;
 
         vm.asset = entity;
         vm.clear = clear;
         vm.save = save;
-        vm.assetspecificationtypefields = AssetSpecificationTypeField.query({filter: 'assetspecificationtypefield-is-null'});
-        $q.all([vm.asset.$promise, vm.assetspecificationtypefields.$promise]).then(function() {
-            if (!vm.asset.assetSpecificationTypeFieldId) {
-                return $q.reject();
-            }
-            return AssetSpecificationTypeField.get({id : vm.asset.assetSpecificationTypeFieldId}).$promise;
-        }).then(function(assetSpecificationTypeField) {
-            vm.assetspecificationtypefields.push(assetSpecificationTypeField);
-        });
         vm.workorders = WorkOrder.query();
+        vm.users = User.query();
 
         $timeout(function (){
             angular.element('.form-group:eq(1)>input').focus();
@@ -42,7 +34,7 @@
         }
 
         function onSaveSuccess (result) {
-            $scope.$emit('app:assetUpdate', result);
+            $scope.$emit('appApp:assetUpdate', result);
             $uibModalInstance.close(result);
             vm.isSaving = false;
         }

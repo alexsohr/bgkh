@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @Transactional
-class AssetServiceImpl implements AssetService{
+public class AssetServiceImpl implements AssetService{
 
     private final Logger log = LoggerFactory.getLogger(AssetServiceImpl.class);
 
@@ -70,8 +70,6 @@ class AssetServiceImpl implements AssetService{
 
         BeanUtils.copyProperties(asset, newAssetEntity);
         newAssetEntity.setWorkOrders(null);
-        newAssetEntity.setMaps(null);
-        newAssetEntity.setOtherFiles(null);
 
         newAssetEntity.setParentId(parentId);
         newAssetEntity.setId(null);

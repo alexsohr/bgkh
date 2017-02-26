@@ -75,12 +75,6 @@ public class Asset implements Serializable {
     private Set<WorkOrder> workOrders = new HashSet<>();
 
     @ManyToOne
-    private UploadFile maps;
-
-    @ManyToOne
-    private UploadFile otherFiles;
-
-    @ManyToOne
     private User supervisor;
 
     @ManyToOne
@@ -247,32 +241,6 @@ public class Asset implements Serializable {
 
     public void setWorkOrders(Set<WorkOrder> workOrders) {
         this.workOrders = workOrders;
-    }
-
-    public UploadFile getMaps() {
-        return maps;
-    }
-
-    public Asset maps(UploadFile uploadFile) {
-        this.maps = uploadFile;
-        return this;
-    }
-
-    public void setMaps(UploadFile uploadFile) {
-        this.maps = uploadFile;
-    }
-
-    public UploadFile getOtherFiles() {
-        return otherFiles;
-    }
-
-    public Asset otherFiles(UploadFile uploadFile) {
-        this.otherFiles = uploadFile;
-        return this;
-    }
-
-    public void setOtherFiles(UploadFile uploadFile) {
-        this.otherFiles = uploadFile;
     }
 
     public User getSupervisor() {

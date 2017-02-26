@@ -4,125 +4,195 @@
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
                 ng-click="vm.clear()">&times;</button>
-        <h4 class="modal-title" id="myAssetLabel" >Create or edit a Asset</h4>
+        <h4 class="modal-title" id="myAssetLabel" data-translate="appApp.asset.home.createOrEditLabel">Create or edit a Asset</h4>
     </div>
     <div class="modal-body">
         <jhi-alert-error></jhi-alert-error>
         <div class="form-group" ng-show="vm.asset.id">
-            <label for="id" >ID</label>
+            <label for="id" data-translate="global.field.id">ID</label>
             <input type="text" class="form-control" id="id" name="id"
                     ng-model="vm.asset.id" readonly />
         </div>
         <div class="form-group">
-            <label class="control-label"  for="field_parentId">Parent Id</label>
+            <label class="control-label" data-translate="appApp.asset.parentId" for="field_parentId">Parent Id</label>
             <input type="number" class="form-control" name="parentId" id="field_parentId"
                     ng-model="vm.asset.parentId"
                     required />
             <div ng-show="editForm.parentId.$invalid">
                 <p class="help-block"
-                    ng-show="editForm.parentId.$error.required" >
+                    ng-show="editForm.parentId.$error.required" data-translate="entity.validation.required">
                     This field is required.
                 </p>
                 <p class="help-block"
-                    ng-show="editForm.parentId.$error.number" >
+                    ng-show="editForm.parentId.$error.number" data-translate="entity.validation.number">
                     This field should be a number.
                 </p>
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label"  for="field_name">Name</label>
+            <label class="control-label" data-translate="appApp.asset.name" for="field_name">Name</label>
             <input type="text" class="form-control" name="name" id="field_name"
                     ng-model="vm.asset.name"
                     required ng-minlength="3" ng-maxlength="100" />
             <div ng-show="editForm.name.$invalid">
                 <p class="help-block"
-                    ng-show="editForm.name.$error.required" >
+                    ng-show="editForm.name.$error.required" data-translate="entity.validation.required">
                     This field is required.
                 </p>
                 <p class="help-block"
-                    ng-show="editForm.name.$error.minlength"  translate-value-min="3">
+                    ng-show="editForm.name.$error.minlength" data-translate="entity.validation.minlength" translate-value-min="3">
                     This field is required to be at least 3 characters.
                 </p>
                 <p class="help-block"
-                    ng-show="editForm.name.$error.maxlength"  translate-value-max="100">
+                    ng-show="editForm.name.$error.maxlength" data-translate="entity.validation.maxlength" translate-value-max="100">
                     This field cannot be longer than 100 characters.
                 </p>
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label"  for="field_code">Code</label>
+            <label class="control-label" data-translate="appApp.asset.location" for="field_location">Location</label>
+            <input type="text" class="form-control" name="location" id="field_location"
+                    ng-model="vm.asset.location"
+                    ng-minlength="3" ng-maxlength="250" />
+            <div ng-show="editForm.location.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.location.$error.minlength" data-translate="entity.validation.minlength" translate-value-min="3">
+                    This field is required to be at least 3 characters.
+                </p>
+                <p class="help-block"
+                    ng-show="editForm.location.$error.maxlength" data-translate="entity.validation.maxlength" translate-value-max="250">
+                    This field cannot be longer than 250 characters.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="appApp.asset.details" for="field_details">Details</label>
+            <input type="text" class="form-control" name="details" id="field_details"
+                    ng-model="vm.asset.details"
+                    ng-minlength="3" ng-maxlength="500" />
+            <div ng-show="editForm.details.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.details.$error.minlength" data-translate="entity.validation.minlength" translate-value-min="3">
+                    This field is required to be at least 3 characters.
+                </p>
+                <p class="help-block"
+                    ng-show="editForm.details.$error.maxlength" data-translate="entity.validation.maxlength" translate-value-max="500">
+                    This field cannot be longer than 500 characters.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="appApp.asset.code" for="field_code">Code</label>
             <input type="text" class="form-control" name="code" id="field_code"
                     ng-model="vm.asset.code"
                     required ng-minlength="1" ng-maxlength="50" />
             <div ng-show="editForm.code.$invalid">
                 <p class="help-block"
-                    ng-show="editForm.code.$error.required" >
+                    ng-show="editForm.code.$error.required" data-translate="entity.validation.required">
                     This field is required.
                 </p>
                 <p class="help-block"
-                    ng-show="editForm.code.$error.minlength"  translate-value-min="1">
+                    ng-show="editForm.code.$error.minlength" data-translate="entity.validation.minlength" translate-value-min="1">
                     This field is required to be at least 1 characters.
                 </p>
                 <p class="help-block"
-                    ng-show="editForm.code.$error.maxlength"  translate-value-max="50">
+                    ng-show="editForm.code.$error.maxlength" data-translate="entity.validation.maxlength" translate-value-max="50">
                     This field cannot be longer than 50 characters.
                 </p>
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label"  for="field_assetType">Asset Type</label>
+            <label class="control-label" data-translate="appApp.asset.assetType" for="field_assetType">Asset Type</label>
             <select class="form-control" name="assetType" ng-model="vm.asset.assetType" id="field_assetType">
-                <option value="ASSET_GROUP" >ASSET_GROUP</option>
-                <option value="ASSET" >ASSET</option>
-                <option value="SUB_ASSET" >SUB_ASSET</option>
+                <option value="ASSET_GROUP" data-translate="appApp.AssetType.ASSET_GROUP">ASSET_GROUP</option>
+                <option value="ASSET" data-translate="appApp.AssetType.ASSET">ASSET</option>
+                <option value="SUB_ASSET" data-translate="appApp.AssetType.SUB_ASSET">SUB_ASSET</option>
             </select>
         </div>
         <div class="form-group">
-            <label class="control-label"  for="field_capacity">Capacity</label>
+            <label class="control-label" data-translate="appApp.asset.manufacture" for="field_manufacture">Manufacture</label>
+            <input type="text" class="form-control" name="manufacture" id="field_manufacture"
+                    ng-model="vm.asset.manufacture"
+                    ng-minlength="1" ng-maxlength="250" />
+            <div ng-show="editForm.manufacture.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.manufacture.$error.minlength" data-translate="entity.validation.minlength" translate-value-min="1">
+                    This field is required to be at least 1 characters.
+                </p>
+                <p class="help-block"
+                    ng-show="editForm.manufacture.$error.maxlength" data-translate="entity.validation.maxlength" translate-value-max="250">
+                    This field cannot be longer than 250 characters.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="appApp.asset.typeVal" for="field_typeVal">Type Val</label>
+            <input type="text" class="form-control" name="typeVal" id="field_typeVal"
+                    ng-model="vm.asset.typeVal"
+                    ng-minlength="1" ng-maxlength="250" />
+            <div ng-show="editForm.typeVal.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.typeVal.$error.minlength" data-translate="entity.validation.minlength" translate-value-min="1">
+                    This field is required to be at least 1 characters.
+                </p>
+                <p class="help-block"
+                    ng-show="editForm.typeVal.$error.maxlength" data-translate="entity.validation.maxlength" translate-value-max="250">
+                    This field cannot be longer than 250 characters.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="appApp.asset.capacity" for="field_capacity">Capacity</label>
             <input type="number" class="form-control" name="capacity" id="field_capacity"
                     ng-model="vm.asset.capacity"
                     min="0" />
             <div ng-show="editForm.capacity.$invalid">
                 <p class="help-block"
-                    ng-show="editForm.capacity.$error.min"  translate-value-min="0">
+                    ng-show="editForm.capacity.$error.min" data-translate="entity.validation.min" translate-value-min="0">
                     This field should be more than 0.
                 </p>
                 <p class="help-block"
-                    ng-show="editForm.capacity.$error.number" >
+                    ng-show="editForm.capacity.$error.number" data-translate="entity.validation.number">
                     This field should be a number.
                 </p>
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label"  for="field_year">Year</label>
+            <label class="control-label" data-translate="appApp.asset.year" for="field_year">Year</label>
             <input type="number" class="form-control" name="year" id="field_year"
                     ng-model="vm.asset.year"
                     min="1800" />
             <div ng-show="editForm.year.$invalid">
                 <p class="help-block"
-                    ng-show="editForm.year.$error.min"  translate-value-min="1800">
+                    ng-show="editForm.year.$error.min" data-translate="entity.validation.min" translate-value-min="1800">
                     This field should be more than 1800.
                 </p>
                 <p class="help-block"
-                    ng-show="editForm.year.$error.number" >
+                    ng-show="editForm.year.$error.number" data-translate="entity.validation.number">
                     This field should be a number.
                 </p>
             </div>
         </div>
 
         <div class="form-group">
-            <label >Asset Specification Type Field</label>
-            <select class="form-control" id="field_assetSpecificationTypeField" name="assetSpecificationTypeField" ng-model="vm.asset.assetSpecificationTypeFieldId" ng-options="assetSpecificationTypeField.id as assetSpecificationTypeField.id for assetSpecificationTypeField in vm.assetspecificationtypefields | orderBy:'id'">
+            <label data-translate="appApp.asset.supervisor" for="field_supervisor">Supervisor</label>
+            <select class="form-control" id="field_supervisor" name="supervisor" ng-model="vm.asset.supervisorId" ng-options="user.id as user.id for user in vm.users"            >
+                <option value=""></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label data-translate="appApp.asset.technician" for="field_technician">Technician</label>
+            <select class="form-control" id="field_technician" name="technician" ng-model="vm.asset.technicianId" ng-options="user.id as user.id for user in vm.users"            >
                 <option value=""></option>
             </select>
         </div>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">
-            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span >Cancel</span>
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span data-translate="entity.action.cancel">Cancel</span>
         </button>
         <button type="submit" ng-disabled="editForm.$invalid || vm.isSaving" class="btn btn-primary">
-            <span class="glyphicon glyphicon-save"></span>&nbsp;<span >Save</span>
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span data-translate="entity.action.save">Save</span>
         </button>
     </div>
 </form>

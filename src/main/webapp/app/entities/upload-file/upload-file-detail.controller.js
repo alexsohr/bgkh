@@ -2,18 +2,18 @@
     'use strict';
 
     angular
-        .module('app')
+        .module('appApp')
         .controller('UploadFileDetailController', UploadFileDetailController);
 
-    UploadFileDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'UploadFile', 'Asset'];
+    UploadFileDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'UploadFile'];
 
-    function UploadFileDetailController($scope, $rootScope, $stateParams, previousState, entity, UploadFile, Asset) {
+    function UploadFileDetailController($scope, $rootScope, $stateParams, previousState, entity, UploadFile) {
         var vm = this;
 
         vm.uploadFile = entity;
         vm.previousState = previousState.name;
 
-        var unsubscribe = $rootScope.$on('app:uploadFileUpdate', function(event, result) {
+        var unsubscribe = $rootScope.$on('appApp:uploadFileUpdate', function(event, result) {
             vm.uploadFile = result;
         });
         $scope.$on('$destroy', unsubscribe);

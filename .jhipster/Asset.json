@@ -8,18 +8,6 @@
             "otherEntityRelationshipName": "asset"
         },
         {
-            "relationshipType": "many-to-one",
-            "relationshipName": "maps",
-            "otherEntityName": "uploadFile",
-            "otherEntityField": "id"
-        },
-        {
-            "relationshipType": "many-to-one",
-            "relationshipName": "otherFiles",
-            "otherEntityName": "uploadFile",
-            "otherEntityField": "id"
-        },
-        {
             "relationshipName": "supervisor",
             "otherEntityName": "user",
             "relationshipType": "many-to-one",

@@ -1,19 +1,6 @@
 {
     "fluentMethods": true,
-    "relationships": [
-        {
-            "relationshipType": "one-to-many",
-            "relationshipName": "asset",
-            "otherEntityName": "asset",
-            "otherEntityRelationshipName": "maps"
-        },
-        {
-            "relationshipType": "one-to-many",
-            "relationshipName": "asset",
-            "otherEntityName": "asset",
-            "otherEntityRelationshipName": "otherFiles"
-        }
-    ],
+    "relationships": [],
     "fields": [
         {
             "fieldName": "location",
@@ -35,8 +22,8 @@
         }
     ],
     "changelogDate": "20170220044752",
-    "entityTableName": "upload_file",
     "dto": "mapstruct",
-    "pagination": "no",
-    "service": "serviceImpl"
+    "service": "serviceImpl",
+    "entityTableName": "upload_file",
+    "pagination": "no"
 }

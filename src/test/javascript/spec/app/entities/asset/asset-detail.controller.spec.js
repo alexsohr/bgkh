@@ -4,7 +4,7 @@ describe('Controller Tests', function() {
 
     describe('Asset Management Detail Controller', function() {
         var $scope, $rootScope;
-        var MockEntity, MockPreviousState, MockAsset, MockWorkOrder, MockUploadFile, MockUser;
+        var MockEntity, MockPreviousState, MockAsset, MockWorkOrder, MockUser;
         var createController;
 
         beforeEach(inject(function($injector) {
@@ -14,7 +14,6 @@ describe('Controller Tests', function() {
             MockPreviousState = jasmine.createSpy('MockPreviousState');
             MockAsset = jasmine.createSpy('MockAsset');
             MockWorkOrder = jasmine.createSpy('MockWorkOrder');
-            MockUploadFile = jasmine.createSpy('MockUploadFile');
             MockUser = jasmine.createSpy('MockUser');
             
 
@@ -25,7 +24,6 @@ describe('Controller Tests', function() {
                 'previousState': MockPreviousState,
                 'Asset': MockAsset,
                 'WorkOrder': MockWorkOrder,
-                'UploadFile': MockUploadFile,
                 'User': MockUser
             };
             createController = function() {

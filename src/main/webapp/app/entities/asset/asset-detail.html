@@ -1,47 +1,67 @@
 
 <div>
-    <h2><span >Asset</span> {{vm.assetList.id}}</h2>
+    <h2><span data-translate="appApp.asset.detail.title">Asset</span> {{vm.asset.id}}</h2>
     <hr>
     <jhi-alert-error></jhi-alert-error>
     <dl class="dl-horizontal jh-entity-details">
-        <dt><span >Parent Id</span></dt>
+        <dt><span data-translate="appApp.asset.parentId">Parent Id</span></dt>
         <dd>
-            <span>{{vm.assetList.parentId}}</span>
+            <span>{{vm.asset.parentId}}</span>
         </dd>
-        <dt><span >Name</span></dt>
+        <dt><span data-translate="appApp.asset.name">Name</span></dt>
         <dd>
-            <span>{{vm.assetList.name}}</span>
+            <span>{{vm.asset.name}}</span>
         </dd>
-        <dt><span >Code</span></dt>
+        <dt><span data-translate="appApp.asset.location">Location</span></dt>
         <dd>
-            <span>{{vm.assetList.code}}</span>
+            <span>{{vm.asset.location}}</span>
         </dd>
-        <dt><span >Asset Type</span></dt>
+        <dt><span data-translate="appApp.asset.details">Details</span></dt>
         <dd>
-            <span >{{vm.assetList.assetType}}</span>
+            <span>{{vm.asset.details}}</span>
         </dd>
-        <dt><span >Capacity</span></dt>
+        <dt><span data-translate="appApp.asset.code">Code</span></dt>
         <dd>
-            <span>{{vm.assetList.capacity}}</span>
+            <span>{{vm.asset.code}}</span>
         </dd>
-        <dt><span >Year</span></dt>
+        <dt><span data-translate="appApp.asset.assetType">Asset Type</span></dt>
+        <dd>
+            <span data-translate="{{'appApp.AssetType.' + vm.asset.assetType}}">{{vm.asset.assetType}}</span>
+        </dd>
+        <dt><span data-translate="appApp.asset.manufacture">Manufacture</span></dt>
+        <dd>
+            <span>{{vm.asset.manufacture}}</span>
+        </dd>
+        <dt><span data-translate="appApp.asset.typeVal">Type Val</span></dt>
+        <dd>
+            <span>{{vm.asset.typeVal}}</span>
+        </dd>
+        <dt><span data-translate="appApp.asset.capacity">Capacity</span></dt>
+        <dd>
+            <span>{{vm.asset.capacity}}</span>
+        </dd>
+        <dt><span data-translate="appApp.asset.year">Year</span></dt>
         <dd>
             <span>{{vm.asset.year}}</span>
         </dd>
-        <dt><span>Asset Specification Type Field</span></dt>
+        <dt><span data-translate="appApp.asset.supervisor">Supervisor</span></dt>
         <dd>
-            <a ui-sref="asset-specification-type-field-detail({id:vm.asset.assetSpecificationTypeFieldId})">{{vm.asset.assetSpecificationTypeFieldId}}</a>
+            {{vm.asset.supervisorId}}
+        </dd>
+        <dt><span data-translate="appApp.asset.technician">Technician</span></dt>
+        <dd>
+            {{vm.asset.technicianId}}
         </dd>
     </dl>
 
     <button type="submit"
             ui-sref="{{ vm.previousState }}"
             class="btn btn-info">
-        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span > Back</span>
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span data-translate="entity.action.back"> Back</span>
     </button>
 
     <button type="button" ui-sref="asset-detail.edit({id:vm.asset.id})" class="btn btn-primary">
         <span class="glyphicon glyphicon-pencil"></span>
-        <span class="hidden-xs hidden-sm" > Edit</span>
+        <span class="hidden-xs hidden-sm" data-translate="entity.action.edit"> Edit</span>
     </button>
 </div>

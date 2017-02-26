@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('app')
+        .module('appApp')
         .controller('UploadFileDeleteController',UploadFileDeleteController);
 
     UploadFileDeleteController.$inject = ['$uibModalInstance', 'entity', 'UploadFile'];

@@ -2,6 +2,8 @@ package com.bgkh.service.dto;
 
 import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 import com.bgkh.domain.enumeration.AssetType;
@@ -44,10 +46,6 @@ public class AssetDTO implements Serializable {
     @Min(value = 1800)
     private Integer year;
 
-
-    private Long mapsId;
-
-    private Long otherFilesId;
 
     private Long supervisorId;
 
@@ -137,22 +135,6 @@ public class AssetDTO implements Serializable {
 
     public void setYear(Integer year) {
         this.year = year;
-    }
-
-    public Long getMapsId() {
-        return mapsId;
-    }
-
-    public void setMapsId(Long uploadFileId) {
-        this.mapsId = uploadFileId;
-    }
-
-    public Long getOtherFilesId() {
-        return otherFilesId;
-    }
-
-    public void setOtherFilesId(Long uploadFileId) {
-        this.otherFilesId = uploadFileId;
     }
 
     public Long getSupervisorId() {

@@ -1,5 +1,5 @@
 {
-    "app": {
+    "appApp": {
         "asset" : {
             "home": {
                 "title": "Assets",
@@ -18,12 +18,17 @@
             },
             "parentId": "Parent Id",
             "name": "Name",
+            "location": "Location",
+            "details": "Details",
             "code": "Code",
             "assetType": "Asset Type",
+            "manufacture": "Manufacture",
+            "typeVal": "Type Val",
             "capacity": "Capacity",
             "year": "Year",
-            "assetSpecificationTypeField": "Asset Specification Type Field",
-            "workOrder": "Work Order"
+            "workOrder": "Work Order",
+            "supervisor": "Supervisor",
+            "technician": "Technician"
         }
     }
 }

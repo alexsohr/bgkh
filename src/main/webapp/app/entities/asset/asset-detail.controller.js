@@ -2,18 +2,18 @@
     'use strict';
 
     angular
-        .module('app')
+        .module('appApp')
         .controller('AssetDetailController', AssetDetailController);
 
-    AssetDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'Asset', 'WorkOrder'];
+    AssetDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'Asset', 'WorkOrder', 'User'];
 
-    function AssetDetailController($scope, $rootScope, $stateParams, previousState, entity, Asset, WorkOrder) {
+    function AssetDetailController($scope, $rootScope, $stateParams, previousState, entity, Asset, WorkOrder, User) {
         var vm = this;
 
         vm.asset = entity;
         vm.previousState = previousState.name;
 
-        var unsubscribe = $rootScope.$on('app:assetUpdate', function(event, result) {
+        var unsubscribe = $rootScope.$on('appApp:assetUpdate', function(event, result) {
             vm.asset = result;
         });
         $scope.$on('$destroy', unsubscribe);

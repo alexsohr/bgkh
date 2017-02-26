@@ -1,5 +1,5 @@
 {
-    "app": {
+    "appApp": {
         "uploadFile" : {
             "home": {
                 "title": "Upload Files",
@@ -17,9 +17,7 @@
                 "title": "Upload File"
             },
             "location": "Location",
-            "deleted": "Deleted",
-            "asset": "Asset",
-            "asset": "Asset"
+            "deleted": "Deleted"
         }
     }
 }

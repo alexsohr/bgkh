@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('app')
+        .module('appApp')
         .config(stateConfig);
 
     stateConfig.$inject = ['$stateProvider'];
@@ -14,7 +14,7 @@
             url: '/upload-file',
             data: {
                 authorities: ['ROLE_USER'],
-                pageTitle: 'app.uploadFile.home.title'
+                pageTitle: 'appApp.uploadFile.home.title'
             },
             views: {
                 'content@': {
@@ -36,7 +36,7 @@
             url: '/upload-file/{id}',
             data: {
                 authorities: ['ROLE_USER'],
-                pageTitle: 'app.uploadFile.detail.title'
+                pageTitle: 'appApp.uploadFile.detail.title'
             },
             views: {
                 'content@': {
