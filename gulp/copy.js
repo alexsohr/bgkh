@@ -44,7 +44,7 @@ function fonts() {
     return es.merge(gulp.src(config.bower + 'bootstrap/fonts/*.*')
         .pipe(plumber({errorHandler: handleErrors}))
         .pipe(changed(config.dist + 'content/fonts/'))
-        .pipe(rev())
+        // .pipe(rev())
         .pipe(gulp.dest(config.dist + 'content/fonts/'))
         .pipe(rev.manifest(config.revManifest, {
             base: config.dist,
@@ -55,7 +55,7 @@ function fonts() {
         .pipe(plumber({errorHandler: handleErrors}))
         .pipe(changed(config.dist + 'content/fonts/'))
         .pipe(flatten())
-        .pipe(rev())
+        // .pipe(rev())
         .pipe(gulp.dest(config.dist + 'content/fonts/'))
         .pipe(rev.manifest(config.revManifest, {
             base: config.dist,

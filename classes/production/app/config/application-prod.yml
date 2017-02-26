@@ -12,6 +12,9 @@
 
 
 spring:
+    profiles:
+        active: prod
+        include: swagger
     devtools:
         restart:
             enabled: false
@@ -78,7 +81,7 @@ jhipster:
             key: 115da487b2950764f8df28bfa4cdc0f81faa3f73
     mail: # specific JHipster mail property, for standard properties see MailProperties
         from: app@localhost
-        baseUrl: http://my-server-url-to-change # Modify according to your server's URL
+        baseUrl: http://127.0.0.1:8080 # Modify according to your server's URL
     metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
         jmx.enabled: true
         graphite:

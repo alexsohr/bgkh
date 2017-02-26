@@ -2,7 +2,7 @@
     "users": [
         {
             "username": "میترا رشیدیان",
-            "picture": "content/img/avatars/5.png",
+            "picture": "content/images/avatars/5.png",
             "status": "Online"
         }
     ],
@@ -10,7 +10,7 @@
         {
             "user": {
                 "username": "میترا رشیدیان",
-                "picture": "content/img/avatars/5.png",
+                "picture": "content/images/avatars/5.png",
                 "status": "Online"
             },
             "date": "2014-10-01T21:08:06.388Z",
@@ -19,7 +19,7 @@
         {
             "user": {
                 "username": "پیمان سهرابخانی",
-                "picture": "content/img/avatars/sunny.png",
+                "picture": "content/images/avatars/sunny.png",
                 "status": "Online"
             },
             "date": "2014-10-01T21:09:08.388Z",

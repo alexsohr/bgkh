@@ -85,19 +85,19 @@ angular.module('app.forms').controller('ImageEditorCtrl', function ($scope) {
     $scope.apiDemoImages = [
         {
             name: 'Lego',
-            src: 'content/img/superbox/superbox-full-24.jpg',
+            src: 'content/images/superbox/superbox-full-24.jpg',
             bgOpacity: .6
         },
         {
             name: 'Breakdance',
-            src: 'content/img/superbox/superbox-full-7.jpg',
+            src: 'content/images/superbox/superbox-full-7.jpg',
             bgOpacity: .6
         },
         {
             name: 'Dragon Fly',
-            src: 'content/img/superbox/superbox-full-20.jpg',
+            src: 'content/images/superbox/superbox-full-20.jpg',
             bgOpacity: 1,
-            outerImage: 'content/img/superbox/superbox-full-20-bw.jpg'
+            outerImage: 'content/images/superbox/superbox-full-20-bw.jpg'
         }
     ];
 

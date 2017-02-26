@@ -52,7 +52,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="typeVal" type="varchar(255)">
+            <column name="type_val" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 

@@ -8,10 +8,19 @@ angular.module('app').directive('workOrdersAssetsTreeGrid', function () {
         templateUrl: 'app/dashboard/workOrders/directives/work-order-assets-tree-grid.tpl.html',
         scope: true,
         controllerAs: 'workOrdersAssetsTreeGrid',
-        controller: function ($scope, $rootScope, $compile, $element, $sce, $templateCache) {
+        controller: function ($scope, $rootScope, $compile, $element, $sce, $templateCache, Asset) {
             var tree;
             $scope.work_order_assets_tree = tree = {};
 
+            $scope.loadAssets = loadAssets;
+            $scope.loadAssets();
+
+            function loadAssets() {
+                Asset.query(function (result) {
+                    $scope.workOrders = getTree(result, 'id', 'parentId');
+                    $scope.searchQuery = null;
+                });
+            }
             $scope.workOrders = $rootScope.workOrders;
 
             $scope.tree_data = {};
@@ -53,6 +62,54 @@ angular.module('app').directive('workOrdersAssetsTreeGrid', function () {
                 $scope.workOrderAssetImportBody = "<div></div>";
                 $scope.workOrderAssetImportFooter = "";
             }
+
+            function getTree(data, primaryIdName, parentIdName) {
+                if (!data || data.length == 0 || !primaryIdName || !parentIdName)
+                    return [];
+
+                var tree = [],
+                    rootIds = [],
+                    item = data[0],
+                    primaryKey = item[primaryIdName],
+                    treeObjs = {},
+                    parentId,
+                    parent,
+                    len = data.length,
+                    i = 0,
+                    primeryIds = [];
+
+                while (i < len) {
+                    item = data[i++];
+                    primaryKey = item[primaryIdName];
+                    if (!primeryIds[primaryKey]) {
+                        treeObjs[primaryKey] = item;
+                        parentId = item[parentIdName];
+
+                        if (parentId) {
+                            parent = treeObjs[parentId];
+
+                            if (parent.children) {
+                                parent.children.push(item);
+                            }
+                            else {
+                                parent.children = [item];
+                            }
+                        }
+                        else {
+                            rootIds.push(primaryKey);
+                        }
+                    }
+                    primeryIds.push(primaryKey)
+                }
+
+                for (var i = 0; i < rootIds.length; i++) {
+                    tree.push(treeObjs[rootIds[i]]);
+                }
+                ;
+
+                return tree;
+            }
+
         },
         link: function (scope, element, attrs) {
             scope.init();

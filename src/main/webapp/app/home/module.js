@@ -14,7 +14,7 @@ angular
                 },
                 views: {
                     'content@app': {
-                        templateUrl: 'app/home/welcome.html',
+                        templateUrl: 'app/home/welcome.tpl.html',
                         controller: 'HomeController',
                         controllerAs: 'vm'
                     }
