@@ -74,7 +74,7 @@ angular.module('app.forms').config(function ($stateProvider) {
                 }
             },
             resolve: {
-                srcipts: function(lazyScript){
+                srcipts: function (lazyScript) {
                     return lazyScript.register([
                         'content/js/vendor.ui.js'
                     ])
@@ -95,7 +95,7 @@ angular.module('app.forms').config(function ($stateProvider) {
                 }
             },
             resolve: {
-                srcipts: function(lazyScript){
+                srcipts: function (lazyScript) {
                     return lazyScript.register([
                         "content/js/vendor.ui.js"
                     ])
@@ -115,7 +115,7 @@ angular.module('app.forms').config(function ($stateProvider) {
                 }
             },
             resolve: {
-                srcipts: function(lazyScript){
+                srcipts: function (lazyScript) {
                     return lazyScript.register([
                         "content/js/vendor.ui.js"
                     ])
@@ -134,7 +134,7 @@ angular.module('app.forms').config(function ($stateProvider) {
                 }
             },
             resolve: {
-                scripts: function(lazyScript){
+                scripts: function (lazyScript) {
                     return lazyScript.register([
                         "content/js/vendor.ui.js"
                     ])
@@ -149,7 +149,7 @@ angular.module('app.forms').config(function ($stateProvider) {
             views: {
                 "content@app": {
                     templateUrl: 'app/forms/views/dropzone.html',
-                    controller: function($scope){
+                    controller: function ($scope) {
                         $scope.dropzoneConfig = {
                             'options': { // passed into the Dropzone constructor
                                 'url': '/api/plug'
@@ -165,7 +165,7 @@ angular.module('app.forms').config(function ($stateProvider) {
                 }
             },
             resolve: {
-                scripts: function(lazyScript){
+                scripts: function (lazyScript) {
                     return lazyScript.register('content/js/vendor.ui.js')
                 }
             }
@@ -182,7 +182,7 @@ angular.module('app.forms').config(function ($stateProvider) {
                 }
             },
             resolve: {
-                scripts: function(lazyScript){
+                scripts: function (lazyScript) {
                     return lazyScript.register([
                         'content/js/vendor.ui.js'
                     ])

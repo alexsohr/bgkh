@@ -186,6 +186,14 @@
                 <option value=""></option>
             </select>
         </div>
+        <div class="form-group">
+            <label data-translate="appApp.asset.maps" for="field_maps">Maps</label>
+            <select class="form-control" id="field_maps" multiple name="maps" ng-model="vm.asset.maps" ng-options="uploadFile as uploadFile.id for uploadFile in vm.uploadfiles track by uploadFile.id"></select>
+        </div>
+        <div class="form-group">
+            <label data-translate="appApp.asset.otherFiles" for="field_otherFiles">Other Files</label>
+            <select class="form-control" id="field_otherFiles" multiple name="otherFiles" ng-model="vm.asset.otherFiles" ng-options="uploadFile as uploadFile.id for uploadFile in vm.uploadfiles track by uploadFile.id"></select>
+        </div>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">

@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('appApp')
+        .module('app')
         .controller('UploadFileController', UploadFileController);
 
     UploadFileController.$inject = ['$scope', '$state', 'UploadFile'];

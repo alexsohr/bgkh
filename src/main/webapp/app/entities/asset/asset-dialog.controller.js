@@ -2,12 +2,12 @@
     'use strict';
 
     angular
-        .module('appApp')
+        .module('app')
         .controller('AssetDialogController', AssetDialogController);
 
-    AssetDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'Asset', 'WorkOrder', 'User'];
+    AssetDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'Asset', 'WorkOrder', 'User', 'UploadFile'];
 
-    function AssetDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, Asset, WorkOrder, User) {
+    function AssetDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, Asset, WorkOrder, User, UploadFile) {
         var vm = this;
 
         vm.asset = entity;
@@ -15,6 +15,7 @@
         vm.save = save;
         vm.workorders = WorkOrder.query();
         vm.users = User.query();
+        vm.uploadfiles = UploadFile.query();
 
         $timeout(function (){
             angular.element('.form-group:eq(1)>input').focus();

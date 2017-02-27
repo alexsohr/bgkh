@@ -59,6 +59,10 @@ public class AssetDTO implements Serializable {
 
     private String technicianLastName;
 
+    private Set<UploadFileDTO> maps = new HashSet<>();
+
+    private Set<UploadFileDTO> otherFiles = new HashSet<>();
+
     public Long getId() {
         return id;
     }
@@ -183,6 +187,22 @@ public class AssetDTO implements Serializable {
 
     public void setTechnicianFirstName(String technicianFirstName) {
         this.technicianFirstName = technicianFirstName;
+    }
+
+    public Set<UploadFileDTO> getMaps() {
+        return maps;
+    }
+
+    public void setMaps(Set<UploadFileDTO> uploadFiles) {
+        this.maps = uploadFiles;
+    }
+
+    public Set<UploadFileDTO> getOtherFiles() {
+        return otherFiles;
+    }
+
+    public void setOtherFiles(Set<UploadFileDTO> uploadFiles) {
+        this.otherFiles = uploadFiles;
     }
 
     @Override

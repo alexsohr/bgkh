@@ -20,5 +20,27 @@
                                  referencedColumnNames="id"
                                  referencedTableName="jhi_user"/>
 
+        <addForeignKeyConstraint baseColumnNames="assets_id"
+                                 baseTableName="asset_maps"
+                                 constraintName="fk_asset_maps_assets_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="asset"/>
+        <addForeignKeyConstraint baseColumnNames="maps_id"
+                                 baseTableName="asset_maps"
+                                 constraintName="fk_asset_maps_maps_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="upload_file"/>
+        
+        <addForeignKeyConstraint baseColumnNames="assets_id"
+                                 baseTableName="asset_other_files"
+                                 constraintName="fk_asset_other_files_assets_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="asset"/>
+        <addForeignKeyConstraint baseColumnNames="other_files_id"
+                                 baseTableName="asset_other_files"
+                                 constraintName="fk_asset_other_files_other_files_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="upload_file"/>
+        
     </changeSet>
 </databaseChangeLog>

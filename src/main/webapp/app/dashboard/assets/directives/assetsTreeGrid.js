@@ -137,7 +137,7 @@ angular.module('app').directive('assetsTreeGrid', function () {
                         if (parentId) {
                             parent = treeObjs[parentId];
 
-                            if (parent.children) {
+                            if (parent.children !== undefined) {
                                 parent.children.push(item);
                             }
                             else {

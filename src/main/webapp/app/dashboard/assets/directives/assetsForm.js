@@ -14,7 +14,7 @@ angular.module('app').directive('assetsForm', function () {
             parentId: '=parentId',
             updateAssetCallback: '&?'
         },
-        controller: function ($scope, User, AssetManufacture) {
+        controller: function ($scope, User, AssetManufacture, Upload) {
 
             if (angular.isUndefinedOrNull($scope.currentStep)) {
                 $scope.currentStep = 1;
@@ -113,6 +113,36 @@ angular.module('app').directive('assetsForm', function () {
                     $scope.hasSubTree = $scope.asset.children.length > 0;
                 }
             }
+
+
+            $scope.mapsDropzoneConfig = {
+                'options': { // passed into the Dropzone constructor
+                    'url': '/api/upload-files'
+                },
+                acceptedFiles: "image/*,application/pdf",
+                'eventHandlers': {
+                    'success': function (file, response) {
+                        if (!angular.isArray($scope.asset.maps)) {
+                            $scope.asset.maps = [];
+                        }
+                        $scope.asset.maps.push(response);
+                    }
+                }
+            };
+            $scope.otherDropzoneConfig = {
+                'options': { // passed into the Dropzone constructor
+                    'url': '/api/upload-files'
+                },
+                'eventHandlers': {
+                    'success': function (file, response) {
+                        if (!angular.isArray($scope.asset.otherFiles)) {
+                            $scope.asset.otherFiles = [];
+                        }
+                        $scope.asset.otherFiles.push(response);
+                    }
+                }
+            };
+
         },
         link: function (scope, rootScope, element, attrs) {
 

@@ -2,9 +2,9 @@
 
 describe('Controller Tests', function() {
 
-    describe('Asset Management Detail Controller', function() {
+    describe('UploadFile Management Detail Controller', function() {
         var $scope, $rootScope;
-        var MockEntity, MockPreviousState, MockAsset, MockWorkOrder, MockUser, MockUploadFile;
+        var MockEntity, MockPreviousState, MockUploadFile, MockAsset;
         var createController;
 
         beforeEach(inject(function($injector) {
@@ -12,10 +12,8 @@ describe('Controller Tests', function() {
             $scope = $rootScope.$new();
             MockEntity = jasmine.createSpy('MockEntity');
             MockPreviousState = jasmine.createSpy('MockPreviousState');
-            MockAsset = jasmine.createSpy('MockAsset');
-            MockWorkOrder = jasmine.createSpy('MockWorkOrder');
-            MockUser = jasmine.createSpy('MockUser');
             MockUploadFile = jasmine.createSpy('MockUploadFile');
+            MockAsset = jasmine.createSpy('MockAsset');
             
 
             var locals = {
@@ -23,20 +21,18 @@ describe('Controller Tests', function() {
                 '$rootScope': $rootScope,
                 'entity': MockEntity,
                 'previousState': MockPreviousState,
-                'Asset': MockAsset,
-                'WorkOrder': MockWorkOrder,
-                'User': MockUser,
-                'UploadFile': MockUploadFile
+                'UploadFile': MockUploadFile,
+                'Asset': MockAsset
             };
             createController = function() {
-                $injector.get('$controller')("AssetDetailController", locals);
+                $injector.get('$controller')("UploadFileDetailController", locals);
             };
         }));
 
 
         describe('Root Scope Listening', function() {
             it('Unregisters root scope listener upon scope destruction', function() {
-                var eventType = 'appApp:assetUpdate';
+                var eventType = 'appApp:uploadFileUpdate';
 
                 createController();
                 expect($rootScope.$$listenerCount[eventType]).toEqual(1);

@@ -17,7 +17,9 @@
                 "title": "Upload File"
             },
             "location": "Location",
-            "deleted": "Deleted"
+            "deleted": "Deleted",
+            "assetMaps": "Asset Maps",
+            "assetOtherFiles": "Asset Other Files"
         }
     }
 }

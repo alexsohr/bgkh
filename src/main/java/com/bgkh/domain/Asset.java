@@ -80,6 +80,20 @@ public class Asset implements Serializable {
     @ManyToOne
     private User technician;
 
+    @ManyToMany
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @JoinTable(name = "asset_maps",
+               joinColumns = @JoinColumn(name="assets_id", referencedColumnName="ID"),
+               inverseJoinColumns = @JoinColumn(name="maps_id", referencedColumnName="ID"))
+    private Set<UploadFile> maps = new HashSet<>();
+
+    @ManyToMany
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @JoinTable(name = "asset_other_files",
+               joinColumns = @JoinColumn(name="assets_id", referencedColumnName="ID"),
+               inverseJoinColumns = @JoinColumn(name="other_files_id", referencedColumnName="ID"))
+    private Set<UploadFile> otherFiles = new HashSet<>();
+
     public Long getId() {
         return id;
     }
@@ -267,6 +281,56 @@ public class Asset implements Serializable {
 
     public void setTechnician(User user) {
         this.technician = user;
+    }
+
+    public Set<UploadFile> getMaps() {
+        return maps;
+    }
+
+    public Asset maps(Set<UploadFile> uploadFiles) {
+        this.maps = uploadFiles;
+        return this;
+    }
+
+    public Asset addMaps(UploadFile uploadFile) {
+        maps.add(uploadFile);
+        uploadFile.getAssetMaps().add(this);
+        return this;
+    }
+
+    public Asset removeMaps(UploadFile uploadFile) {
+        maps.remove(uploadFile);
+        uploadFile.getAssetMaps().remove(this);
+        return this;
+    }
+
+    public void setMaps(Set<UploadFile> uploadFiles) {
+        this.maps = uploadFiles;
+    }
+
+    public Set<UploadFile> getOtherFiles() {
+        return otherFiles;
+    }
+
+    public Asset otherFiles(Set<UploadFile> uploadFiles) {
+        this.otherFiles = uploadFiles;
+        return this;
+    }
+
+    public Asset addOtherFiles(UploadFile uploadFile) {
+        otherFiles.add(uploadFile);
+        uploadFile.getAssetOtherFiles().add(this);
+        return this;
+    }
+
+    public Asset removeOtherFiles(UploadFile uploadFile) {
+        otherFiles.remove(uploadFile);
+        uploadFile.getAssetOtherFiles().remove(this);
+        return this;
+    }
+
+    public void setOtherFiles(Set<UploadFile> uploadFiles) {
+        this.otherFiles = uploadFiles;
     }
 
     @Override

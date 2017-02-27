@@ -20,6 +20,22 @@
             "relationshipType": "many-to-one",
             "otherEntityField": "id",
             "ownerSide": true
+        },
+        {
+            "relationshipName": "maps",
+            "otherEntityName": "uploadFile",
+            "relationshipType": "many-to-many",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "assetMaps"
+        },
+        {
+            "relationshipName": "otherFiles",
+            "otherEntityName": "uploadFile",
+            "relationshipType": "many-to-many",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "assetOtherFiles"
         }
     ],
     "fields": [

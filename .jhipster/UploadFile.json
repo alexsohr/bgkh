@@ -1,6 +1,21 @@
 {
     "fluentMethods": true,
-    "relationships": [],
+    "relationships": [
+        {
+            "relationshipName": "assetMaps",
+            "otherEntityName": "asset",
+            "relationshipType": "many-to-many",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "maps"
+        },
+        {
+            "relationshipName": "assetOtherFiles",
+            "otherEntityName": "asset",
+            "relationshipType": "many-to-many",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "otherFiles"
+        }
+    ],
     "fields": [
         {
             "fieldName": "location",

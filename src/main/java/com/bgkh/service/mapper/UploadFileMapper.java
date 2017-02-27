@@ -16,6 +16,8 @@ public interface UploadFileMapper {
 
     List<UploadFileDTO> uploadFilesToUploadFileDTOs(List<UploadFile> uploadFiles);
 
+    @Mapping(target = "assetMaps", ignore = true)
+    @Mapping(target = "assetOtherFiles", ignore = true)
     UploadFile uploadFileDTOToUploadFile(UploadFileDTO uploadFileDTO);
 
     List<UploadFile> uploadFileDTOsToUploadFiles(List<UploadFileDTO> uploadFileDTOs);

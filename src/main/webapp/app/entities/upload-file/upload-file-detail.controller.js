@@ -2,12 +2,12 @@
     'use strict';
 
     angular
-        .module('appApp')
+        .module('app')
         .controller('UploadFileDetailController', UploadFileDetailController);
 
-    UploadFileDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'UploadFile'];
+    UploadFileDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'UploadFile', 'Asset'];
 
-    function UploadFileDetailController($scope, $rootScope, $stateParams, previousState, entity, UploadFile) {
+    function UploadFileDetailController($scope, $rootScope, $stateParams, previousState, entity, UploadFile, Asset) {
         var vm = this;
 
         vm.uploadFile = entity;

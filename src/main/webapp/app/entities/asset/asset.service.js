@@ -1,11 +1,23 @@
 (function() {
     'use strict';
     angular
-        .module('appApp')
-        .factory('Asset', Asset);
+        .module('app')
+        .factory('Asset', Asset)
+        .factory('AssetImport', AssetImport)
+        .factory('AssetCopy', AssetCopy)
+        .factory('AssetManufacture', AssetManufacture);
 
     Asset.$inject = ['$resource'];
+    AssetImport.$inject = ['$resource'];
+    AssetCopy.$inject = ['$resource'];
+    AssetManufacture.$inject = ['$resource'];
 
+    function AssetManufacture($resource) {
+        var resourceUrl = 'api/assets/manufactures';
+        return $resource(resourceUrl, {}, {
+            'query': { method: 'GET', isArray: true}
+        });
+    }
     function Asset ($resource) {
         var resourceUrl =  'api/assets/:id';
 
@@ -20,7 +32,24 @@
                     return data;
                 }
             },
-            'update': { method:'PUT' }
+            'save': {method: 'POST'},
+            'update': { method:'PUT'},
+            'delete': {method: 'DELETE'}
+        });
+    }
+
+    function AssetImport ($resource) {
+        var resourceUrl =  '/api/assets/all';
+
+        return $resource(resourceUrl, {}, {
+            'save': {method: 'POST'}
+        });
+    }
+
+    function AssetCopy($resource) {
+        var resourceUrl = '/api/assets/copy';
+        return $resource(resourceUrl, {}, {
+            'save': {method: 'POST'}
         });
     }
 })();

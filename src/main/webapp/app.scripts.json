@@ -37,6 +37,7 @@
             "flot-time",
             "flot-tooltip",
             "datatables",
+            "ng-file-upload",
             "angular-datatables",
             "angular-datatables.bootstrap"
         ],
@@ -134,6 +135,7 @@
         "highcharts": "src/main/webapp/bower_components/highcharts/highcharts.js",
         "highchartTable": "src/main/webapp/bower_components/highchartTable/jquery.highchartTable.js",
         "datatables": "src/main/webapp/bower_components/datatables/media/js/jquery.dataTables.min.js",
+        "ng-file-upload": "src/main/webapp/bower_components/ng-file-upload/ng-file-upload-all.min.js",
         "datatables-bootstrap": "src/main/webapp/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js",
         "datatables-tools": "src/main/webapp/bower_components/datatables-tabletools/js/dataTables.tableTools.js",
         "datatables-colvis": "src/main/webapp/bower_components/datatables-colvis/js/dataTables.colVis.js",

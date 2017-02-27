@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Mapper for the entity Asset and its DTO AssetDTO.
  */
-@Mapper(componentModel = "spring", uses = {UserMapper.class, UserMapper.class, })
+@Mapper(componentModel = "spring", uses = {UserMapper.class, UserMapper.class, UploadFileMapper.class, UploadFileMapper.class, })
 public interface AssetMapper {
 
     @Mapping(source = "supervisor.id", target = "supervisorId")
@@ -28,4 +28,13 @@ public interface AssetMapper {
     Asset assetDTOToAsset(AssetDTO assetDTO);
 
     List<Asset> assetDTOsToAssets(List<AssetDTO> assetDTOs);
+
+    default UploadFile uploadFileFromId(Long id) {
+        if (id == null) {
+            return null;
+        }
+        UploadFile uploadFile = new UploadFile();
+        uploadFile.setId(id);
+        return uploadFile;
+    }
 }

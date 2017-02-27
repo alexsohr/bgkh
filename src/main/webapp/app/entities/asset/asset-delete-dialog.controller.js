@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('appApp')
+        .module('app')
         .controller('AssetDeleteController',AssetDeleteController);
 
     AssetDeleteController.$inject = ['$uibModalInstance', 'entity', 'Asset'];

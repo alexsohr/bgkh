@@ -1,11 +1,14 @@
 package com.bgkh.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -30,6 +33,16 @@ public class UploadFile implements Serializable {
     @NotNull
     @Column(name = "deleted", nullable = false)
     private Boolean deleted;
+
+    @ManyToMany(mappedBy = "maps")
+    @JsonIgnore
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<Asset> assetMaps = new HashSet<>();
+
+    @ManyToMany(mappedBy = "otherFiles")
+    @JsonIgnore
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<Asset> assetOtherFiles = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -63,6 +76,56 @@ public class UploadFile implements Serializable {
 
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public Set<Asset> getAssetMaps() {
+        return assetMaps;
+    }
+
+    public UploadFile assetMaps(Set<Asset> assets) {
+        this.assetMaps = assets;
+        return this;
+    }
+
+    public UploadFile addAssetMaps(Asset asset) {
+        assetMaps.add(asset);
+        asset.getMaps().add(this);
+        return this;
+    }
+
+    public UploadFile removeAssetMaps(Asset asset) {
+        assetMaps.remove(asset);
+        asset.getMaps().remove(this);
+        return this;
+    }
+
+    public void setAssetMaps(Set<Asset> assets) {
+        this.assetMaps = assets;
+    }
+
+    public Set<Asset> getAssetOtherFiles() {
+        return assetOtherFiles;
+    }
+
+    public UploadFile assetOtherFiles(Set<Asset> assets) {
+        this.assetOtherFiles = assets;
+        return this;
+    }
+
+    public UploadFile addAssetOtherFiles(Asset asset) {
+        assetOtherFiles.add(asset);
+        asset.getOtherFiles().add(this);
+        return this;
+    }
+
+    public UploadFile removeAssetOtherFiles(Asset asset) {
+        assetOtherFiles.remove(asset);
+        asset.getOtherFiles().remove(this);
+        return this;
+    }
+
+    public void setAssetOtherFiles(Set<Asset> assets) {
+        this.assetOtherFiles = assets;
     }
 
     @Override

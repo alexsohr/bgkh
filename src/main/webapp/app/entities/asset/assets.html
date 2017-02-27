@@ -31,6 +31,8 @@
                     <th><span data-translate="appApp.asset.year">Year</span></th>
                     <th><span data-translate="appApp.asset.supervisor">Supervisor</span></th>
                     <th><span data-translate="appApp.asset.technician">Technician</span></th>
+                    <th><span data-translate="appApp.asset.maps">Maps</span></th>
+                    <th><span data-translate="appApp.asset.otherFiles">Other Files</span></th>
                     <th></th>
                 </tr>
             </thead>
@@ -52,6 +54,16 @@
                     </td>
                     <td>
                         {{asset.technicianId}}
+                    </td>
+                    <td>
+                        <span ng-repeat="maps in asset.maps">
+                            <a class="form-control-static" ui-sref="upload-file-detail({id: maps.id})">{{maps.id}}</a>{{$last ? '' : ', '}}
+                        </span>
+                    </td>
+                    <td>
+                        <span ng-repeat="otherFiles in asset.otherFiles">
+                            <a class="form-control-static" ui-sref="upload-file-detail({id: otherFiles.id})">{{otherFiles.id}}</a>{{$last ? '' : ', '}}
+                        </span>
                     </td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">

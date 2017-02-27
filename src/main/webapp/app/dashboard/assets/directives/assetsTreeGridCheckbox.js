@@ -59,7 +59,7 @@ angular.module('app').directive('assetsTreeGridCheckbox', function () {
                         if (parentId) {
                             parent = treeObjs[parentId];
 
-                            if (parent.children) {
+                            if (parent.children !== undefined) {
                                 parent.children.push(item);
                             }
                             else {

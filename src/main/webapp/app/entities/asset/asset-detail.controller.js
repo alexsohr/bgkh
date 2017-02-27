@@ -2,12 +2,12 @@
     'use strict';
 
     angular
-        .module('appApp')
+        .module('app')
         .controller('AssetDetailController', AssetDetailController);
 
-    AssetDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'Asset', 'WorkOrder', 'User'];
+    AssetDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'Asset', 'WorkOrder', 'User', 'UploadFile'];
 
-    function AssetDetailController($scope, $rootScope, $stateParams, previousState, entity, Asset, WorkOrder, User) {
+    function AssetDetailController($scope, $rootScope, $stateParams, previousState, entity, Asset, WorkOrder, User, UploadFile) {
         var vm = this;
 
         vm.asset = entity;

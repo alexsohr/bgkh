@@ -1,5 +1,6 @@
 package com.bgkh.web.rest;
 
+import com.bgkh.config.JHipsterProperties;
 import com.codahale.metrics.annotation.Timed;
 import com.bgkh.service.UploadFileService;
 import com.bgkh.web.rest.util.HeaderUtil;
@@ -11,11 +12,16 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -29,20 +35,45 @@ import java.util.stream.Collectors;
 public class UploadFileResource {
 
     private final Logger log = LoggerFactory.getLogger(UploadFileResource.class);
-        
+
     @Inject
     private UploadFileService uploadFileService;
 
     /**
      * POST  /upload-files : Create a new uploadFile.
      *
-     * @param uploadFileDTO the uploadFileDTO to create
+     * @param file file To upload
      * @return the ResponseEntity with status 201 (Created) and with body the new uploadFileDTO, or with status 400 (Bad Request) if the uploadFile has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/upload-files")
     @Timed
-    public ResponseEntity<UploadFileDTO> createUploadFile(@Valid @RequestBody UploadFileDTO uploadFileDTO) throws URISyntaxException {
+    public ResponseEntity<UploadFileDTO> createUploadFile(@RequestParam("file") MultipartFile file) throws URISyntaxException {
+
+        String uploadPath = "/home/alex/Desktop/test";
+
+        UploadFileDTO uploadFileDTO = null;
+        if (!file.isEmpty()) {
+            try {
+                byte[] bytes = file.getBytes();
+                String newFileName = new Date().toString()+"_" + file.getOriginalFilename();
+                File newFile = new File(uploadPath, newFileName);
+                BufferedOutputStream stream =
+                    new BufferedOutputStream(new FileOutputStream(newFile));
+                stream.write(bytes);
+                stream.close();
+
+                uploadFileDTO = new UploadFileDTO();
+                uploadFileDTO.setLocation(newFile.getAbsolutePath());
+                uploadFileDTO.setDeleted(false);
+            } catch (Exception e) {
+                log.error("You failed to upload " + file.getName() + " => " + e.getMessage());
+                return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("uploadFile", "fileSaveError", "A new uploadFile cannot be saved")).body(null);
+            }
+        } else {
+            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("uploadFile", "idexists", "A new uploadFile cannot already have an ID")).body(null);
+        }
+
         log.debug("REST request to save UploadFile : {}", uploadFileDTO);
         if (uploadFileDTO.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("uploadFile", "idexists", "A new uploadFile cannot already have an ID")).body(null);
@@ -50,28 +81,6 @@ public class UploadFileResource {
         UploadFileDTO result = uploadFileService.save(uploadFileDTO);
         return ResponseEntity.created(new URI("/api/upload-files/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert("uploadFile", result.getId().toString()))
-            .body(result);
-    }
-
-    /**
-     * PUT  /upload-files : Updates an existing uploadFile.
-     *
-     * @param uploadFileDTO the uploadFileDTO to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated uploadFileDTO,
-     * or with status 400 (Bad Request) if the uploadFileDTO is not valid,
-     * or with status 500 (Internal Server Error) if the uploadFileDTO couldnt be updated
-     * @throws URISyntaxException if the Location URI syntax is incorrect
-     */
-    @PutMapping("/upload-files")
-    @Timed
-    public ResponseEntity<UploadFileDTO> updateUploadFile(@Valid @RequestBody UploadFileDTO uploadFileDTO) throws URISyntaxException {
-        log.debug("REST request to update UploadFile : {}", uploadFileDTO);
-        if (uploadFileDTO.getId() == null) {
-            return createUploadFile(uploadFileDTO);
-        }
-        UploadFileDTO result = uploadFileService.save(uploadFileDTO);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert("uploadFile", uploadFileDTO.getId().toString()))
             .body(result);
     }
 

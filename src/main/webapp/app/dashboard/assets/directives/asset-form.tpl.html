@@ -2,13 +2,14 @@
     <header>
         {{$root.getWord('Asset Details')}}
     </header>
-<input type="hidden" name="assetParent[{{currentStep}}]" value="{{parentStep}}" />
+    <input type="hidden" name="assetParent[{{currentStep}}]" value="{{parentStep}}"/>
     <fieldset>
         <div class="row">
             <div class="col-md-12">
                 <label class="control-label">{{$root.getWord('Type')}}</label>
                 <div class="col-md-12">
-                    <select class="form-control" ng-model="asset.assetType" ng-disabled="disableForm" ng-change="toggleAssetForm()">
+                    <select class="form-control" ng-model="asset.assetType" ng-disabled="disableForm"
+                            ng-change="toggleAssetForm()">
                         <option value="ASSET_GROUP">{{$root.getWord('Asset Group')}}</option>
                         <option value="ASSET">{{$root.getWord('Asset')}}</option>
                         <option value="SUB_ASSET">{{$root.getWord('Sub Asset')}}</option>
@@ -78,8 +79,12 @@
                 <label class="control-label">{{$root.getWord('Installation Map')}}</label>
 
                 <div class="col-md-12">
-                    <input type="file" class="btn btn-default col-md-12 col-xs-12"
-                           id="exampleInputFile2" ng-disabled="disableForm">
+                    <div class="dropzone" data-smart-dropzone="mapsDropzoneConfig">
+                        <div class="dz-default dz-message"><span><span class="text-center"><span
+                            class="font-lg visible-xs-block visible-sm-block visible-lg-block"><span class="font-lg"><i
+                            class="fa fa-caret-right text-danger"></i> Drop files <span class="font-xs">to upload</span></span><span>&nbsp;&nbsp;<h4
+                            class="display-inline"> (Or Click)</h4></span></span></span></span></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -104,7 +109,6 @@
             <div class="col-md-6 ">
                 <label class="control-label">{{$root.getWord('Manufacture')}}</label>
                 <div class="col-md-12">
-                    {{manufactures}}
                     <input class="form-control" placeholder="{{$root.getWord('Type something')}}..." type="text"
                            list="list" ng-model="asset.manufacture" ng-disabled="disableForm">
                     <datalist id="list">
@@ -117,7 +121,8 @@
             <div class="col-md-6 ">
                 <label class="control-label">{{$root.getWord('Manufacture Year')}}</label>
                 <div class="col-md-12">
-                    <select class="form-control" ng-model="asset.year"  ng-disabled="disableForm" ng-options="o as o for o in years">
+                    <select class="form-control" ng-model="asset.year" ng-disabled="disableForm"
+                            ng-options="o as o for o in years">
                     </select> <i></i>
                 </div>
             </div>
@@ -127,7 +132,8 @@
                 <label class="control-label">{{$root.getWord('Supervisor')}}</label>
                 <div class="col-md-12">
                     <!--user.name for user in users track by user.id-->
-                    <select class="form-control" ng-model="asset.supervisorId"  ng-disabled="disableForm" ng-options="user.id as user.name for user in users">
+                    <select class="form-control" ng-model="asset.supervisorId" ng-disabled="disableForm"
+                            ng-options="user.id as user.name for user in users">
                     </select> <i></i>
                 </div>
 
@@ -136,7 +142,8 @@
             <div class="col-md-6 ">
                 <label class="control-label">{{$root.getWord('Technician')}}</label>
                 <div class="col-md-12">
-                    <select class="form-control" ng-model="asset.technicianId"  ng-disabled="disableForm" ng-options="user.id as user.name for user in users">
+                    <select class="form-control" ng-model="asset.technicianId" ng-disabled="disableForm"
+                            ng-options="user.id as user.name for user in users">
                     </select> <i></i>
                 </div>
             </div>
@@ -150,8 +157,12 @@
                 <label class="control-label">{{$root.getWord('Attachments')}}</label>
 
                 <div class="col-md-12">
-                    <input type="file" class="btn btn-default col-md-12 col-xs-12"
-                           id="exampleInputFile3" ng-disabled="disableForm">
+                    <div class="dropzone" data-smart-dropzone="otherDropzoneConfig">
+                        <div class="dz-default dz-message"><span><span class="text-center"><span
+                            class="font-lg visible-xs-block visible-sm-block visible-lg-block"><span class="font-lg"><i
+                            class="fa fa-caret-right text-danger"></i> Drop files <span class="font-xs">to upload</span></span><span>&nbsp;&nbsp;<h4
+                            class="display-inline"> (Or Click)</h4></span></span></span></span></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -160,7 +171,8 @@
                 <label class="control-label">{{$root.getWord('Details')}}</label>
 
                 <div class="col-md-12 textarea textarea-expandable ">
-                    <textarea rows="3" ng-model="asset.details" class="custom-scroll form-control" ng-disabled="disableForm">{{assetList.details}}</textarea>
+                    <textarea rows="3" ng-model="asset.details" class="custom-scroll form-control"
+                              ng-disabled="disableForm">{{assetList.details}}</textarea>
                 </div>
             </div>
         </div>
@@ -171,14 +183,15 @@
             <div class="col-md-12">
                 <label class="col-md-2">{{$root.getWord('Next Step Configuration')}}</label>
 
-                    <div class="col-md-10">
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" class="checkbox style-0" name="hasNextStep" ng-model="hasNextStep" value="1">
-                                <span>{{$root.getWord('Has Next Step')}}</span>
-                            </label>
-                        </div>
+                <div class="col-md-10">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" class="checkbox style-0" name="hasNextStep" ng-model="hasNextStep"
+                                   value="1">
+                            <span>{{$root.getWord('Has Next Step')}}</span>
+                        </label>
                     </div>
+                </div>
             </div>
         </div>
     </fieldset>

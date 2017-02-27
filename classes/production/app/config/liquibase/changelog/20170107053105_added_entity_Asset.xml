@@ -75,5 +75,27 @@
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
         
+        <createTable tableName="asset_maps">
+            <column name="maps_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="assets_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="assets_id, maps_id" tableName="asset_maps"/>
+        
+        <createTable tableName="asset_other_files">
+            <column name="other_files_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="assets_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="assets_id, other_files_id" tableName="asset_other_files"/>
+        
     </changeSet>
 </databaseChangeLog>

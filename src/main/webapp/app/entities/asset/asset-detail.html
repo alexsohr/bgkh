@@ -52,6 +52,18 @@
         <dd>
             {{vm.asset.technicianId}}
         </dd>
+        <dt><span data-translate="appApp.asset.maps">Maps</span></dt>
+        <dd>
+            <span ng-repeat="maps in vm.asset.maps">
+                <a ui-sref="upload-file-detail({id: maps.id})">{{maps.id}}</a>{{$last ? '' : ', '}}
+            </span>
+        </dd>
+        <dt><span data-translate="appApp.asset.otherFiles">Other Files</span></dt>
+        <dd>
+            <span ng-repeat="otherFiles in vm.asset.otherFiles">
+                <a ui-sref="upload-file-detail({id: otherFiles.id})">{{otherFiles.id}}</a>{{$last ? '' : ', '}}
+            </span>
+        </dd>
     </dl>
 
     <button type="submit"

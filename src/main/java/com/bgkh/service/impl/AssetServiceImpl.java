@@ -132,7 +132,7 @@ public class AssetServiceImpl implements AssetService{
     @Transactional(readOnly = true)
     public List<AssetDTO> findAll() {
         log.debug("Request to get all Assets");
-        List<AssetDTO> result = assetRepository.findAll().stream()
+        List<AssetDTO> result = assetRepository.findAllWithEagerRelationships().stream()
             .map(assetMapper::assetToAssetDTO)
             .collect(Collectors.toCollection(LinkedList::new));
 
@@ -154,7 +154,7 @@ public class AssetServiceImpl implements AssetService{
     @Transactional(readOnly = true)
     public AssetDTO findOne(Long id) {
         log.debug("Request to get Asset : {}", id);
-        Asset asset = assetRepository.findOne(id);
+        Asset asset = assetRepository.findOneWithEagerRelationships(id);
         AssetDTO assetDTO = assetMapper.assetToAssetDTO(asset);
         return assetDTO;
     }

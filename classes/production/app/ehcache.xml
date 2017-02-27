@@ -36,5 +36,15 @@
 
     <cache alias="com.bgkh.domain.UploadFile.assets" uses-template="simple"/>
 
+    <cache alias="com.bgkh.domain.UploadFile.assetMaps" uses-template="simple"/>
+
+    <cache alias="com.bgkh.domain.UploadFile.assetOtherFiles" uses-template="simple"/>
+
+    <cache alias="com.bgkh.domain.Asset.maps" uses-template="simple"/>
+
+    <cache alias="com.bgkh.domain.Asset.assetOtherFiles" uses-template="simple"/>
+
+    <cache alias="com.bgkh.domain.Asset.otherFiles" uses-template="simple"/>
+
     <!-- jhipster-needle-ehcache-add-entry -->
 </config>

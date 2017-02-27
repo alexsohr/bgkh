@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('appApp')
+        .module('app')
         .controller('AssetController', AssetController);
 
     AssetController.$inject = ['$scope', '$state', 'Asset'];

@@ -2,17 +2,18 @@
     'use strict';
 
     angular
-        .module('appApp')
+        .module('app')
         .controller('UploadFileDialogController', UploadFileDialogController);
 
-    UploadFileDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'UploadFile'];
+    UploadFileDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'UploadFile', 'Asset'];
 
-    function UploadFileDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, UploadFile) {
+    function UploadFileDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, UploadFile, Asset) {
         var vm = this;
 
         vm.uploadFile = entity;
         vm.clear = clear;
         vm.save = save;
+        vm.assets = Asset.query();
 
         $timeout(function (){
             angular.element('.form-group:eq(1)>input').focus();

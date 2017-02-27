@@ -1,7 +1,7 @@
 (function() {
     'use strict';
     angular
-        .module('appApp')
+        .module('app')
         .factory('UploadFile', UploadFile);
 
     UploadFile.$inject = ['$resource'];
