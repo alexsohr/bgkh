@@ -33,8 +33,6 @@
                                     <table class="table table-striped">
                                         <thead>
                                         <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
-                                            <th jh-sort-by="id"><span>ID</span><span
-                                                class="glyphicon glyphicon-sort"></span></th>
                                             <th jh-sort-by="login"><span>Login</span> <span
                                                 class="glyphicon glyphicon-sort"></span></th>
                                             <th jh-sort-by="email"><span>Email</span> <span
@@ -52,8 +50,6 @@
                                         </thead>
                                         <tbody>
                                         <tr ng-repeat="user in vm.users track by user.id">
-                                            <td><a ui-sref="app.admin.user-management-detail({login:user.login})">{{user.id}}</a>
-                                            </td>
                                             <td>{{user.login}}</td>
                                             <td>{{user.email}}</td>
                                             <td>
