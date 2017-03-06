@@ -94,6 +94,9 @@ public class Asset implements Serializable {
                inverseJoinColumns = @JoinColumn(name="other_files_id", referencedColumnName="ID"))
     private Set<UploadFile> otherFiles = new HashSet<>();
 
+    @ManyToOne
+    private AssetSpecificationType assetSpecificationType;
+
     public Long getId() {
         return id;
     }
@@ -331,6 +334,19 @@ public class Asset implements Serializable {
 
     public void setOtherFiles(Set<UploadFile> uploadFiles) {
         this.otherFiles = uploadFiles;
+    }
+
+    public AssetSpecificationType getAssetSpecificationType() {
+        return assetSpecificationType;
+    }
+
+    public Asset assetSpecificationType(AssetSpecificationType assetSpecificationType) {
+        this.assetSpecificationType = assetSpecificationType;
+        return this;
+    }
+
+    public void setAssetSpecificationType(AssetSpecificationType assetSpecificationType) {
+        this.assetSpecificationType = assetSpecificationType;
     }
 
     @Override

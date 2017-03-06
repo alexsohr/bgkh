@@ -27,4 +27,5 @@ public interface AssetRepository extends JpaRepository<Asset,Long> {
 
     @Query("select asset from Asset asset left join fetch asset.maps left join fetch asset.otherFiles where asset.id =:id order by asset.id")
     Asset findOneWithEagerRelationships(@Param("id") Long id);
+
 }

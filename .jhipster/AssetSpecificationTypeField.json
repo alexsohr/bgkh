@@ -2,29 +2,13 @@
     "fluentMethods": true,
     "relationships": [
         {
-            "relationshipType": "one-to-one",
-            "relationshipName": "assetSpecificationTypeField",
-            "otherEntityName": "asset",
-            "otherEntityField": "id",
-            "ownerSide": true,
-            "otherEntityRelationshipName": "assetSpecificationTypeField"
-        },
-        {
-            "relationshipType": "one-to-many",
-            "relationshipName": "field",
-            "otherEntityName": "assetSpecificationTypeValue",
-            "otherEntityRelationshipName": "assetSpecificationTypeField"
+            "relationshipName": "assetSpecificationType",
+            "otherEntityName": "assetSpecificationType",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
         }
     ],
     "fields": [
-        {
-            "fieldName": "assetSpecificationType",
-            "fieldType": "AssetSpecificationType",
-            "fieldValues": "BOILER,COSMETIC_BOILER,CATHODIC_TRANS,DEISEL_GENERATORE,DEISEL_PUMP,ELECTRO_MOTOR,TRANSFORMER,LOADING_ARM,PUMP,UPS",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
         {
             "fieldName": "fieldLable",
             "fieldType": "String",
@@ -48,8 +32,8 @@
         }
     ],
     "changelogDate": "20170219232038",
-    "entityTableName": "asset_specification_type_field",
     "dto": "mapstruct",
-    "pagination": "no",
-    "service": "serviceImpl"
+    "service": "serviceImpl",
+    "entityTableName": "asset_specification_type_field",
+    "pagination": "no"
 }

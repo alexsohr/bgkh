@@ -18,6 +18,7 @@ public interface AssetMapper {
     @Mapping(source = "technician.lastName", target = "technicianLastName")
     @Mapping(source = "supervisor.firstName", target = "supervisorFirstName")
     @Mapping(source = "supervisor.lastName", target = "supervisorLastName")
+    @Mapping(source = "assetSpecificationType.id", target = "assetSpecificationTypeId")
     AssetDTO assetToAssetDTO(Asset asset);
 
     List<AssetDTO> assetsToAssetDTOs(List<Asset> assets);
@@ -25,6 +26,7 @@ public interface AssetMapper {
     @Mapping(target = "workOrders", ignore = true)
     @Mapping(source = "supervisorId", target = "supervisor")
     @Mapping(source = "technicianId", target = "technician")
+    @Mapping(source = "assetSpecificationTypeId", target = "assetSpecificationType")
     Asset assetDTOToAsset(AssetDTO assetDTO);
 
     List<Asset> assetDTOsToAssets(List<AssetDTO> assetDTOs);
@@ -36,5 +38,14 @@ public interface AssetMapper {
         UploadFile uploadFile = new UploadFile();
         uploadFile.setId(id);
         return uploadFile;
+    }
+
+    default AssetSpecificationType assetSpecificationTypeFromId(Long id) {
+        if (id == null) {
+            return null;
+        }
+        AssetSpecificationType assetSpecificationType = new AssetSpecificationType();
+        assetSpecificationType.setId(id);
+        return assetSpecificationType;
     }
 }

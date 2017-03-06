@@ -18,10 +18,12 @@ public interface AssetSpecificationTypeFieldService {
 
     /**
      *  Get all the assetSpecificationTypeFields.
-     *  
+     *
      *  @return the list of entities
      */
     List<AssetSpecificationTypeFieldDTO> findAll();
+
+    List<AssetSpecificationTypeFieldDTO> findAllByAssetSpecificationTypeId(Long id);
 
     /**
      *  Get the "id" assetSpecificationTypeField.

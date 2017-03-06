@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
 
-import com.bgkh.domain.enumeration.AssetSpecificationType;
 
 /**
  * A DTO for the AssetSpecificationTypeField entity.
@@ -14,9 +13,6 @@ import com.bgkh.domain.enumeration.AssetSpecificationType;
 public class AssetSpecificationTypeFieldDTO implements Serializable {
 
     private Long id;
-
-    @NotNull
-    private AssetSpecificationType assetSpecificationType;
 
     @NotNull
     private String fieldLable;
@@ -28,7 +24,7 @@ public class AssetSpecificationTypeFieldDTO implements Serializable {
     private String fieldType;
 
 
-    private Long assetSpecificationTypeFieldId;
+    private Long assetSpecificationTypeId;
     
     public Long getId() {
         return id;
@@ -36,13 +32,6 @@ public class AssetSpecificationTypeFieldDTO implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-    public AssetSpecificationType getAssetSpecificationType() {
-        return assetSpecificationType;
-    }
-
-    public void setAssetSpecificationType(AssetSpecificationType assetSpecificationType) {
-        this.assetSpecificationType = assetSpecificationType;
     }
     public String getFieldLable() {
         return fieldLable;
@@ -66,12 +55,12 @@ public class AssetSpecificationTypeFieldDTO implements Serializable {
         this.fieldType = fieldType;
     }
 
-    public Long getAssetSpecificationTypeFieldId() {
-        return assetSpecificationTypeFieldId;
+    public Long getAssetSpecificationTypeId() {
+        return assetSpecificationTypeId;
     }
 
-    public void setAssetSpecificationTypeFieldId(Long assetId) {
-        this.assetSpecificationTypeFieldId = assetId;
+    public void setAssetSpecificationTypeId(Long assetSpecificationTypeId) {
+        this.assetSpecificationTypeId = assetSpecificationTypeId;
     }
 
     @Override
@@ -99,7 +88,6 @@ public class AssetSpecificationTypeFieldDTO implements Serializable {
     public String toString() {
         return "AssetSpecificationTypeFieldDTO{" +
             "id=" + id +
-            ", assetSpecificationType='" + assetSpecificationType + "'" +
             ", fieldLable='" + fieldLable + "'" +
             ", fieldName='" + fieldName + "'" +
             ", fieldType='" + fieldType + "'" +

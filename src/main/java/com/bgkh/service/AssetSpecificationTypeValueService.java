@@ -18,7 +18,7 @@ public interface AssetSpecificationTypeValueService {
 
     /**
      *  Get all the assetSpecificationTypeValues.
-     *  
+     *
      *  @return the list of entities
      */
     List<AssetSpecificationTypeValueDTO> findAll();
@@ -29,7 +29,7 @@ public interface AssetSpecificationTypeValueService {
      *  @param id the id of the entity
      *  @return the entity
      */
-    AssetSpecificationTypeValueDTO findOne(Long id);
+    List<AssetSpecificationTypeValueDTO> findAllByAssetId(Long id);
 
     /**
      *  Delete the "id" assetSpecificationTypeValue.

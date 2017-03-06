@@ -14,7 +14,7 @@ angular.module('app').directive('assetsForm', function () {
             parentId: '=parentId',
             updateAssetCallback: '&?'
         },
-        controller: function ($scope, User, AssetManufacture, Upload) {
+        controller: function ($scope, $filter, $compile, User, AssetManufacture, Upload, AssetSpecificationType, AssetSpecificationTypeFieldByType, AssetSpecificationTypeValue, AlertService) {
 
             if (angular.isUndefinedOrNull($scope.currentStep)) {
                 $scope.currentStep = 1;
@@ -23,9 +23,67 @@ angular.module('app').directive('assetsForm', function () {
             $scope.disableForm = false;
             $scope.users = [];
             $scope.manufactures = [];
+            $scope.assetSpecificationTypes = [];
+            $scope.assetSpecificationTypeFields = [];
+            $scope.assetSpecificationTypeValues = [];
+            $scope.destroySpecTypeElement = false;
+            $scope.assetSpecificationTypeSelect = true;
 
+            if ($scope.updateAssetCallback !== undefined) {
+                var index = {index: $scope.currentStep};
+                $scope.asset = $scope.updateAssetCallback(index);
+                console.log($scope.asset);
+            }
+
+            loadAllAssetSpecificationTypes();
             loadAllManufactures();
             loadAllUsers();
+
+            addTypeFieldElements();
+
+            $scope.changeToNewSpecType = function () {
+                $scope.destroySpecTypeElement = true;
+                $scope.assetSpecificationTypeSelect = false;
+                $scope.assetSpecificationTypeValues = [];
+                $scope.assetSpecificationTypeFields = [];
+                $scope.destroySpecTypeElement = false;
+                addTypeFieldElements();
+            };
+
+            $scope.changeToSelectSpecType = function () {
+                $scope.destroySpecTypeElement = false;
+                $scope.assetSpecificationTypeSelect = true;
+                loadAllAssetSpecificationTypeFields($scope.asset.assetSpecificationTypeId);
+            };
+
+            function loadAllAssetSpecificationTypeFields(assetSpecificationTypeId) {
+                if (!angular.isUndefinedOrNull(assetSpecificationTypeId)) {
+                    if (!angular.isUndefinedOrNull($scope.asset.id)) {
+                        AssetSpecificationTypeValue.query({id: $scope.asset.id}, function (data) {
+                            $scope.assetSpecificationTypeValues = data;
+                        }, onError);
+                    }
+
+                    AssetSpecificationTypeFieldByType.query({id: assetSpecificationTypeId}, function (data) {
+                        $scope.assetSpecificationTypeFields = data;
+                        // $scope.destroySpecTypeElement = true;
+                        addTypeFieldElements();
+                    }, onError);
+                }
+            }
+
+            function addTypeFieldElements() {
+                var specTypeFormDir = document.querySelector(".asset-type-container");
+                angular.element(specTypeFormDir).html("");
+                // $scope.destroySpecTypeElement = false;
+                angular.element(specTypeFormDir).append($compile("<asset-type-field-form asset=\"asset\" asset-type-fields=\"assetSpecificationTypeFields\" asset-type-values=\"assetSpecificationTypeValues\" destroy-element=\"destroySpecTypeElement\"></asset-type-field-form>")($scope));
+            }
+
+            function loadAllAssetSpecificationTypes() {
+                AssetSpecificationType.query({}, function (data) {
+                    $scope.assetSpecificationTypes = data;
+                }, onError);
+            }
 
             function loadAllManufactures() {
                 AssetManufacture.query({}, onSuccessManufacture, onError);
@@ -35,12 +93,23 @@ angular.module('app').directive('assetsForm', function () {
                 User.query({}, onSuccess, onError);
             }
 
+
+            function findAssetSpecificationTypeByFilter(field, value) {
+                var example = {};
+                example[field] = value;
+                var assetSpecType = $filter('filter')($scope.assetSpecificationTypes, example, true);
+                if (assetSpecType.length == 1) {
+                    return assetSpecType;
+                }
+                return null;
+            }
+
             function onSuccessManufacture(data) {
                 $scope.manufactures = data;
             }
 
             function onSuccess(data) {
-                for(var i=0; i < data.length; i++) {
+                for (var i = 0; i < data.length; i++) {
                     if (angular.isUndefinedOrNull(data[i].firstName) && angular.isUndefinedOrNull(data[i].lastName)) {
                         data[i].name = data[i].login;
                     }
@@ -55,19 +124,14 @@ angular.module('app').directive('assetsForm', function () {
                 AlertService.error(error.data.message);
             }
 
+
+            $scope.$watch('asset.assetSpecificationTypeId', function (newValue, oldValue) {
+                loadAllAssetSpecificationTypeFields(newValue);
+            });
+
             if (!angular.isUndefinedOrNull($scope.displayDetails)) {
                 $scope.disableForm = true;
             }
-
-            if ($scope.updateAssetCallback !== undefined) {
-                var index = {index: $scope.currentStep};
-                $scope.asset = $scope.updateAssetCallback(index);
-                console.log($scope.asset);
-            }
-
-            $scope.$watch('asset', function(newValue, oldValue) {
-                console.log(newValue);
-            });
 
             $scope.hasSubTree = false;
             $scope.assetType = 'ASSET_GROUP';
@@ -86,7 +150,6 @@ angular.module('app').directive('assetsForm', function () {
                 j++;
             }
 
-            console.log($scope.asset);
             $scope.toggleAssetForm = function () {
                 console.log($scope.asset.assetType);
                 if ('ASSET_GROUP' == $scope.asset.assetType) {
@@ -144,21 +207,22 @@ angular.module('app').directive('assetsForm', function () {
             };
 
         },
-        link: function (scope, rootScope, element, attrs) {
+        link: function (scope, rootScope, element, attrs, compile) {
+
 
         }
     }
 })
-.directive('convertToString', function () {
-    return {
-        require: 'ngModel',
-        link: function (scope, element, attrs, ngModel) {
-            ngModel.$parsers.push(function (val) {
-                return '' + val;
-            });
-            ngModel.$formatters.push(function (val) {
-                return parseInt(val, 10);
-            });
+    .directive('convertToString', function () {
+        return {
+            require: 'ngModel',
+            link: function (scope, element, attrs, ngModel) {
+                ngModel.$parsers.push(function (val) {
+                    return '' + val;
+                });
+                ngModel.$formatters.push(function (val) {
+                    return parseInt(val, 10);
+                });
+            }
         }
-    }
-});
+    });

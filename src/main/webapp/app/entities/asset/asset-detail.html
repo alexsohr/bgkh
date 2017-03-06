@@ -64,6 +64,10 @@
                 <a ui-sref="upload-file-detail({id: otherFiles.id})">{{otherFiles.id}}</a>{{$last ? '' : ', '}}
             </span>
         </dd>
+        <dt><span data-translate="appApp.asset.assetSpecificationType">Asset Specification Type</span></dt>
+        <dd>
+            <a ui-sref="asset-specification-type-detail({id:vm.asset.assetSpecificationTypeId})">{{vm.asset.assetSpecificationTypeId}}</a>
+        </dd>
     </dl>
 
     <button type="submit"

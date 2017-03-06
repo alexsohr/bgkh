@@ -12,6 +12,7 @@
                 "assetSpecificationTypeField": "Asset Specification Type Field",
                 "assetSpecificationTypeValue": "Asset Specification Type Value",
                 "uploadFile": "Upload File",
+                "assetSpecificationType": "Asset Specification Type",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {

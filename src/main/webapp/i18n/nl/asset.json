@@ -30,7 +30,8 @@
             "supervisor": "Supervisor",
             "technician": "Technician",
             "maps": "Maps",
-            "otherFiles": "Other Files"
+            "otherFiles": "Other Files",
+            "assetSpecificationType": "Asset Specification Type"
         }
     }
 }

@@ -5,15 +5,15 @@
         .module('app')
         .controller('AssetSpecificationTypeValueDetailController', AssetSpecificationTypeValueDetailController);
 
-    AssetSpecificationTypeValueDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'AssetSpecificationTypeValue', 'AssetSpecificationTypeField'];
+    AssetSpecificationTypeValueDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'AssetSpecificationTypeValue', 'AssetSpecificationTypeField', 'Asset'];
 
-    function AssetSpecificationTypeValueDetailController($scope, $rootScope, $stateParams, previousState, entity, AssetSpecificationTypeValue, AssetSpecificationTypeField) {
+    function AssetSpecificationTypeValueDetailController($scope, $rootScope, $stateParams, previousState, entity, AssetSpecificationTypeValue, AssetSpecificationTypeField, Asset) {
         var vm = this;
 
         vm.assetSpecificationTypeValue = entity;
         vm.previousState = previousState.name;
 
-        var unsubscribe = $rootScope.$on('app:assetSpecificationTypeValueUpdate', function(event, result) {
+        var unsubscribe = $rootScope.$on('appApp:assetSpecificationTypeValueUpdate', function(event, result) {
             vm.assetSpecificationTypeValue = result;
         });
         $scope.$on('$destroy', unsubscribe);

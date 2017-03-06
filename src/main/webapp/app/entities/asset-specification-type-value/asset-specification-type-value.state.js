@@ -14,7 +14,7 @@
             url: '/asset-specification-type-value',
             data: {
                 authorities: ['ROLE_USER'],
-                pageTitle: 'app.assetSpecificationTypeValue.home.title'
+                pageTitle: 'appApp.assetSpecificationTypeValue.home.title'
             },
             views: {
                 'content@': {
@@ -36,7 +36,7 @@
             url: '/asset-specification-type-value/{id}',
             data: {
                 authorities: ['ROLE_USER'],
-                pageTitle: 'app.assetSpecificationTypeValue.detail.title'
+                pageTitle: 'appApp.assetSpecificationTypeValue.detail.title'
             },
             views: {
                 'content@': {

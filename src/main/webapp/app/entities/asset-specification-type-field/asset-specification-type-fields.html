@@ -1,12 +1,12 @@
 <div>
-    <h2 data-translate="app.assetSpecificationTypeField.home.title">Asset Specification Type Fields</h2>
+    <h2 data-translate="appApp.assetSpecificationTypeField.home.title">Asset Specification Type Fields</h2>
     <jhi-alert></jhi-alert>
     <div class="container-fluid">
         <div class="row">
             <div class="col-xs-4 no-padding-left">
                 <button class="btn btn-primary" ui-sref="asset-specification-type-field.new" >
                     <span class="glyphicon glyphicon-plus"></span>
-                    <span  data-translate="app.assetSpecificationTypeField.home.createLabel">
+                    <span  data-translate="appApp.assetSpecificationTypeField.home.createLabel">
                         Create new Asset Specification Type Field
                     </span>
                 </button>
@@ -19,20 +19,22 @@
             <thead>
                 <tr>
                     <th><span data-translate="global.field.id">ID</span></th>
-                    <th><span data-translate="app.assetSpecificationTypeField.assetSpecificationType">Asset Specification Type</span></th>
-                    <th><span data-translate="app.assetSpecificationTypeField.fieldLable">Field Lable</span></th>
-                    <th><span data-translate="app.assetSpecificationTypeField.fieldName">Field Name</span></th>
-                    <th><span data-translate="app.assetSpecificationTypeField.fieldType">Field Type</span></th>
+                    <th><span data-translate="appApp.assetSpecificationTypeField.fieldLable">Field Lable</span></th>
+                    <th><span data-translate="appApp.assetSpecificationTypeField.fieldName">Field Name</span></th>
+                    <th><span data-translate="appApp.assetSpecificationTypeField.fieldType">Field Type</span></th>
+                    <th><span data-translate="appApp.assetSpecificationTypeField.assetSpecificationType">Asset Specification Type</span></th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="assetSpecificationTypeField in vm.assetSpecificationTypeFields track by assetSpecificationTypeField.id">
                     <td><a ui-sref="asset-specification-type-field-detail({id:assetSpecificationTypeField.id})">{{assetSpecificationTypeField.id}}</a></td>
-                    <td data-translate="{{'app.AssetSpecificationType.' + assetSpecificationTypeField.assetSpecificationType}}">{{assetSpecificationTypeField.assetSpecificationType}}</td>
                     <td>{{assetSpecificationTypeField.fieldLable}}</td>
                     <td>{{assetSpecificationTypeField.fieldName}}</td>
                     <td>{{assetSpecificationTypeField.fieldType}}</td>
+                    <td>
+                        <a ui-sref="asset-specification-type-detail({id:assetSpecificationTypeField.assetSpecificationTypeId})">{{assetSpecificationTypeField.assetSpecificationTypeId}}</a>
+                    </td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">
                             <button type="submit"

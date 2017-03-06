@@ -20,6 +20,8 @@ public class AssetSpecificationTypeValueDTO implements Serializable {
 
     private Long assetSpecificationTypeFieldId;
     
+    private Long assetId;
+    
     public Long getId() {
         return id;
     }
@@ -41,6 +43,14 @@ public class AssetSpecificationTypeValueDTO implements Serializable {
 
     public void setAssetSpecificationTypeFieldId(Long assetSpecificationTypeFieldId) {
         this.assetSpecificationTypeFieldId = assetSpecificationTypeFieldId;
+    }
+
+    public Long getAssetId() {
+        return assetId;
+    }
+
+    public void setAssetId(Long assetId) {
+        this.assetId = assetId;
     }
 
     @Override

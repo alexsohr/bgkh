@@ -1,0 +1,22 @@
+{
+    "appApp": {
+        "assetSpecificationType" : {
+            "home": {
+                "title": "Asset Specification Types",
+                "createLabel": "Maak een nieuwe Asset Specification Type",
+                "createOrEditLabel": "Maak of wijzig een Asset Specification Type",
+                "search": "Search for Asset Specification Type"
+            },
+            "created": "A new Asset Specification Type is created with identifier {{ param }}",
+            "updated": "A Asset Specification Type is updated with identifier {{ param }}",
+            "deleted": "A Asset Specification Type is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Bent u zeker dat u Asset Specification Type {{ id }} wilt verwijderen?"
+            },
+            "detail": {
+                "title": "Asset Specification Type"
+            },
+            "name": "Name"
+        }
+    }
+}

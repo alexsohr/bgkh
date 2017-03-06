@@ -14,7 +14,7 @@
             url: '/asset-specification-type-field',
             data: {
                 authorities: ['ROLE_USER'],
-                pageTitle: 'app.assetSpecificationTypeField.home.title'
+                pageTitle: 'appApp.assetSpecificationTypeField.home.title'
             },
             views: {
                 'content@': {
@@ -26,7 +26,6 @@
             resolve: {
                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
                     $translatePartialLoader.addPart('assetSpecificationTypeField');
-                    $translatePartialLoader.addPart('assetSpecificationType');
                     $translatePartialLoader.addPart('global');
                     return $translate.refresh();
                 }]
@@ -37,7 +36,7 @@
             url: '/asset-specification-type-field/{id}',
             data: {
                 authorities: ['ROLE_USER'],
-                pageTitle: 'app.assetSpecificationTypeField.detail.title'
+                pageTitle: 'appApp.assetSpecificationTypeField.detail.title'
             },
             views: {
                 'content@': {
@@ -49,7 +48,6 @@
             resolve: {
                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
                     $translatePartialLoader.addPart('assetSpecificationTypeField');
-                    $translatePartialLoader.addPart('assetSpecificationType');
                     return $translate.refresh();
                 }],
                 entity: ['$stateParams', 'AssetSpecificationTypeField', function($stateParams, AssetSpecificationTypeField) {
@@ -106,7 +104,6 @@
                     resolve: {
                         entity: function () {
                             return {
-                                assetSpecificationType: null,
                                 fieldLable: null,
                                 fieldName: null,
                                 fieldType: null,

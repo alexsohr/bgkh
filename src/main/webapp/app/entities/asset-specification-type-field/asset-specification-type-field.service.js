@@ -2,10 +2,18 @@
     'use strict';
     angular
         .module('app')
-        .factory('AssetSpecificationTypeField', AssetSpecificationTypeField);
+        .factory('AssetSpecificationTypeField', AssetSpecificationTypeField)
+        .factory('AssetSpecificationTypeFieldByType', AssetSpecificationTypeFieldByType);
 
     AssetSpecificationTypeField.$inject = ['$resource'];
+    AssetSpecificationTypeFieldByType.$inject = ['$resource'];
 
+    function AssetSpecificationTypeFieldByType ($resource) {
+        var resourceUrl =  'api/asset-specification-type-fields/byType/:id';
+        return $resource(resourceUrl, {}, {
+            'query': { method: 'GET', isArray: true}
+        });
+    }
     function AssetSpecificationTypeField ($resource) {
         var resourceUrl =  'api/asset-specification-type-fields/:id';
 

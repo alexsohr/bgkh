@@ -5,9 +5,9 @@
         .module('app')
         .controller('AssetDialogController', AssetDialogController);
 
-    AssetDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'Asset', 'WorkOrder', 'User', 'UploadFile'];
+    AssetDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'Asset', 'WorkOrder', 'User', 'UploadFile', 'AssetSpecificationType'];
 
-    function AssetDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, Asset, WorkOrder, User, UploadFile) {
+    function AssetDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, Asset, WorkOrder, User, UploadFile, AssetSpecificationType) {
         var vm = this;
 
         vm.asset = entity;
@@ -16,6 +16,7 @@
         vm.workorders = WorkOrder.query();
         vm.users = User.query();
         vm.uploadfiles = UploadFile.query();
+        vm.assetspecificationtypes = AssetSpecificationType.query();
 
         $timeout(function (){
             angular.element('.form-group:eq(1)>input').focus();

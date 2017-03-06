@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class AssetSpecificationTypeValueServiceImpl implements AssetSpecificationTypeValueService{
 
     private final Logger log = LoggerFactory.getLogger(AssetSpecificationTypeValueServiceImpl.class);
-    
+
     @Inject
     private AssetSpecificationTypeValueRepository assetSpecificationTypeValueRepository;
 
@@ -46,10 +46,10 @@ public class AssetSpecificationTypeValueServiceImpl implements AssetSpecificatio
 
     /**
      *  Get all the assetSpecificationTypeValues.
-     *  
+     *
      *  @return the list of entities
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public List<AssetSpecificationTypeValueDTO> findAll() {
         log.debug("Request to get all AssetSpecificationTypeValues");
         List<AssetSpecificationTypeValueDTO> result = assetSpecificationTypeValueRepository.findAll().stream()
@@ -65,12 +65,14 @@ public class AssetSpecificationTypeValueServiceImpl implements AssetSpecificatio
      *  @param id the id of the entity
      *  @return the entity
      */
-    @Transactional(readOnly = true) 
-    public AssetSpecificationTypeValueDTO findOne(Long id) {
-        log.debug("Request to get AssetSpecificationTypeValue : {}", id);
-        AssetSpecificationTypeValue assetSpecificationTypeValue = assetSpecificationTypeValueRepository.findOne(id);
-        AssetSpecificationTypeValueDTO assetSpecificationTypeValueDTO = assetSpecificationTypeValueMapper.assetSpecificationTypeValueToAssetSpecificationTypeValueDTO(assetSpecificationTypeValue);
-        return assetSpecificationTypeValueDTO;
+    @Transactional(readOnly = true)
+    public List<AssetSpecificationTypeValueDTO> findAllByAssetId(Long id) {
+        log.debug("Request to get all AssetSpecificationTypeValues by assetId");
+        List<AssetSpecificationTypeValueDTO> result = assetSpecificationTypeValueRepository.findAllByAssetId(id).stream()
+            .map(assetSpecificationTypeValueMapper::assetSpecificationTypeValueToAssetSpecificationTypeValueDTO)
+            .collect(Collectors.toCollection(LinkedList::new));
+
+        return result;
     }
 
     /**

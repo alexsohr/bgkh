@@ -1,0 +1,25 @@
+<div class="section">
+    <div class="row padding-top-10">
+        <div class="col-md-12">
+            <span class="btn btn-primary" ng-click="addNewChoice()" id="addNewChoice"> <i class="fa fa-plus-square"></i> {{$root.getWord('Add new type')}}</span>
+        </div>
+    </div>
+    <div class="row padding-top-10" data-ng-repeat="assetSpecificationTypeField in asset.assetSpecificationTypeFields">
+        <div class="col-md-5">
+            <div class="col-md-12">
+                <input type="hidden" class="form-control" ng-model="assetSpecificationTypeField.typeId">
+                <input type="text" class="form-control" ng-model="assetSpecificationTypeField.name" placeholder="Filed name">
+            </div>
+        </div>
+        <div class="col-md-7">
+            <div class="col-md-10">
+                <input type="hidden" class="form-control" ng-model="assetSpecificationTypeField.valId">
+                <input type="text" class="form-control"
+                       ng-model="assetSpecificationTypeField.value" placeholder="Filed value">
+            </div>
+            <div class="col-md-2">
+                <span class="btn btn-danger" ng-click="removeChoice(assetSpecificationTypeField)"><i class="fa fa-minus-square"></i></span>
+            </div>
+        </div>
+    </div>
+</div>

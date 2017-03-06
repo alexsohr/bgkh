@@ -29,6 +29,9 @@ public class AssetSpecificationTypeValue implements Serializable {
     @ManyToOne
     private AssetSpecificationTypeField assetSpecificationTypeField;
 
+    @ManyToOne
+    private Asset asset;
+
     public Long getId() {
         return id;
     }
@@ -61,6 +64,19 @@ public class AssetSpecificationTypeValue implements Serializable {
 
     public void setAssetSpecificationTypeField(AssetSpecificationTypeField assetSpecificationTypeField) {
         this.assetSpecificationTypeField = assetSpecificationTypeField;
+    }
+
+    public Asset getAsset() {
+        return asset;
+    }
+
+    public AssetSpecificationTypeValue asset(Asset asset) {
+        this.asset = asset;
+        return this;
+    }
+
+    public void setAsset(Asset asset) {
+        this.asset = asset;
     }
 
     @Override

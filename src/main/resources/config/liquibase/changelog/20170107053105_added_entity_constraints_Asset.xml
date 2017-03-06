@@ -42,5 +42,11 @@
                                  referencedColumnNames="id"
                                  referencedTableName="upload_file"/>
         
+        <addForeignKeyConstraint baseColumnNames="asset_specification_type_id"
+                                 baseTableName="asset"
+                                 constraintName="fk_asset_asset_specification_type_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="asset_specification_type"/>
+
     </changeSet>
 </databaseChangeLog>

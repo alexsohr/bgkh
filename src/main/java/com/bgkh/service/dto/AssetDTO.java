@@ -63,6 +63,8 @@ public class AssetDTO implements Serializable {
 
     private Set<UploadFileDTO> otherFiles = new HashSet<>();
 
+    private Long assetSpecificationTypeId;
+
     public Long getId() {
         return id;
     }
@@ -203,6 +205,14 @@ public class AssetDTO implements Serializable {
 
     public void setOtherFiles(Set<UploadFileDTO> uploadFiles) {
         this.otherFiles = uploadFiles;
+    }
+
+    public Long getAssetSpecificationTypeId() {
+        return assetSpecificationTypeId;
+    }
+
+    public void setAssetSpecificationTypeId(Long assetSpecificationTypeId) {
+        this.assetSpecificationTypeId = assetSpecificationTypeId;
     }
 
     @Override

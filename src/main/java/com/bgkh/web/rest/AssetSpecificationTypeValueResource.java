@@ -7,7 +7,6 @@ import com.bgkh.service.dto.AssetSpecificationTypeValueDTO;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +15,8 @@ import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * REST controller for managing AssetSpecificationTypeValue.
@@ -29,7 +26,7 @@ import java.util.stream.Collectors;
 public class AssetSpecificationTypeValueResource {
 
     private final Logger log = LoggerFactory.getLogger(AssetSpecificationTypeValueResource.class);
-        
+
     @Inject
     private AssetSpecificationTypeValueService assetSpecificationTypeValueService;
 
@@ -80,11 +77,11 @@ public class AssetSpecificationTypeValueResource {
      *
      * @return the ResponseEntity with status 200 (OK) and the list of assetSpecificationTypeValues in body
      */
-    @GetMapping("/asset-specification-type-values")
+    @GetMapping("/asset-specification-type-values/{id}")
     @Timed
-    public List<AssetSpecificationTypeValueDTO> getAllAssetSpecificationTypeValues() {
+    public List<AssetSpecificationTypeValueDTO> getAllAssetSpecificationTypeValues(@PathVariable Long id) {
         log.debug("REST request to get all AssetSpecificationTypeValues");
-        return assetSpecificationTypeValueService.findAll();
+        return assetSpecificationTypeValueService.findAllByAssetId(id);
     }
 
     /**
@@ -93,17 +90,17 @@ public class AssetSpecificationTypeValueResource {
      * @param id the id of the assetSpecificationTypeValueDTO to retrieve
      * @return the ResponseEntity with status 200 (OK) and with body the assetSpecificationTypeValueDTO, or with status 404 (Not Found)
      */
-    @GetMapping("/asset-specification-type-values/{id}")
-    @Timed
-    public ResponseEntity<AssetSpecificationTypeValueDTO> getAssetSpecificationTypeValue(@PathVariable Long id) {
-        log.debug("REST request to get AssetSpecificationTypeValue : {}", id);
-        AssetSpecificationTypeValueDTO assetSpecificationTypeValueDTO = assetSpecificationTypeValueService.findOne(id);
-        return Optional.ofNullable(assetSpecificationTypeValueDTO)
-            .map(result -> new ResponseEntity<>(
-                result,
-                HttpStatus.OK))
-            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
+//    @GetMapping("/asset-specification-type-values/{id}")
+//    @Timed
+//    public ResponseEntity<AssetSpecificationTypeValueDTO> getAssetSpecificationTypeValue(@PathVariable Long id) {
+//        log.debug("REST request to get AssetSpecificationTypeValue : {}", id);
+//        AssetSpecificationTypeValueDTO assetSpecificationTypeValueDTO = assetSpecificationTypeValueService.findAllByAssetId(id);
+//        return Optional.ofNullable(assetSpecificationTypeValueDTO)
+//            .map(result -> new ResponseEntity<>(
+//                result,
+//                HttpStatus.OK))
+//            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+//    }
 
     /**
      * DELETE  /asset-specification-type-values/:id : delete the "id" assetSpecificationTypeValue.

@@ -8,11 +8,11 @@
     -->
     <changeSet id="20170219232038-2" author="jhipster">
         
-        <addForeignKeyConstraint baseColumnNames="asset_specification_type_field_id"
+        <addForeignKeyConstraint baseColumnNames="asset_specification_type_id"
                                  baseTableName="asset_specification_type_field"
-                                 constraintName="asset_specification_type_field_asset_specification_type_field_id"
+                                 constraintName="fk_asset_specification_type_field_asset_specification_type_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="asset"/>
+                                 referencedTableName="asset_specification_type"/>
 
     </changeSet>
 </databaseChangeLog>

@@ -1,14 +1,16 @@
 package com.bgkh.service.impl;
 
-import com.bgkh.service.AssetSpecificationTypeFieldService;
+import com.bgkh.domain.AssetSpecificationType;
 import com.bgkh.domain.AssetSpecificationTypeField;
 import com.bgkh.repository.AssetSpecificationTypeFieldRepository;
+import com.bgkh.service.AssetSpecificationTypeFieldService;
 import com.bgkh.service.dto.AssetSpecificationTypeFieldDTO;
 import com.bgkh.service.mapper.AssetSpecificationTypeFieldMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.util.LinkedList;
@@ -23,7 +25,7 @@ import java.util.stream.Collectors;
 public class AssetSpecificationTypeFieldServiceImpl implements AssetSpecificationTypeFieldService{
 
     private final Logger log = LoggerFactory.getLogger(AssetSpecificationTypeFieldServiceImpl.class);
-    
+
     @Inject
     private AssetSpecificationTypeFieldRepository assetSpecificationTypeFieldRepository;
 
@@ -46,10 +48,10 @@ public class AssetSpecificationTypeFieldServiceImpl implements AssetSpecificatio
 
     /**
      *  Get all the assetSpecificationTypeFields.
-     *  
+     *
      *  @return the list of entities
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public List<AssetSpecificationTypeFieldDTO> findAll() {
         log.debug("Request to get all AssetSpecificationTypeFields");
         List<AssetSpecificationTypeFieldDTO> result = assetSpecificationTypeFieldRepository.findAll().stream()
@@ -59,13 +61,22 @@ public class AssetSpecificationTypeFieldServiceImpl implements AssetSpecificatio
         return result;
     }
 
+    @Override
+    public List<AssetSpecificationTypeFieldDTO> findAllByAssetSpecificationTypeId(Long id) {
+        List<AssetSpecificationTypeFieldDTO> assetSpecificationTypeFields = assetSpecificationTypeFieldRepository.findAllByTypeId(id).stream()
+            .map(assetSpecificationTypeFieldMapper::assetSpecificationTypeFieldToAssetSpecificationTypeFieldDTO)
+            .collect(Collectors.toCollection(LinkedList::new));
+
+        return assetSpecificationTypeFields;
+    }
+
     /**
      *  Get one assetSpecificationTypeField by id.
      *
      *  @param id the id of the entity
      *  @return the entity
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public AssetSpecificationTypeFieldDTO findOne(Long id) {
         log.debug("Request to get AssetSpecificationTypeField : {}", id);
         AssetSpecificationTypeField assetSpecificationTypeField = assetSpecificationTypeFieldRepository.findOne(id);

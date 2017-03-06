@@ -5,16 +5,15 @@
         .module('app')
         .controller('AssetSpecificationTypeFieldDialogController', AssetSpecificationTypeFieldDialogController);
 
-    AssetSpecificationTypeFieldDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'AssetSpecificationTypeField', 'AssetSpecificationTypeValue', 'Asset'];
+    AssetSpecificationTypeFieldDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'AssetSpecificationTypeField', 'AssetSpecificationType'];
 
-    function AssetSpecificationTypeFieldDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, AssetSpecificationTypeField, AssetSpecificationTypeValue, Asset) {
+    function AssetSpecificationTypeFieldDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, AssetSpecificationTypeField, AssetSpecificationType) {
         var vm = this;
 
         vm.assetSpecificationTypeField = entity;
         vm.clear = clear;
         vm.save = save;
-        vm.assetspecificationtypevalues = AssetSpecificationTypeValue.query();
-        vm.assets = Asset.query();
+        vm.assetspecificationtypes = AssetSpecificationType.query();
 
         $timeout(function (){
             angular.element('.form-group:eq(1)>input').focus();
@@ -34,7 +33,7 @@
         }
 
         function onSaveSuccess (result) {
-            $scope.$emit('app:assetSpecificationTypeFieldUpdate', result);
+            $scope.$emit('appApp:assetSpecificationTypeFieldUpdate', result);
             $uibModalInstance.close(result);
             vm.isSaving = false;
         }

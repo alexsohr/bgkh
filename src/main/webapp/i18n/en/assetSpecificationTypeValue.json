@@ -1,5 +1,5 @@
 {
-    "app": {
+    "appApp": {
         "assetSpecificationTypeValue" : {
             "home": {
                 "title": "Asset Specification Type Values",
@@ -17,7 +17,8 @@
                 "title": "Asset Specification Type Value"
             },
             "fieldValue": "Field Value",
-            "assetSpecificationTypeField": "Asset Specification Type Field"
+            "assetSpecificationTypeField": "Asset Specification Type Field",
+            "asset": "Asset"
         }
     }
 }

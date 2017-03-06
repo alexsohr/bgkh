@@ -1,12 +1,12 @@
 <div>
-    <h2 data-translate="app.assetSpecificationTypeValue.home.title">Asset Specification Type Values</h2>
+    <h2 data-translate="appApp.assetSpecificationTypeValue.home.title">Asset Specification Type Values</h2>
     <jhi-alert></jhi-alert>
     <div class="container-fluid">
         <div class="row">
             <div class="col-xs-4 no-padding-left">
                 <button class="btn btn-primary" ui-sref="asset-specification-type-value.new" >
                     <span class="glyphicon glyphicon-plus"></span>
-                    <span  data-translate="app.assetSpecificationTypeValue.home.createLabel">
+                    <span  data-translate="appApp.assetSpecificationTypeValue.home.createLabel">
                         Create new Asset Specification Type Value
                     </span>
                 </button>
@@ -19,8 +19,9 @@
             <thead>
                 <tr>
                     <th><span data-translate="global.field.id">ID</span></th>
-                    <th><span data-translate="app.assetSpecificationTypeValue.fieldValue">Field Value</span></th>
-                    <th><span data-translate="app.assetSpecificationTypeValue.assetSpecificationTypeField">Asset Specification Type Field</span></th>
+                    <th><span data-translate="appApp.assetSpecificationTypeValue.fieldValue">Field Value</span></th>
+                    <th><span data-translate="appApp.assetSpecificationTypeValue.assetSpecificationTypeField">Asset Specification Type Field</span></th>
+                    <th><span data-translate="appApp.assetSpecificationTypeValue.asset">Asset</span></th>
                     <th></th>
                 </tr>
             </thead>
@@ -30,6 +31,9 @@
                     <td>{{assetSpecificationTypeValue.fieldValue}}</td>
                     <td>
                         <a ui-sref="asset-specification-type-field-detail({id:assetSpecificationTypeValue.assetSpecificationTypeFieldId})">{{assetSpecificationTypeValue.assetSpecificationTypeFieldId}}</a>
+                    </td>
+                    <td>
+                        <a ui-sref="asset-detail({id:assetSpecificationTypeValue.assetId})">{{assetSpecificationTypeValue.assetId}}</a>
                     </td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">

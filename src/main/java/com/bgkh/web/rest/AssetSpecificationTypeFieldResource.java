@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 public class AssetSpecificationTypeFieldResource {
 
     private final Logger log = LoggerFactory.getLogger(AssetSpecificationTypeFieldResource.class);
-        
+
     @Inject
     private AssetSpecificationTypeFieldService assetSpecificationTypeFieldService;
 
@@ -80,11 +80,11 @@ public class AssetSpecificationTypeFieldResource {
      *
      * @return the ResponseEntity with status 200 (OK) and the list of assetSpecificationTypeFields in body
      */
-    @GetMapping("/asset-specification-type-fields")
+    @GetMapping("/asset-specification-type-fields/byType/{assetSpecificationTypeId}")
     @Timed
-    public List<AssetSpecificationTypeFieldDTO> getAllAssetSpecificationTypeFields() {
+    public List<AssetSpecificationTypeFieldDTO> getAllAssetSpecificationTypeFields(@PathVariable Long assetSpecificationTypeId) {
         log.debug("REST request to get all AssetSpecificationTypeFields");
-        return assetSpecificationTypeFieldService.findAll();
+        return assetSpecificationTypeFieldService.findAllByAssetSpecificationTypeId(assetSpecificationTypeId);
     }
 
     /**

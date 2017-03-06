@@ -33,6 +33,7 @@
                     <th><span data-translate="appApp.asset.technician">Technician</span></th>
                     <th><span data-translate="appApp.asset.maps">Maps</span></th>
                     <th><span data-translate="appApp.asset.otherFiles">Other Files</span></th>
+                    <th><span data-translate="appApp.asset.assetSpecificationType">Asset Specification Type</span></th>
                     <th></th>
                 </tr>
             </thead>
@@ -64,6 +65,9 @@
                         <span ng-repeat="otherFiles in asset.otherFiles">
                             <a class="form-control-static" ui-sref="upload-file-detail({id: otherFiles.id})">{{otherFiles.id}}</a>{{$last ? '' : ', '}}
                         </span>
+                    </td>
+                    <td>
+                        <a ui-sref="asset-specification-type-detail({id:asset.assetSpecificationTypeId})">{{asset.assetSpecificationTypeId}}</a>
                     </td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">

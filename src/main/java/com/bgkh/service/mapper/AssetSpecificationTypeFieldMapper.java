@@ -12,23 +12,22 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = {})
 public interface AssetSpecificationTypeFieldMapper {
 
-    @Mapping(source = "assetSpecificationTypeField.id", target = "assetSpecificationTypeFieldId")
+    @Mapping(source = "assetSpecificationType.id", target = "assetSpecificationTypeId")
     AssetSpecificationTypeFieldDTO assetSpecificationTypeFieldToAssetSpecificationTypeFieldDTO(AssetSpecificationTypeField assetSpecificationTypeField);
 
     List<AssetSpecificationTypeFieldDTO> assetSpecificationTypeFieldsToAssetSpecificationTypeFieldDTOs(List<AssetSpecificationTypeField> assetSpecificationTypeFields);
 
-    @Mapping(source = "assetSpecificationTypeFieldId", target = "assetSpecificationTypeField")
-    @Mapping(target = "fields", ignore = true)
+    @Mapping(source = "assetSpecificationTypeId", target = "assetSpecificationType")
     AssetSpecificationTypeField assetSpecificationTypeFieldDTOToAssetSpecificationTypeField(AssetSpecificationTypeFieldDTO assetSpecificationTypeFieldDTO);
 
     List<AssetSpecificationTypeField> assetSpecificationTypeFieldDTOsToAssetSpecificationTypeFields(List<AssetSpecificationTypeFieldDTO> assetSpecificationTypeFieldDTOs);
 
-    default Asset assetFromId(Long id) {
+    default AssetSpecificationType assetSpecificationTypeFromId(Long id) {
         if (id == null) {
             return null;
         }
-        Asset asset = new Asset();
-        asset.setId(id);
-        return asset;
+        AssetSpecificationType assetSpecificationType = new AssetSpecificationType();
+        assetSpecificationType.setId(id);
+        return assetSpecificationType;
     }
 }

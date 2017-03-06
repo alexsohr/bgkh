@@ -1,17 +1,22 @@
 {
-    "app": {
-        "AssetSpecificationType" : {
-            "null": "",
-            "BOILER": "BOILER",
-            "COSMETIC_BOILER": "COSMETIC_BOILER",
-            "CATHODIC_TRANS": "CATHODIC_TRANS",
-            "DEISEL_GENERATORE": "DEISEL_GENERATORE",
-            "DEISEL_PUMP": "DEISEL_PUMP",
-            "ELECTRO_MOTOR": "ELECTRO_MOTOR",
-            "TRANSFORMER": "TRANSFORMER",
-            "LOADING_ARM": "LOADING_ARM",
-            "PUMP": "PUMP",
-            "UPS": "UPS"
+    "appApp": {
+        "assetSpecificationType" : {
+            "home": {
+                "title": "Asset Specification Types",
+                "createLabel": "Create a new Asset Specification Type",
+                "createOrEditLabel": "Create or edit a Asset Specification Type",
+                "search": "Search for Asset Specification Type"
+            },
+            "created": "A new Asset Specification Type is created with identifier {{ param }}",
+            "updated": "A Asset Specification Type is updated with identifier {{ param }}",
+            "deleted": "A Asset Specification Type is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Asset Specification Type {{ id }}?"
+            },
+            "detail": {
+                "title": "Asset Specification Type"
+            },
+            "name": "Name"
         }
     }
 }

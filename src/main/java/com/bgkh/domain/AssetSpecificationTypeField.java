@@ -1,17 +1,12 @@
 package com.bgkh.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
-
-import com.bgkh.domain.enumeration.AssetSpecificationType;
 
 /**
  * A AssetSpecificationTypeField.
@@ -28,11 +23,6 @@ public class AssetSpecificationTypeField implements Serializable {
     private Long id;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "asset_specification_type", nullable = false)
-    private AssetSpecificationType assetSpecificationType;
-
-    @NotNull
     @Column(name = "field_lable", nullable = false)
     private String fieldLable;
 
@@ -44,14 +34,8 @@ public class AssetSpecificationTypeField implements Serializable {
     @Column(name = "field_type", nullable = false)
     private String fieldType;
 
-    @OneToOne
-    @JoinColumn(unique = true)
-    private Asset assetSpecificationTypeField;
-
-    @OneToMany(mappedBy = "assetSpecificationTypeField")
-    @JsonIgnore
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Set<AssetSpecificationTypeValue> fields = new HashSet<>();
+    @ManyToOne
+    private AssetSpecificationType assetSpecificationType;
 
     public Long getId() {
         return id;
@@ -59,19 +43,6 @@ public class AssetSpecificationTypeField implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public AssetSpecificationType getAssetSpecificationType() {
-        return assetSpecificationType;
-    }
-
-    public AssetSpecificationTypeField assetSpecificationType(AssetSpecificationType assetSpecificationType) {
-        this.assetSpecificationType = assetSpecificationType;
-        return this;
-    }
-
-    public void setAssetSpecificationType(AssetSpecificationType assetSpecificationType) {
-        this.assetSpecificationType = assetSpecificationType;
     }
 
     public String getFieldLable() {
@@ -113,42 +84,17 @@ public class AssetSpecificationTypeField implements Serializable {
         this.fieldType = fieldType;
     }
 
-    public Asset getAssetSpecificationTypeField() {
-        return assetSpecificationTypeField;
+    public AssetSpecificationType getAssetSpecificationType() {
+        return assetSpecificationType;
     }
 
-    public AssetSpecificationTypeField assetSpecificationTypeField(Asset asset) {
-        this.assetSpecificationTypeField = asset;
+    public AssetSpecificationTypeField assetSpecificationType(AssetSpecificationType assetSpecificationType) {
+        this.assetSpecificationType = assetSpecificationType;
         return this;
     }
 
-    public void setAssetSpecificationTypeField(Asset asset) {
-        this.assetSpecificationTypeField = asset;
-    }
-
-    public Set<AssetSpecificationTypeValue> getFields() {
-        return fields;
-    }
-
-    public AssetSpecificationTypeField fields(Set<AssetSpecificationTypeValue> assetSpecificationTypeValues) {
-        this.fields = assetSpecificationTypeValues;
-        return this;
-    }
-
-    public AssetSpecificationTypeField addField(AssetSpecificationTypeValue assetSpecificationTypeValue) {
-        fields.add(assetSpecificationTypeValue);
-        assetSpecificationTypeValue.setAssetSpecificationTypeField(this);
-        return this;
-    }
-
-    public AssetSpecificationTypeField removeField(AssetSpecificationTypeValue assetSpecificationTypeValue) {
-        fields.remove(assetSpecificationTypeValue);
-        assetSpecificationTypeValue.setAssetSpecificationTypeField(null);
-        return this;
-    }
-
-    public void setFields(Set<AssetSpecificationTypeValue> assetSpecificationTypeValues) {
-        this.fields = assetSpecificationTypeValues;
+    public void setAssetSpecificationType(AssetSpecificationType assetSpecificationType) {
+        this.assetSpecificationType = assetSpecificationType;
     }
 
     @Override
@@ -175,7 +121,6 @@ public class AssetSpecificationTypeField implements Serializable {
     public String toString() {
         return "AssetSpecificationTypeField{" +
             "id=" + id +
-            ", assetSpecificationType='" + assetSpecificationType + "'" +
             ", fieldLable='" + fieldLable + "'" +
             ", fieldName='" + fieldName + "'" +
             ", fieldType='" + fieldType + "'" +
