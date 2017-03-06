@@ -50,7 +50,8 @@ public class UploadFileResource {
     @Timed
     public ResponseEntity<UploadFileDTO> createUploadFile(@RequestParam("file") MultipartFile file) throws URISyntaxException {
 
-        String uploadPath = "C:\\bgkh\\data";
+        String uploadPath = "/home/alex/Desktop/test";
+//        String uploadPath = "C:\\bgkh\\data";
 
         UploadFileDTO uploadFileDTO = null;
         if (!file.isEmpty()) {
