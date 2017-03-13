@@ -63,7 +63,7 @@ public class AssetResource {
         log.debug("REST request to copy Assets : {}", assetDTOs);
 
         AssetDTOs result = assetService.copy(assetDTOs);
-        return ResponseEntity.created(new URI("/api/assets/" + result.getAssetList().get(0).getId()))
+        return ResponseEntity.created(new URI("/api/assets/"))
             .headers(HeaderUtil.createEntityCreationAlert("asset", result.getAssetList().get(0).getId().toString()))
             .body(result);
     }
@@ -131,6 +131,20 @@ public class AssetResource {
     public List<String> getAllManufactures() {
         log.debug("REST request to get all Assets Manufactures");
         return assetService.findAllManufactures();
+    }
+
+    @GetMapping("/assets/names")
+    @Timed
+    public List<String> getAllAssetNames() {
+        log.debug("REST request to get all Asset names");
+        return assetService.findAllAssetNames();
+    }
+
+    @GetMapping("/assets/locations")
+    @Timed
+    public List<String> getAllAssetLocations() {
+        log.debug("REST request to get all Asset locations");
+        return assetService.findAllAssetLocations();
     }
 
     /**

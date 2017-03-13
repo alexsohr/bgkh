@@ -22,7 +22,6 @@ public class AssetSpecificationTypeValue implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull
     @Column(name = "field_value", nullable = false)
     private String fieldValue;
 

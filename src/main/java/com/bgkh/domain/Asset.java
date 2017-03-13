@@ -57,10 +57,6 @@ public class Asset implements Serializable {
     @Column(name = "manufacture", length = 250)
     private String manufacture;
 
-    @Size(min = 1, max = 250)
-    @Column(name = "type_val", length = 250)
-    private String typeVal;
-
     @Min(value = 0)
     @Column(name = "capacity")
     private Integer capacity;
@@ -68,6 +64,9 @@ public class Asset implements Serializable {
     @Min(value = 1800)
     @Column(name = "year")
     private Integer year;
+
+    @Column(name = "strategic")
+    private boolean strategic;
 
     @OneToMany(mappedBy = "asset")
     @JsonIgnore
@@ -194,19 +193,6 @@ public class Asset implements Serializable {
 
     public void setManufacture(String manufacture) {
         this.manufacture = manufacture;
-    }
-
-    public String getTypeVal() {
-        return typeVal;
-    }
-
-    public Asset typeVal(String typeVal) {
-        this.typeVal = typeVal;
-        return this;
-    }
-
-    public void setTypeVal(String typeVal) {
-        this.typeVal = typeVal;
     }
 
     public Integer getCapacity() {
@@ -349,6 +335,14 @@ public class Asset implements Serializable {
         this.assetSpecificationType = assetSpecificationType;
     }
 
+    public boolean isStrategic() {
+        return strategic;
+    }
+
+    public void setStrategic(boolean strategic) {
+        this.strategic = strategic;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -380,8 +374,8 @@ public class Asset implements Serializable {
             ", code='" + code + "'" +
             ", assetType='" + assetType + "'" +
             ", manufacture='" + manufacture + "'" +
-            ", typeVal='" + typeVal + "'" +
             ", capacity='" + capacity + "'" +
+            ", strategic='" + strategic + "'" +
             ", year='" + year + "'" +
             '}';
     }

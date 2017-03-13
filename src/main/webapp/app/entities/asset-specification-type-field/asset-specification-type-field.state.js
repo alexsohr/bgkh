@@ -104,7 +104,7 @@
                     resolve: {
                         entity: function () {
                             return {
-                                fieldLable: null,
+                                fieldLabel: null,
                                 fieldName: null,
                                 fieldType: null,
                                 id: null

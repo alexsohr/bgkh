@@ -14,7 +14,7 @@ angular.module('app').directive('assetsForm', function () {
             parentId: '=parentId',
             updateAssetCallback: '&?'
         },
-        controller: function ($scope, $filter, $compile, User, AssetManufacture, Upload, AssetSpecificationType, AssetSpecificationTypeFieldByType, AssetSpecificationTypeValue, AlertService) {
+        controller: function ($scope, $filter, $compile, User, AssetManufacture, AssetNames, AssetLocations, Upload, AssetSpecificationType, AssetSpecificationTypeFieldByType, AssetSpecificationTypeValue, AlertService) {
 
             if (angular.isUndefinedOrNull($scope.currentStep)) {
                 $scope.currentStep = 1;
@@ -23,11 +23,14 @@ angular.module('app').directive('assetsForm', function () {
             $scope.disableForm = false;
             $scope.users = [];
             $scope.manufactures = [];
+            $scope.locations = [];
+            $scope.names = [];
             $scope.assetSpecificationTypes = [];
             $scope.assetSpecificationTypeFields = [];
-            $scope.assetSpecificationTypeValues = [];
+            $scope.assetSpecificationTypeValue = [];
             $scope.destroySpecTypeElement = false;
             $scope.assetSpecificationTypeSelect = true;
+
 
             if ($scope.updateAssetCallback !== undefined) {
                 var index = {index: $scope.currentStep};
@@ -37,6 +40,8 @@ angular.module('app').directive('assetsForm', function () {
 
             loadAllAssetSpecificationTypes();
             loadAllManufactures();
+            loadAllLocations();
+            loadAllNames();
             loadAllUsers();
 
             addTypeFieldElements();
@@ -44,9 +49,10 @@ angular.module('app').directive('assetsForm', function () {
             $scope.changeToNewSpecType = function () {
                 $scope.destroySpecTypeElement = true;
                 $scope.assetSpecificationTypeSelect = false;
-                $scope.assetSpecificationTypeValues = [];
+                $scope.assetSpecificationTypeValue = [];
                 $scope.assetSpecificationTypeFields = [];
                 $scope.destroySpecTypeElement = false;
+                $scope.asset.assetSpecificationTypeId = null;
                 addTypeFieldElements();
             };
 
@@ -58,16 +64,17 @@ angular.module('app').directive('assetsForm', function () {
 
             function loadAllAssetSpecificationTypeFields(assetSpecificationTypeId) {
                 if (!angular.isUndefinedOrNull(assetSpecificationTypeId)) {
-                    if (!angular.isUndefinedOrNull($scope.asset.id)) {
-                        AssetSpecificationTypeValue.query({id: $scope.asset.id}, function (data) {
-                            $scope.assetSpecificationTypeValues = data;
-                        }, onError);
-                    }
 
                     AssetSpecificationTypeFieldByType.query({id: assetSpecificationTypeId}, function (data) {
                         $scope.assetSpecificationTypeFields = data;
+                        if (!angular.isUndefinedOrNull($scope.asset.id)) {
+                            AssetSpecificationTypeValue.query({id: $scope.asset.id}, function (data) {
+                                $scope.assetSpecificationTypeValue = data;
+                                addTypeFieldElements();
+                            }, onError);
+                        }
                         // $scope.destroySpecTypeElement = true;
-                        addTypeFieldElements();
+
                     }, onError);
                 }
             }
@@ -76,7 +83,7 @@ angular.module('app').directive('assetsForm', function () {
                 var specTypeFormDir = document.querySelector(".asset-type-container");
                 angular.element(specTypeFormDir).html("");
                 // $scope.destroySpecTypeElement = false;
-                angular.element(specTypeFormDir).append($compile("<asset-type-field-form asset=\"asset\" asset-type-fields=\"assetSpecificationTypeFields\" asset-type-values=\"assetSpecificationTypeValues\" destroy-element=\"destroySpecTypeElement\"></asset-type-field-form>")($scope));
+                angular.element(specTypeFormDir).append($compile("<asset-type-field-form asset=\"asset\" asset-type-fields=\"assetSpecificationTypeFields\" asset-type-values=\"assetSpecificationTypeValue\" disable-form=\"disableForm\" destroy-element=\"destroySpecTypeElement\"></asset-type-field-form>")($scope));
             }
 
             function loadAllAssetSpecificationTypes() {
@@ -87,6 +94,14 @@ angular.module('app').directive('assetsForm', function () {
 
             function loadAllManufactures() {
                 AssetManufacture.query({}, onSuccessManufacture, onError);
+            }
+
+            function loadAllNames() {
+                AssetNames.query({}, function (data) { $scope.names = data}, onError);
+            }
+
+            function loadAllLocations() {
+                AssetLocations.query({}, function (data) { $scope.locations = data}, onError);
             }
 
             function loadAllUsers() {
@@ -137,6 +152,7 @@ angular.module('app').directive('assetsForm', function () {
             $scope.assetType = 'ASSET_GROUP';
             if (!angular.isUndefinedOrNull($scope.asset) && $scope.asset.assetType == null) {
                 $scope.asset.assetType = 'ASSET_GROUP';
+                $scope.asset.strategic = "false";
             }
 
             $scope.years = [];
@@ -149,6 +165,7 @@ angular.module('app').directive('assetsForm', function () {
                 }
                 j++;
             }
+
 
             $scope.toggleAssetForm = function () {
                 console.log($scope.asset.assetType);
@@ -174,6 +191,12 @@ angular.module('app').directive('assetsForm', function () {
                 $scope.state = "E";
                 if (!angular.isUndefinedOrNull($scope.asset.children)) {
                     $scope.hasSubTree = $scope.asset.children.length > 0;
+                }
+                if ($scope.asset.strategic) {
+                    $scope.asset.strategic = "true";
+                }
+                else {
+                    $scope.asset.strategic = "false";
                 }
             }
 

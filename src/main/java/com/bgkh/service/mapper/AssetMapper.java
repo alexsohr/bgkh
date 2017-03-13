@@ -14,6 +14,7 @@ public interface AssetMapper {
 
     @Mapping(source = "supervisor.id", target = "supervisorId")
     @Mapping(source = "technician.id", target = "technicianId")
+    @Mapping(source = "strategic", target = "strategic")
     @Mapping(source = "technician.firstName", target = "technicianFirstName")
     @Mapping(source = "technician.lastName", target = "technicianLastName")
     @Mapping(source = "supervisor.firstName", target = "supervisorFirstName")
@@ -24,6 +25,7 @@ public interface AssetMapper {
     List<AssetDTO> assetsToAssetDTOs(List<Asset> assets);
 
     @Mapping(target = "workOrders", ignore = true)
+    @Mapping(source = "strategic", target = "strategic")
     @Mapping(source = "supervisorId", target = "supervisor")
     @Mapping(source = "technicianId", target = "technician")
     @Mapping(source = "assetSpecificationTypeId", target = "assetSpecificationType")

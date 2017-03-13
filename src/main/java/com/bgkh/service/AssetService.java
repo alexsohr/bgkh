@@ -44,6 +44,10 @@ public interface AssetService {
 
     List<String> findAllManufactures();
 
+    List<String> findAllAssetNames();
+
+    List<String> findAllAssetLocations();
+
     /**
      *  Get the "id" asset.
      *

@@ -37,9 +37,6 @@ public class AssetDTO implements Serializable {
     @Size(min = 3, max = 250)
     private String manufacture;
 
-    @Size(min = 3, max = 250)
-    private String typeVal;
-
     @Min(value = 0)
     private Integer capacity;
 
@@ -50,6 +47,10 @@ public class AssetDTO implements Serializable {
     private Long supervisorId;
 
     private Long technicianId;
+
+    private boolean strategic = false;
+
+    private String assetSpecificationTypeName;
 
     private String supervisorFirstName;
 
@@ -63,6 +64,8 @@ public class AssetDTO implements Serializable {
 
     private Set<UploadFileDTO> otherFiles = new HashSet<>();
 
+    private Set<AssetSpecificationTypeDataDTO> assetSpecificationTypeData = new HashSet<>();
+
     private Long assetSpecificationTypeId;
 
     public Long getId() {
@@ -72,6 +75,7 @@ public class AssetDTO implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
     public Long getParentId() {
         return parentId;
     }
@@ -79,6 +83,7 @@ public class AssetDTO implements Serializable {
     public void setParentId(Long parentId) {
         this.parentId = parentId;
     }
+
     public String getName() {
         return name;
     }
@@ -86,6 +91,7 @@ public class AssetDTO implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+
     public String getLocation() {
         return location;
     }
@@ -93,6 +99,7 @@ public class AssetDTO implements Serializable {
     public void setLocation(String location) {
         this.location = location;
     }
+
     public String getDetails() {
         return details;
     }
@@ -100,6 +107,7 @@ public class AssetDTO implements Serializable {
     public void setDetails(String details) {
         this.details = details;
     }
+
     public String getCode() {
         return code;
     }
@@ -107,6 +115,7 @@ public class AssetDTO implements Serializable {
     public void setCode(String code) {
         this.code = code;
     }
+
     public AssetType getAssetType() {
         return assetType;
     }
@@ -114,6 +123,7 @@ public class AssetDTO implements Serializable {
     public void setAssetType(AssetType assetType) {
         this.assetType = assetType;
     }
+
     public String getManufacture() {
         return manufacture;
     }
@@ -121,13 +131,7 @@ public class AssetDTO implements Serializable {
     public void setManufacture(String manufacture) {
         this.manufacture = manufacture;
     }
-    public String getTypeVal() {
-        return typeVal;
-    }
 
-    public void setTypeVal(String typeVal) {
-        this.typeVal = typeVal;
-    }
     public Integer getCapacity() {
         return capacity;
     }
@@ -135,12 +139,21 @@ public class AssetDTO implements Serializable {
     public void setCapacity(Integer capacity) {
         this.capacity = capacity;
     }
+
     public Integer getYear() {
         return year;
     }
 
     public void setYear(Integer year) {
         this.year = year;
+    }
+
+    public boolean isStrategic() {
+        return strategic;
+    }
+
+    public void setStrategic(boolean strategic) {
+        this.strategic = strategic;
     }
 
     public Long getSupervisorId() {
@@ -207,12 +220,28 @@ public class AssetDTO implements Serializable {
         this.otherFiles = uploadFiles;
     }
 
+    public Set<AssetSpecificationTypeDataDTO> getAssetSpecificationTypeData() {
+        return assetSpecificationTypeData;
+    }
+
+    public void setAssetSpecificationTypeData(Set<AssetSpecificationTypeDataDTO> assetSpecificationTypeData) {
+        this.assetSpecificationTypeData = assetSpecificationTypeData;
+    }
+
     public Long getAssetSpecificationTypeId() {
         return assetSpecificationTypeId;
     }
 
     public void setAssetSpecificationTypeId(Long assetSpecificationTypeId) {
         this.assetSpecificationTypeId = assetSpecificationTypeId;
+    }
+
+    public String getAssetSpecificationTypeName() {
+        return assetSpecificationTypeName;
+    }
+
+    public void setAssetSpecificationTypeName(String assetSpecificationTypeName) {
+        this.assetSpecificationTypeName = assetSpecificationTypeName;
     }
 
     @Override
@@ -226,7 +255,7 @@ public class AssetDTO implements Serializable {
 
         AssetDTO assetDTO = (AssetDTO) o;
 
-        if ( ! Objects.equals(id, assetDTO.id)) return false;
+        if (!Objects.equals(id, assetDTO.id)) return false;
 
         return true;
     }
@@ -247,7 +276,6 @@ public class AssetDTO implements Serializable {
             ", code='" + code + "'" +
             ", assetType='" + assetType + "'" +
             ", manufacture='" + manufacture + "'" +
-            ", typeVal='" + typeVal + "'" +
             ", capacity='" + capacity + "'" +
             ", year='" + year + "'" +
             ", supervisorId='" + supervisorId + "'" +

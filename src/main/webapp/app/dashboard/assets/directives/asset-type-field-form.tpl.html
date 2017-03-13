@@ -1,24 +1,24 @@
 <div class="section">
-    <div class="row padding-top-10">
+    <div class="row padding-top-10" ng-hide="disableForm">
         <div class="col-md-12">
             <span class="btn btn-primary" ng-click="addNewChoice()" id="addNewChoice"> <i class="fa fa-plus-square"></i> {{$root.getWord('Add new type')}}</span>
         </div>
     </div>
-    <div class="row padding-top-10" data-ng-repeat="assetSpecificationTypeField in asset.assetSpecificationTypeFields">
+    <div class="row padding-top-10" data-ng-repeat="assetSpecTypeFieldVal in assetSpecTypeFieldVals">
         <div class="col-md-5">
             <div class="col-md-12">
-                <input type="hidden" class="form-control" ng-model="assetSpecificationTypeField.typeId">
-                <input type="text" class="form-control" ng-model="assetSpecificationTypeField.name" placeholder="Filed name">
+                <input type="hidden" class="form-control" ng-model="assetSpecTypeFieldVal.typeId">
+                <input type="text" class="form-control" ng-model="assetSpecTypeFieldVal.fieldLabel" ng-change="changeFormValue()" placeholder="Filed name" ng-disabled="disableForm">
             </div>
         </div>
         <div class="col-md-7">
             <div class="col-md-10">
-                <input type="hidden" class="form-control" ng-model="assetSpecificationTypeField.valId">
-                <input type="text" class="form-control"
-                       ng-model="assetSpecificationTypeField.value" placeholder="Filed value">
+                <input type="hidden" class="form-control" ng-model="assetSpecTypeFieldVal.valId">
+                <input type="text" class="form-control" ng-disabled="disableForm"
+                       ng-model="assetSpecTypeFieldVal.value" placeholder="Filed value"  ng-change="changeFormValue()">
             </div>
-            <div class="col-md-2">
-                <span class="btn btn-danger" ng-click="removeChoice(assetSpecificationTypeField)"><i class="fa fa-minus-square"></i></span>
+            <div class="col-md-2" ng-hide="disableForm">
+                <span class="btn btn-danger" ng-click="removeChoice(assetSpecTypeFieldVal)"><i class="fa fa-minus-square"></i></span>
             </div>
         </div>
     </div>

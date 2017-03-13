@@ -15,7 +15,7 @@ public class AssetSpecificationTypeFieldDTO implements Serializable {
     private Long id;
 
     @NotNull
-    private String fieldLable;
+    private String fieldLabel;
 
     @NotNull
     private String fieldName;
@@ -25,7 +25,7 @@ public class AssetSpecificationTypeFieldDTO implements Serializable {
 
 
     private Long assetSpecificationTypeId;
-    
+
     public Long getId() {
         return id;
     }
@@ -33,12 +33,12 @@ public class AssetSpecificationTypeFieldDTO implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    public String getFieldLable() {
-        return fieldLable;
+    public String getFieldLabel() {
+        return fieldLabel;
     }
 
-    public void setFieldLable(String fieldLable) {
-        this.fieldLable = fieldLable;
+    public void setFieldLabel(String fieldLabel) {
+        this.fieldLabel = fieldLabel;
     }
     public String getFieldName() {
         return fieldName;
@@ -88,7 +88,7 @@ public class AssetSpecificationTypeFieldDTO implements Serializable {
     public String toString() {
         return "AssetSpecificationTypeFieldDTO{" +
             "id=" + id +
-            ", fieldLable='" + fieldLable + "'" +
+            ", fieldLabel='" + fieldLabel + "'" +
             ", fieldName='" + fieldName + "'" +
             ", fieldType='" + fieldType + "'" +
             '}';

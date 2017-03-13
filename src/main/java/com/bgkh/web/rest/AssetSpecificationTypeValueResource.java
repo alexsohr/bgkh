@@ -73,9 +73,9 @@ public class AssetSpecificationTypeValueResource {
     }
 
     /**
-     * GET  /asset-specification-type-values : get all the assetSpecificationTypeValues.
+     * GET  /asset-specification-type-values : get all the assetSpecificationTypeData.
      *
-     * @return the ResponseEntity with status 200 (OK) and the list of assetSpecificationTypeValues in body
+     * @return the ResponseEntity with status 200 (OK) and the list of assetSpecificationTypeData in body
      */
     @GetMapping("/asset-specification-type-values/{id}")
     @Timed

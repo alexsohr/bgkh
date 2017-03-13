@@ -140,7 +140,6 @@ angular
                         assetType: null,
                         capacity: null,
                         manufacture: null,
-                        typeVal: null,
                         supervisorId: undefined,
                         technicianId: undefined,
                         year: null,

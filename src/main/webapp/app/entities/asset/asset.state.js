@@ -113,7 +113,6 @@
                                 code: null,
                                 assetType: null,
                                 manufacture: null,
-                                typeVal: null,
                                 capacity: null,
                                 year: null,
                                 id: null

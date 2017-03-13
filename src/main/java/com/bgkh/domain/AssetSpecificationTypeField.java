@@ -23,8 +23,8 @@ public class AssetSpecificationTypeField implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "field_lable", nullable = false)
-    private String fieldLable;
+    @Column(name = "field_label", nullable = false)
+    private String fieldLabel;
 
     @NotNull
     @Column(name = "field_name", nullable = false)
@@ -45,17 +45,17 @@ public class AssetSpecificationTypeField implements Serializable {
         this.id = id;
     }
 
-    public String getFieldLable() {
-        return fieldLable;
+    public String getFieldLabel() {
+        return fieldLabel;
     }
 
-    public AssetSpecificationTypeField fieldLable(String fieldLable) {
-        this.fieldLable = fieldLable;
+    public AssetSpecificationTypeField fieldLabel(String fieldLabel) {
+        this.fieldLabel = fieldLabel;
         return this;
     }
 
-    public void setFieldLable(String fieldLable) {
-        this.fieldLable = fieldLable;
+    public void setFieldLabel(String fieldLabel) {
+        this.fieldLabel = fieldLabel;
     }
 
     public String getFieldName() {
@@ -121,7 +121,7 @@ public class AssetSpecificationTypeField implements Serializable {
     public String toString() {
         return "AssetSpecificationTypeField{" +
             "id=" + id +
-            ", fieldLable='" + fieldLable + "'" +
+            ", fieldLabel='" + fieldLabel + "'" +
             ", fieldName='" + fieldName + "'" +
             ", fieldType='" + fieldType + "'" +
             '}';

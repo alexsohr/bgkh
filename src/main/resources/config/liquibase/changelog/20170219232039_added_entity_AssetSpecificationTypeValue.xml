@@ -25,9 +25,9 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="field_value" type="varchar(255)">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
-            
+
             <column name="asset_specification_type_field_id" type="bigint">
                 <constraints nullable="true" />
             </column>
@@ -38,6 +38,6 @@
 
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
-        
+
     </changeSet>
 </databaseChangeLog>

@@ -24,6 +24,7 @@
 
         function save () {
             vm.isSaving = true;
+            console.dir(vm.asset);
             if (vm.asset.id !== null) {
                 Asset.update(vm.asset, onSaveSuccess, onSaveError);
             } else {

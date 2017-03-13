@@ -27,43 +27,43 @@
             <column name="parent_id" type="bigint">
                 <constraints nullable="false" />
             </column>
-            
+
             <column name="name" type="varchar(100)">
                 <constraints nullable="false" />
             </column>
-            
+
             <column name="location" type="varchar(250)">
                 <constraints nullable="true" />
             </column>
-            
+
             <column name="details" type="varchar(500)">
                 <constraints nullable="true" />
             </column>
-            
+
             <column name="code" type="varchar(50)">
                 <constraints nullable="false" />
             </column>
-            
+
             <column name="asset_type" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            
+
             <column name="manufacture" type="varchar(250)">
                 <constraints nullable="true" />
             </column>
-            
-            <column name="type_val" type="varchar(250)">
-                <constraints nullable="true" />
-            </column>
-            
+
             <column name="capacity" type="integer">
                 <constraints nullable="true" />
             </column>
-            
+
             <column name="year" type="integer">
                 <constraints nullable="true" />
             </column>
-            
+
+            <column name="strategic" type="boolean" valueBoolean="false">
+                <constraints nullable="false" />
+            </column>
+
             <column name="supervisor_id" type="bigint">
                 <constraints nullable="true" />
             </column>
@@ -78,7 +78,7 @@
 
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
-        
+
         <createTable tableName="asset_maps">
             <column name="maps_id" type="bigint">
                 <constraints nullable="false"/>
@@ -89,7 +89,7 @@
         </createTable>
 
         <addPrimaryKey columnNames="assets_id, maps_id" tableName="asset_maps"/>
-        
+
         <createTable tableName="asset_other_files">
             <column name="other_files_id" type="bigint">
                 <constraints nullable="false"/>
@@ -100,6 +100,6 @@
         </createTable>
 
         <addPrimaryKey columnNames="assets_id, other_files_id" tableName="asset_other_files"/>
-        
+
     </changeSet>
 </databaseChangeLog>

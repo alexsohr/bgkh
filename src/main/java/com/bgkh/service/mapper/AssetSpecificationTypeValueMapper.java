@@ -16,7 +16,7 @@ public interface AssetSpecificationTypeValueMapper {
     @Mapping(source = "asset.id", target = "assetId")
     AssetSpecificationTypeValueDTO assetSpecificationTypeValueToAssetSpecificationTypeValueDTO(AssetSpecificationTypeValue assetSpecificationTypeValue);
 
-    List<AssetSpecificationTypeValueDTO> assetSpecificationTypeValuesToAssetSpecificationTypeValueDTOs(List<AssetSpecificationTypeValue> assetSpecificationTypeValues);
+    List<AssetSpecificationTypeValueDTO> assetSpecificationTypeDataToAssetSpecificationTypeValueDTOs(List<AssetSpecificationTypeValue> assetSpecificationTypeData);
 
     @Mapping(source = "assetSpecificationTypeFieldId", target = "assetSpecificationTypeField")
     @Mapping(source = "assetId", target = "asset")

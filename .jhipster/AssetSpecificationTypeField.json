@@ -10,7 +10,7 @@
     ],
     "fields": [
         {
-            "fieldName": "fieldLable",
+            "fieldName": "fieldLabel",
             "fieldType": "String",
             "fieldValidateRules": [
                 "required"

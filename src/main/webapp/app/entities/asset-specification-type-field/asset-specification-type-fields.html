@@ -19,7 +19,7 @@
             <thead>
                 <tr>
                     <th><span data-translate="global.field.id">ID</span></th>
-                    <th><span data-translate="appApp.assetSpecificationTypeField.fieldLable">Field Lable</span></th>
+                    <th><span data-translate="appApp.assetSpecificationTypeField.fieldLabel">Field label</span></th>
                     <th><span data-translate="appApp.assetSpecificationTypeField.fieldName">Field Name</span></th>
                     <th><span data-translate="appApp.assetSpecificationTypeField.fieldType">Field Type</span></th>
                     <th><span data-translate="appApp.assetSpecificationTypeField.assetSpecificationType">Asset Specification Type</span></th>
@@ -29,7 +29,7 @@
             <tbody>
                 <tr ng-repeat="assetSpecificationTypeField in vm.assetSpecificationTypeFields track by assetSpecificationTypeField.id">
                     <td><a ui-sref="asset-specification-type-field-detail({id:assetSpecificationTypeField.id})">{{assetSpecificationTypeField.id}}</a></td>
-                    <td>{{assetSpecificationTypeField.fieldLable}}</td>
+                    <td>{{assetSpecificationTypeField.fieldLabel}}</td>
                     <td>{{assetSpecificationTypeField.fieldName}}</td>
                     <td>{{assetSpecificationTypeField.fieldType}}</td>
                     <td>

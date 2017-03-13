@@ -16,7 +16,7 @@
             "detail": {
                 "title": "Asset Specification Type Field"
             },
-            "fieldLable": "Field Lable",
+            "fieldLabel": "Field label",
             "fieldName": "Field Name",
             "fieldType": "Field Type",
             "assetSpecificationType": "Asset Specification Type"

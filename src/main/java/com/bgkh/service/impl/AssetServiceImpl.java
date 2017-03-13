@@ -1,20 +1,32 @@
 package com.bgkh.service.impl;
 
-import com.bgkh.service.AssetService;
 import com.bgkh.domain.Asset;
+import com.bgkh.domain.AssetSpecificationType;
+import com.bgkh.domain.AssetSpecificationTypeField;
+import com.bgkh.domain.AssetSpecificationTypeValue;
+import com.bgkh.domain.enumeration.AssetType;
 import com.bgkh.repository.AssetRepository;
+import com.bgkh.repository.AssetSpecificationTypeFieldRepository;
+import com.bgkh.repository.AssetSpecificationTypeRepository;
+import com.bgkh.repository.AssetSpecificationTypeValueRepository;
+import com.bgkh.service.AssetService;
 import com.bgkh.service.dto.AssetDTO;
 import com.bgkh.service.dto.AssetDTOs;
+import com.bgkh.service.dto.AssetSpecificationTypeDataDTO;
+import com.bgkh.service.dto.AssetSpecificationTypeFieldDTO;
 import com.bgkh.service.mapper.AssetMapper;
+import com.bgkh.service.mapper.AssetSpecificationTypeFieldMapper;
+import com.bgkh.service.mapper.AssetSpecificationTypeValueMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,7 +36,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @Transactional
-public class AssetServiceImpl implements AssetService{
+public class AssetServiceImpl implements AssetService {
 
     private final Logger log = LoggerFactory.getLogger(AssetServiceImpl.class);
 
@@ -32,7 +44,23 @@ public class AssetServiceImpl implements AssetService{
     private AssetRepository assetRepository;
 
     @Inject
+    private AssetSpecificationTypeRepository assetSpecificationTypeRepository;
+
+    @Inject
+    private AssetSpecificationTypeFieldRepository assetSpecificationTypeFieldRepository;
+
+    @Inject
+    private AssetSpecificationTypeValueRepository assetSpecificationTypeValueRepository;
+
+
+    @Inject
     private AssetMapper assetMapper;
+
+    @Inject
+    private AssetSpecificationTypeValueMapper assetSpecificationTypeValueMapper;
+
+    @Inject
+    private AssetSpecificationTypeFieldMapper assetSpecificationTypeFieldMapper;
 
     /**
      * Save a asset.
@@ -43,9 +71,26 @@ public class AssetServiceImpl implements AssetService{
     public AssetDTO save(AssetDTO assetDTO) {
         log.debug("Request to save Asset : {}", assetDTO);
         Asset asset = assetMapper.assetDTOToAsset(assetDTO);
+        saveOrUpdateSpecificType(asset, assetDTO);
         asset = assetRepository.save(asset);
+//        saveOrUpdateSpecificType(asset, assetDTO);
+        saveOrUpdateSpecificTypeFieldsAndValues(asset, assetDTO);
         AssetDTO result = assetMapper.assetToAssetDTO(asset);
         return result;
+    }
+
+
+    private void saveOrUpdateSpecificType(Asset asset, AssetDTO assetDTO) {
+        if (!asset.getAssetType().equals(AssetType.ASSET_GROUP)) {
+            AssetSpecificationType assetSpecificationType = new AssetSpecificationType();
+            if (assetDTO.getAssetSpecificationTypeId() != null) {
+                assetSpecificationType = assetSpecificationTypeRepository.findOne(assetDTO.getAssetSpecificationTypeId());
+            } else {
+                assetSpecificationType.setName(assetDTO.getAssetSpecificationTypeName());
+            }
+            assetSpecificationType = assetSpecificationTypeRepository.save(assetSpecificationType);
+            asset.setAssetSpecificationType(assetSpecificationType);
+        }
     }
 
     @Override
@@ -53,12 +98,8 @@ public class AssetServiceImpl implements AssetService{
     public AssetDTOs copy(AssetDTOs assetDTOs) {
         log.debug("Request to copy Assets : {}", assetDTOs);
         ArrayList<AssetDTO> response = new ArrayList<>();
-        for(AssetDTO assetDTO: assetDTOs.getAssetList()) {
+        for (AssetDTO assetDTO : assetDTOs.getAssetList()) {
             Asset asset = assetMapper.assetDTOToAsset(assetDTO);
-//
-//            AssetDTO newAssetDTO = saveNewAsset(asset, assetDTOs.getParentId());
-//            response.add(newAssetDTO);
-
             findAndCopyChildren(asset, assetDTOs.getParentId(), response);
         }
         assetDTOs.setAssetList(response);
@@ -74,7 +115,19 @@ public class AssetServiceImpl implements AssetService{
         newAssetEntity.setParentId(parentId);
         newAssetEntity.setId(null);
         newAssetEntity.setName(asset.getName() + "_NEW");
+        newAssetEntity.setMaps(null);
+        newAssetEntity.setOtherFiles(null);
         Asset newAsset = assetRepository.save(newAssetEntity);
+        List<AssetSpecificationTypeValue> assetSpecificationTypeValues = new ArrayList<>();
+        List<AssetSpecificationTypeValue> allByAssetId = assetSpecificationTypeValueRepository.findAllByAssetId(asset.getId());
+        for (AssetSpecificationTypeValue typeValue : allByAssetId) {
+            AssetSpecificationTypeValue assetSpecificationTypeValue = new AssetSpecificationTypeValue();
+            BeanUtils.copyProperties(typeValue, assetSpecificationTypeValue);
+            assetSpecificationTypeValue.setId(null);
+            assetSpecificationTypeValue.setAsset(newAsset);
+            assetSpecificationTypeValues.add(assetSpecificationTypeValue);
+        }
+        assetSpecificationTypeValueRepository.save(assetSpecificationTypeValues);
         AssetDTO assetDTO = assetMapper.assetToAssetDTO(newAsset);
         return assetDTO;
     }
@@ -84,12 +137,39 @@ public class AssetServiceImpl implements AssetService{
         AssetDTO newAssetDTO = saveNewAsset(asset, parentId);
         response.add(newAssetDTO);
 
-        Long assetId = asset.getId();
-        Asset assetExample = new Asset();
-        assetExample.setParentId(assetId);
-        List<Asset> allChileAssets = assetRepository.findAll(Example.of(assetExample));
-        for(Asset child: allChileAssets) {
+        List<Asset> allChileAssets = assetRepository.findAllByParentId(asset.getId());
+        for (Asset child : allChileAssets) {
             findAndCopyChildren(child, newAssetDTO.getId(), response);
+        }
+    }
+
+    private void saveOrUpdateSpecificTypeFieldsAndValues(Asset asset, AssetDTO assetDTO) {
+
+        List<AssetSpecificationTypeValue> allByAssetId = assetSpecificationTypeValueRepository.findAllByAssetId(asset.getId());
+        if (allByAssetId != null) {
+            assetSpecificationTypeValueRepository.delete(allByAssetId);
+        }
+
+        Iterator<AssetSpecificationTypeDataDTO> iterator = assetDTO.getAssetSpecificationTypeData().iterator();
+        while (iterator.hasNext()) {
+            AssetSpecificationTypeDataDTO specificationTypeDataDTO = iterator.next();
+            //Saving AssetSpecificationTypeField
+            AssetSpecificationTypeField assetSpecificationTypeField = new AssetSpecificationTypeField();
+            if (specificationTypeDataDTO.getFieldId() != null) {
+                assetSpecificationTypeField = assetSpecificationTypeFieldRepository.findOne(specificationTypeDataDTO.getFieldId());
+            }
+            assetSpecificationTypeField.setFieldLabel(specificationTypeDataDTO.getFieldLabel());
+            assetSpecificationTypeField.setFieldType(specificationTypeDataDTO.getFieldType());
+            assetSpecificationTypeField.setFieldName(specificationTypeDataDTO.getFieldLabel());
+            assetSpecificationTypeField.setAssetSpecificationType(asset.getAssetSpecificationType());
+            assetSpecificationTypeField = assetSpecificationTypeFieldRepository.save(assetSpecificationTypeField);
+
+            //Saving AssetSpecificationTypeValue
+            AssetSpecificationTypeValue assetSpecificationTypeValue = new AssetSpecificationTypeValue();
+            assetSpecificationTypeValue.setAssetSpecificationTypeField(assetSpecificationTypeField);
+            assetSpecificationTypeValue.setAsset(asset);
+            assetSpecificationTypeValue.setFieldValue(specificationTypeDataDTO.getFieldValue());
+            assetSpecificationTypeValueRepository.save(assetSpecificationTypeValue);
         }
     }
 
@@ -102,22 +182,25 @@ public class AssetServiceImpl implements AssetService{
     public AssetDTOs saveAll(AssetDTOs assetDTOs) {
         log.debug("Request to save Assets : {}", assetDTOs);
         List<AssetDTO> response = new ArrayList<>();
-        int i=0;
+        int i = 0;
         Asset lastUpdatedAsset = null;
-        for(AssetDTO assetDTO: assetDTOs.getAssetList()) {
-            Asset asset = assetMapper.assetDTOToAsset(assetDTO);
-            Long parentId = assetDTOs.getParentId();
-            if (i==0) {
-                asset.setParentId(parentId);
-            }
-            else {
-                asset.setParentId(lastUpdatedAsset.getId());
-            }
+        for (AssetDTO assetDTO : assetDTOs.getAssetList()) {
+            if (assetDTO.getName() != null) {
+                Asset asset = assetMapper.assetDTOToAsset(assetDTO);
+                Long parentId = assetDTOs.getParentId();
+                if (i == 0) {
+                    asset.setParentId(parentId);
+                } else {
+                    asset.setParentId(lastUpdatedAsset.getId());
+                }
 
-            asset = assetRepository.save(asset);
-            AssetDTO assetToAssetDTO = assetMapper.assetToAssetDTO(asset);
-            response.add(assetToAssetDTO);
-            lastUpdatedAsset = asset;
+                saveOrUpdateSpecificType(asset, assetDTO);
+                asset = assetRepository.save(asset);
+                saveOrUpdateSpecificTypeFieldsAndValues(asset, assetDTO);
+                AssetDTO assetToAssetDTO = assetMapper.assetToAssetDTO(asset);
+                response.add(assetToAssetDTO);
+                lastUpdatedAsset = asset;
+            }
             i++;
         }
         assetDTOs.setAssetList(response);
@@ -125,9 +208,9 @@ public class AssetServiceImpl implements AssetService{
     }
 
     /**
-     *  Get all the assets.
+     * Get all the assets.
      *
-     *  @return the list of entities
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public List<AssetDTO> findAll() {
@@ -145,11 +228,23 @@ public class AssetServiceImpl implements AssetService{
         return allManufactures;
     }
 
+    @Override
+    public List<String> findAllAssetNames() {
+        List<String> allManufactures = assetRepository.findAllAssetNames();
+        return allManufactures;
+    }
+
+    @Override
+    public List<String> findAllAssetLocations() {
+        List<String> allManufactures = assetRepository.findAllAssetLocations();
+        return allManufactures;
+    }
+
     /**
-     *  Get one asset by id.
+     * Get one asset by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Transactional(readOnly = true)
     public AssetDTO findOne(Long id) {
@@ -160,9 +255,9 @@ public class AssetServiceImpl implements AssetService{
     }
 
     /**
-     *  Delete the  asset by id.
+     * Delete the  asset by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
         log.debug("Request to delete Asset : {}", id);

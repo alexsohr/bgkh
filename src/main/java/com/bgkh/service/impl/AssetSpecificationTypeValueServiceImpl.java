@@ -45,7 +45,7 @@ public class AssetSpecificationTypeValueServiceImpl implements AssetSpecificatio
     }
 
     /**
-     *  Get all the assetSpecificationTypeValues.
+     *  Get all the assetSpecificationTypeData.
      *
      *  @return the list of entities
      */
