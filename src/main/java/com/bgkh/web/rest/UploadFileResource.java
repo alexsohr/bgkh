@@ -1,26 +1,34 @@
 package com.bgkh.web.rest;
 
 import com.bgkh.config.JHipsterProperties;
+import com.bgkh.domain.UploadFile;
 import com.codahale.metrics.annotation.Timed;
 import com.bgkh.service.UploadFileService;
 import com.bgkh.web.rest.util.HeaderUtil;
 import com.bgkh.service.dto.UploadFileDTO;
 
+import com.google.common.io.Files;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLConnection;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -50,14 +58,16 @@ public class UploadFileResource {
     @Timed
     public ResponseEntity<UploadFileDTO> createUploadFile(@RequestParam("file") MultipartFile file) throws URISyntaxException {
 
-        String uploadPath = "/home/alex/Desktop/test";
+        String uploadPath = uploadFileService.getUploadPath();
 //        String uploadPath = "C:\\bgkh\\data";
 
         UploadFileDTO uploadFileDTO = null;
         if (!file.isEmpty()) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
             try {
                 byte[] bytes = file.getBytes();
-                String newFileName = new Date().toString()+"_" + file.getOriginalFilename();
+
+                String newFileName = sdf.format(new Date())+"_" + file.getOriginalFilename();
                 File newFile = new File(uploadPath, newFileName);
                 BufferedOutputStream stream =
                     new BufferedOutputStream(new FileOutputStream(newFile));
@@ -113,6 +123,25 @@ public class UploadFileResource {
                 result,
                 HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+    @GetMapping("/upload-files/download/{id}")
+    @Timed
+    public void downloadFile(@PathVariable Long id, HttpServletResponse response) {
+
+        UploadFileDTO uploadFile = uploadFileService.findOne(id);
+        File file = new File(uploadFile.getLocation());
+        // Generate the http headers with the file properties
+        response.addHeader("content-disposition", "attachment; filename=" + file.getName());
+        String mime = URLConnection.guessContentTypeFromName(file.getName());
+        response.setContentType(mime);
+        try {
+            Files.copy(file, response.getOutputStream());
+            response.getOutputStream().flush();
+        } catch (IOException e) {
+            log.error("unable to get file: {} with id: {}", file.getName(), id);
+        }
+
+
     }
 
     /**

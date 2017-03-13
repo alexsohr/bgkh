@@ -36,7 +36,6 @@
             $scope.$emit('app:assetUpdate', result);
             $uibModalInstance.close(result);
             vm.isSaving = false;
-            AssetImportModalService.openEdit(result.id);
         }
 
         function onSaveError() {

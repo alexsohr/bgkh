@@ -96,7 +96,8 @@
                 <div class="col-md-6">
                     <label class="control-label">{{$root.getWord('Asset Type')}}</label>
                     <div class="col-md-12">
-                        <input class="form-control" placeholder="{{$root.getWord('Type something')}}..." type="text" ng-disabled="disableForm"
+                        <input class="form-control" placeholder="{{$root.getWord('Type something')}}..." type="text"
+                               ng-disabled="disableForm"
                                ng-model="asset.assetSpecificationTypeName">
                     </div>
                 </div>
@@ -122,6 +123,22 @@
                             class="fa fa-caret-right text-danger"></i> Drop files <span class="font-xs">to upload</span></span><span>&nbsp;&nbsp;<h4
                             class="display-inline"> (Or Click)</h4></span></span></span></span></div>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 padding-top-10" data-ng-repeat="map in asset.maps">
+                <div class="col-md-6">
+                    <input find-file-name class="form-control" ng-model="map.location" readonly/>
+                </div>
+                <div class="col-md-6">
+                    <a ng-hide="disableForm" class="btn btn-labeled btn-danger" ng-click="deleteFromMapFiles(map.id)"><span class="btn-label">
+                    <i class="glyphicon glyphicon-trash"></i></span>{{$root.getWord('Remove file')}}
+                    </a>
+                    &nbsp;
+                    <a href="api/upload-files/download/{{map.id}}" target="_blank" class="btn btn-labeled btn-primary"><span class="btn-label">
+                    <i class="glyphicon glyphicon-download-alt"></i></span>{{$root.getWord('Download')}}
+                    </a>
                 </div>
             </div>
         </div>
@@ -209,6 +226,22 @@
                             class="fa fa-caret-right text-danger"></i> Drop files <span class="font-xs">to upload</span></span><span>&nbsp;&nbsp;<h4
                             class="display-inline"> (Or Click)</h4></span></span></span></span></div>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 padding-top-10" data-ng-repeat="otherFile in asset.otherFiles">
+                <div class="col-md-6">
+                    <input find-file-name class="form-control" ng-model="otherFile.location" readonly/>
+                </div>
+                <div class="col-md-6">
+                    <a ng-hide="disableForm" class="btn btn-labeled btn-danger" ng-click="deleteFromOtherFiles(otherFile.id)"><span class="btn-label">
+                    <i class="glyphicon glyphicon-trash"></i></span>{{$root.getWord('Remove file')}}
+                    </a>
+                    &nbsp;
+                    <a href="api/upload-files/download/{{otherFile.id}}" target="_blank" class="btn btn-labeled btn-primary"><span class="btn-label">
+                    <i class="glyphicon glyphicon-download-alt"></i></span>{{$root.getWord('Download')}}
+                    </a>
                 </div>
             </div>
         </div>

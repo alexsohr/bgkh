@@ -14,7 +14,7 @@ angular.module('app').directive('assetsForm', function () {
             parentId: '=parentId',
             updateAssetCallback: '&?'
         },
-        controller: function ($scope, $filter, $compile, User, AssetManufacture, AssetNames, AssetLocations, Upload, AssetSpecificationType, AssetSpecificationTypeFieldByType, AssetSpecificationTypeValue, AlertService) {
+        controller: function ($scope, $filter, $compile, User, UploadFile, AssetManufacture, AssetNames, AssetLocations, Upload, AssetSpecificationType, AssetSpecificationTypeFieldByType, AssetSpecificationTypeValue, AlertService) {
 
             if (angular.isUndefinedOrNull($scope.currentStep)) {
                 $scope.currentStep = 1;
@@ -97,11 +97,15 @@ angular.module('app').directive('assetsForm', function () {
             }
 
             function loadAllNames() {
-                AssetNames.query({}, function (data) { $scope.names = data}, onError);
+                AssetNames.query({}, function (data) {
+                    $scope.names = data
+                }, onError);
             }
 
             function loadAllLocations() {
-                AssetLocations.query({}, function (data) { $scope.locations = data}, onError);
+                AssetLocations.query({}, function (data) {
+                    $scope.locations = data
+                }, onError);
             }
 
             function loadAllUsers() {
@@ -203,7 +207,10 @@ angular.module('app').directive('assetsForm', function () {
 
             $scope.mapsDropzoneConfig = {
                 'options': { // passed into the Dropzone constructor
-                    'url': '/api/upload-files'
+                    'url': '/api/upload-files',
+                    addRemoveLinks: function () {
+                        this.createElement("<button class='btn btn-danger'><i class='fa fa-remove'></i>Remove file</button>");
+                    }
                 },
                 acceptedFiles: "image/*,application/pdf",
                 'eventHandlers': {
@@ -215,9 +222,34 @@ angular.module('app').directive('assetsForm', function () {
                     }
                 }
             };
+
+
+            $scope.mapsDropzoneConfig.eventHandlers.removedfile = function (file) {
+                if (file.status === "success") {
+                    var data = JSON.parse(file.xhr.response);
+                    $scope.deleteFromUploadedMapFiles(data.id);
+                }
+            };
+
+            $scope.deleteFromUploadedMapFiles = function (id) {
+                UploadFile.delete({id: id});
+                $scope.deleteFromMapFiles(id);
+            };
+
+            $scope.deleteFromMapFiles = function (id) {
+                $scope.asset.maps.forEach(function (item, index) {
+                    if (item.id === id) {
+                        $scope.asset.maps.splice(index, 1);
+                    }
+                });
+            };
+
             $scope.otherDropzoneConfig = {
                 'options': { // passed into the Dropzone constructor
-                    'url': '/api/upload-files'
+                    'url': '/api/upload-files',
+                    addRemoveLinks: function () {
+                        this.createElement("<button class='btn btn-danger'><i class='fa fa-remove'></i>Remove file</button>");
+                    }
                 },
                 'eventHandlers': {
                     'success': function (file, response) {
@@ -227,6 +259,26 @@ angular.module('app').directive('assetsForm', function () {
                         $scope.asset.otherFiles.push(response);
                     }
                 }
+            };
+
+            $scope.otherDropzoneConfig.eventHandlers.removedfile = function (file) {
+                if (file.status === "success") {
+                    var data = JSON.parse(file.xhr.response);
+                    $scope.deleteFromUploadedOtherFiles(data.id);
+                }
+            };
+
+            $scope.deleteFromUploadedOtherFiles = function (id) {
+                UploadFile.delete({id: id});
+                $scope.deleteFromOtherFiles(id);
+            };
+
+            $scope.deleteFromOtherFiles = function (id) {
+                $scope.asset.otherFiles.forEach(function (item, index) {
+                    if (item.id === id) {
+                        $scope.asset.otherFiles.splice(index, 1);
+                    }
+                });
             };
 
         },
@@ -245,6 +297,19 @@ angular.module('app').directive('assetsForm', function () {
                 });
                 ngModel.$formatters.push(function (val) {
                     return parseInt(val, 10);
+                });
+            }
+        }
+    })
+    .directive('findFileName', function () {
+        return {
+            require: 'ngModel',
+            link: function (scope, element, attrs, ngModel) {
+                ngModel.$parsers.push(function (val) {
+                    return '' + val;
+                });
+                ngModel.$formatters.push(function (val) {
+                    return val.replace(/^.*[\\\/]/, '');
                 });
             }
         }

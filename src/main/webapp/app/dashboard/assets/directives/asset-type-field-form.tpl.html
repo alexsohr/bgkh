@@ -5,20 +5,20 @@
         </div>
     </div>
     <div class="row padding-top-10" data-ng-repeat="assetSpecTypeFieldVal in assetSpecTypeFieldVals">
-        <div class="col-md-5">
+        <div class="col-md-6">
             <div class="col-md-12">
                 <input type="hidden" class="form-control" ng-model="assetSpecTypeFieldVal.typeId">
                 <input type="text" class="form-control" ng-model="assetSpecTypeFieldVal.fieldLabel" ng-change="changeFormValue()" placeholder="Filed name" ng-disabled="disableForm">
             </div>
         </div>
-        <div class="col-md-7">
-            <div class="col-md-10">
+        <div class="col-md-6">
+            <div class="col-md-12 input-group">
                 <input type="hidden" class="form-control" ng-model="assetSpecTypeFieldVal.valId">
                 <input type="text" class="form-control" ng-disabled="disableForm"
                        ng-model="assetSpecTypeFieldVal.value" placeholder="Filed value"  ng-change="changeFormValue()">
-            </div>
-            <div class="col-md-2" ng-hide="disableForm">
-                <span class="btn btn-danger" ng-click="removeChoice(assetSpecTypeFieldVal)"><i class="fa fa-minus-square"></i></span>
+                <div class="input-group-btn">
+                    <span class="btn btn-danger" ng-click="removeChoice(assetSpecTypeFieldVal)"><i class="fa fa-minus-square"></i></span>
+                </div>
             </div>
         </div>
     </div>

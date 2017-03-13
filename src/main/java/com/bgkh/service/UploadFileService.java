@@ -18,7 +18,7 @@ public interface UploadFileService {
 
     /**
      *  Get all the uploadFiles.
-     *  
+     *
      *  @return the list of entities
      */
     List<UploadFileDTO> findAll();
@@ -37,4 +37,6 @@ public interface UploadFileService {
      *  @param id the id of the entity
      */
     void delete(Long id);
+
+    String getUploadPath();
 }
