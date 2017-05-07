@@ -5,7 +5,7 @@ angular.module('app').directive('assetsTreeGrid', function () {
         restrict: 'E',
         replace: true,
         templateUrl: 'app/dashboard/assets/directives/assets-tree-grid.tpl.html',
-        scope: true,
+        scope: {},
         controller: function ($state, $scope, $rootScope, $compile, $element, $sce, $templateCache, AssetImportModalService, Asset) {
             var tree;
             $scope.assets_tree = tree = {};
@@ -13,7 +13,7 @@ angular.module('app').directive('assetsTreeGrid', function () {
             $scope.col_defs = [];
             $scope.loadAssets = loadAssets;
             $scope.loadAssets();
-            $rootScope.$on('app:assetUpdate', function(event, result) {
+            $rootScope.$on('app:assetUpdate', function (event, result) {
                 $scope.loadAssets();
             });
             $scope.expanding_property = {
@@ -26,10 +26,12 @@ angular.module('app').directive('assetsTreeGrid', function () {
                 {field: "code", displayName: $rootScope.getWord('Asset Code'), sortable: true, filterable: true},
                 {field: "assetType", displayName: $rootScope.getWord('Asset Type')},
                 {field: "capacity", displayName: $rootScope.getWord('Asset Capacity')},
-                {field: "supervisor", displayName: $rootScope.getWord('Asset Supervisor'),
+                {
+                    field: "supervisor", displayName: $rootScope.getWord('Asset Supervisor'),
                     cellTemplate: "<span>{{row.branch.supervisorFirstName}} {{row.branch.supervisorLastName}}</span>"
                 },
-                {field: "technician", displayName: $rootScope.getWord('Asset User'),
+                {
+                    field: "technician", displayName: $rootScope.getWord('Asset User'),
                     cellTemplate: "<span>{{row.branch.technicianFirstName}} {{row.branch.technicianLastName}}</span>"
                 },
                 {
@@ -52,10 +54,41 @@ angular.module('app').directive('assetsTreeGrid', function () {
                     "<li>" +
                     "<a ng-click='cellTemplateScope.openAssetMoveModal(row.branch.id)' >" + $rootScope.getWord('Move') + "</a>" +
                     "</li>" +
+                    "<li>" +
+                    "<a ng-click='cellTemplateScope.deleteConfirm(row.branch.id)' >" + $rootScope.getWord('Delete') + "</a>" +
+                    "</li>" +
                     "</ul>" +
                     "</div>",
                     cellTemplateScope: {
                         //FIXME cellTemplateScope.submitDataWithSuccessAlert() is not working
+                        deleteConfirm: function (id) {
+                            if (!$scope.deleteCalled) {
+                                $.SmartMessageBox({
+                                    title: "Smart Alert!",
+                                    content: "This is a confirmation box. Can be programmed for button callback",
+                                    buttons: '[No][Yes]'
+                                }, function (ButtonPressed) {
+                                    if (ButtonPressed === "Yes") {
+                                        $.smallBox({
+                                            title: "Callback function",
+                                            content: "<i class='fa fa-clock-o'></i> <i>You pressed Yes...</i>",
+                                            color: "#659265",
+                                            iconSmall: "fa fa-check fa-2x fadeInRight animated",
+                                            timeout: 4000
+                                        });
+                                    }
+                                    if (ButtonPressed === "No") {
+                                        $.smallBox({
+                                            title: "Callback function",
+                                            content: "<i class='fa fa-clock-o'></i> <i>You pressed No...</i>",
+                                            color: "#C46A69",
+                                            iconSmall: "fa fa-times fa-2x fadeInRight animated",
+                                            timeout: 4000
+                                        });
+                                    }
+                                });
+                            }
+                        },
                         openAssetEditModal: function (branchId) {
                             if (!AssetImportModalService.isOpen()) {
                                 AssetImportModalService.openEdit(branchId);

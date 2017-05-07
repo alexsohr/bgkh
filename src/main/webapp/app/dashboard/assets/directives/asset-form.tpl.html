@@ -21,12 +21,12 @@
             <div class="col-md-12 ">
                 <div class="col-md-10">
                     <label class="radio radio-inline">
-                        <input type="radio" class="radiobox" name="strategic" ng-model="asset.strategic" value="true"
+                        <input type="radio" class="radiobox" name="strategic{{scopeId}}" ng-model="asset.strategic" value="true"
                                ng-disabled="disableForm">
                         <span>{{$root.getWord('Strategic')}}</span>
                     </label>
                     <label class="radio radio-inline">
-                        <input type="radio" class="radiobox" name="strategic" ng-model="asset.strategic" value="false"
+                        <input type="radio" class="radiobox" name="strategic{{scopeId}}" ng-model="asset.strategic" value="false"
                                ng-disabled="disableForm">
                         <span>{{$root.getWord('Not Strategic')}}</span>
                     </label>
@@ -80,7 +80,7 @@
                 <div class="col-md-6">
                     <label class="control-label">{{$root.getWord('Asset Type')}}</label>
                     <div class="col-md-12">
-                        <select class="form-control" ng-model="asset.assetSpecificationTypeId" ng-disabled="disableForm"
+                        <select class="form-control" ng-model="asset.assetSpecificationTypeId" ng-change="assetSpecificationTypeIdChange()" ng-disabled="disableForm"
                                 ng-options="assetSpecificationType.id as assetSpecificationType.name for assetSpecificationType in assetSpecificationTypes"></select>
                     </div>
                 </div>
@@ -110,7 +110,7 @@
                 </div>
             </div>
         </div>
-        <div class="asset-type-container">
+        <div class="asset-type-container{{scopeId}}">
         </div>
 
         <div class="row" ng-hide="disableForm">

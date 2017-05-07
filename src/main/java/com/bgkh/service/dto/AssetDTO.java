@@ -48,7 +48,7 @@ public class AssetDTO implements Serializable {
 
     private Long technicianId;
 
-    private boolean strategic = false;
+    private String strategic;
 
     private String assetSpecificationTypeName;
 
@@ -148,11 +148,11 @@ public class AssetDTO implements Serializable {
         this.year = year;
     }
 
-    public boolean isStrategic() {
+    public String getStrategic() {
         return strategic;
     }
 
-    public void setStrategic(boolean strategic) {
+    public void setStrategic(String strategic) {
         this.strategic = strategic;
     }
 

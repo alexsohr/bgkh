@@ -102,6 +102,7 @@ angular.module('app').directive('assetsImportWizardForm', function () {
                         assetType: null,
                         capacity: null,
                         manufacture: null,
+                        strategic: "false",
                         supervisorId: null,
                         technicianId: null,
                         year: null,

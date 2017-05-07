@@ -25,6 +25,7 @@ angular.module('app').directive('assetsForm', function () {
             $scope.manufactures = [];
             $scope.locations = [];
             $scope.names = [];
+            $scope.scopeId = $scope.$id;
             $scope.assetSpecificationTypes = [];
             $scope.assetSpecificationTypeFields = [];
             $scope.assetSpecificationTypeValue = [];
@@ -73,6 +74,9 @@ angular.module('app').directive('assetsForm', function () {
                                 addTypeFieldElements();
                             }, onError);
                         }
+                        else {
+                            addTypeFieldElements();
+                        }
                         // $scope.destroySpecTypeElement = true;
 
                     }, onError);
@@ -80,7 +84,7 @@ angular.module('app').directive('assetsForm', function () {
             }
 
             function addTypeFieldElements() {
-                var specTypeFormDir = document.querySelector(".asset-type-container");
+                var specTypeFormDir = document.querySelector(".asset-type-container" + $scope.scopeId);
                 angular.element(specTypeFormDir).html("");
                 // $scope.destroySpecTypeElement = false;
                 angular.element(specTypeFormDir).append($compile("<asset-type-field-form asset=\"asset\" asset-type-fields=\"assetSpecificationTypeFields\" asset-type-values=\"assetSpecificationTypeValue\" disable-form=\"disableForm\" destroy-element=\"destroySpecTypeElement\"></asset-type-field-form>")($scope));
@@ -144,9 +148,9 @@ angular.module('app').directive('assetsForm', function () {
             }
 
 
-            $scope.$watch('asset.assetSpecificationTypeId', function (newValue, oldValue) {
-                loadAllAssetSpecificationTypeFields(newValue);
-            });
+            $scope.assetSpecificationTypeIdChange = function () {
+                loadAllAssetSpecificationTypeFields($scope.asset.assetSpecificationTypeId);
+            };
 
             if (!angular.isUndefinedOrNull($scope.displayDetails)) {
                 $scope.disableForm = true;
@@ -156,7 +160,6 @@ angular.module('app').directive('assetsForm', function () {
             $scope.assetType = 'ASSET_GROUP';
             if (!angular.isUndefinedOrNull($scope.asset) && $scope.asset.assetType == null) {
                 $scope.asset.assetType = 'ASSET_GROUP';
-                $scope.asset.strategic = "false";
             }
 
             $scope.years = [];
@@ -195,12 +198,6 @@ angular.module('app').directive('assetsForm', function () {
                 $scope.state = "E";
                 if (!angular.isUndefinedOrNull($scope.asset.children)) {
                     $scope.hasSubTree = $scope.asset.children.length > 0;
-                }
-                if ($scope.asset.strategic) {
-                    $scope.asset.strategic = "true";
-                }
-                else {
-                    $scope.asset.strategic = "false";
                 }
             }
 

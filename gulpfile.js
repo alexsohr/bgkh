@@ -94,7 +94,7 @@ gulp.task('js', function(){
     return es.merge(gulp.src(source.js.src) , getTemplateStream())
     // return es.merge(gulp.src(source.js.src))
          .pipe(ngAnnotate())
-         .pipe(uglify())
+         // .pipe(uglify())
         .pipe(concat('appApp.js'))
         .pipe(gulp.dest(config.app + 'content/js'));
 });

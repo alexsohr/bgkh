@@ -14,7 +14,7 @@ public interface AssetMapper {
 
     @Mapping(source = "supervisor.id", target = "supervisorId")
     @Mapping(source = "technician.id", target = "technicianId")
-    @Mapping(source = "strategic", target = "strategic")
+    @Mapping(target = "strategic", expression = "java(String.valueOf(asset.isStrategic()))")
     @Mapping(source = "technician.firstName", target = "technicianFirstName")
     @Mapping(source = "technician.lastName", target = "technicianLastName")
     @Mapping(source = "supervisor.firstName", target = "supervisorFirstName")
@@ -25,7 +25,7 @@ public interface AssetMapper {
     List<AssetDTO> assetsToAssetDTOs(List<Asset> assets);
 
     @Mapping(target = "workOrders", ignore = true)
-    @Mapping(source = "strategic", target = "strategic")
+    @Mapping(target = "strategic" , expression = "java(Boolean.valueOf(assetDTO.getStrategic()))")
     @Mapping(source = "supervisorId", target = "supervisor")
     @Mapping(source = "technicianId", target = "technician")
     @Mapping(source = "assetSpecificationTypeId", target = "assetSpecificationType")
@@ -37,6 +37,7 @@ public interface AssetMapper {
         if (id == null) {
             return null;
         }
+
         UploadFile uploadFile = new UploadFile();
         uploadFile.setId(id);
         return uploadFile;
