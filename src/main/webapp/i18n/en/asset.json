@@ -26,6 +26,7 @@
             "typeVal": "Type Val",
             "capacity": "Capacity",
             "year": "Year",
+            "unit": "Unit",
             "workOrder": "Work Order",
             "supervisor": "Supervisor",
             "technician": "Technician",

@@ -1,5 +1,6 @@
 package com.bgkh.service.impl;
 
+import com.bgkh.service.AssetService;
 import com.bgkh.domain.Asset;
 import com.bgkh.domain.AssetSpecificationType;
 import com.bgkh.domain.AssetSpecificationTypeField;
@@ -23,6 +24,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import java.util.ArrayList;

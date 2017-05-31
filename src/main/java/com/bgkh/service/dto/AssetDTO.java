@@ -43,6 +43,8 @@ public class AssetDTO implements Serializable {
     @Min(value = 1800)
     private Integer year;
 
+    private String unit;
+
 
     private Long supervisorId;
 
@@ -75,7 +77,6 @@ public class AssetDTO implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-
     public Long getParentId() {
         return parentId;
     }
@@ -83,7 +84,6 @@ public class AssetDTO implements Serializable {
     public void setParentId(Long parentId) {
         this.parentId = parentId;
     }
-
     public String getName() {
         return name;
     }
@@ -91,7 +91,6 @@ public class AssetDTO implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-
     public String getLocation() {
         return location;
     }
@@ -99,7 +98,6 @@ public class AssetDTO implements Serializable {
     public void setLocation(String location) {
         this.location = location;
     }
-
     public String getDetails() {
         return details;
     }
@@ -107,7 +105,6 @@ public class AssetDTO implements Serializable {
     public void setDetails(String details) {
         this.details = details;
     }
-
     public String getCode() {
         return code;
     }
@@ -115,7 +112,6 @@ public class AssetDTO implements Serializable {
     public void setCode(String code) {
         this.code = code;
     }
-
     public AssetType getAssetType() {
         return assetType;
     }
@@ -123,7 +119,6 @@ public class AssetDTO implements Serializable {
     public void setAssetType(AssetType assetType) {
         this.assetType = assetType;
     }
-
     public String getManufacture() {
         return manufacture;
     }
@@ -131,7 +126,6 @@ public class AssetDTO implements Serializable {
     public void setManufacture(String manufacture) {
         this.manufacture = manufacture;
     }
-
     public Integer getCapacity() {
         return capacity;
     }
@@ -139,7 +133,6 @@ public class AssetDTO implements Serializable {
     public void setCapacity(Integer capacity) {
         this.capacity = capacity;
     }
-
     public Integer getYear() {
         return year;
     }
@@ -154,6 +147,13 @@ public class AssetDTO implements Serializable {
 
     public void setStrategic(String strategic) {
         this.strategic = strategic;
+    }
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 
     public Long getSupervisorId() {

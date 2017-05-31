@@ -124,6 +124,10 @@
                 "min"
             ],
             "fieldValidateRulesMin": 1800
+        },
+        {
+            "fieldName": "unit",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20170107053105",

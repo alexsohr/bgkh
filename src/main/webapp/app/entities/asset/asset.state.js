@@ -115,6 +115,7 @@
                                 manufacture: null,
                                 capacity: null,
                                 year: null,
+                                unit: null,
                                 id: null
                             };
                         }

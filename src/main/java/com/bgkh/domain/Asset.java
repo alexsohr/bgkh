@@ -68,6 +68,9 @@ public class Asset implements Serializable {
     @Column(name = "strategic")
     private boolean strategic;
 
+    @Column(name = "capacity_unit")
+    private String unit;
+
     @OneToMany(mappedBy = "asset")
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -219,6 +222,19 @@ public class Asset implements Serializable {
 
     public void setYear(Integer year) {
         this.year = year;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public Asset unit(String unit) {
+        this.unit = unit;
+        return this;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 
     public Set<WorkOrder> getWorkOrders() {
@@ -375,8 +391,8 @@ public class Asset implements Serializable {
             ", assetType='" + assetType + "'" +
             ", manufacture='" + manufacture + "'" +
             ", capacity='" + capacity + "'" +
-            ", strategic='" + strategic + "'" +
             ", year='" + year + "'" +
+            ", unit='" + unit + "'" +
             '}';
     }
 }

@@ -64,6 +64,10 @@
                 <constraints nullable="false" />
             </column>
 
+            <column name="capacity_unit" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
             <column name="supervisor_id" type="bigint">
                 <constraints nullable="true" />
             </column>
