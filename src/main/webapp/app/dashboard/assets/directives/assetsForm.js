@@ -12,6 +12,7 @@ angular.module('app').directive('assetsForm', function () {
             currentStep: '=?currentStep',
             parentStep: '=parentStep',
             parentId: '=parentId',
+            isValidCallBack: '&',
             updateAssetCallback: '&?'
         },
         controller: function ($scope, $filter, $compile, User, UploadFile, AssetManufacture, AssetNames, AssetLocations, Upload, AssetSpecificationType, AssetSpecificationTypeFieldByType, AssetSpecificationTypeValue, AlertService) {
@@ -31,7 +32,7 @@ angular.module('app').directive('assetsForm', function () {
             $scope.assetSpecificationTypeValue = [];
             $scope.destroySpecTypeElement = false;
             $scope.assetSpecificationTypeSelect = true;
-
+            $scope.forms = {};
 
             if ($scope.updateAssetCallback !== undefined) {
                 var index = {index: $scope.currentStep};
@@ -193,6 +194,13 @@ angular.module('app').directive('assetsForm', function () {
                 }
             });
 
+            $scope.$watch("forms.assetImportWizardForm", function(val) {
+                if (val) {
+                    if ($scope.isValidCallBack && val != null) {
+                        $scope.isValidCallBack({"valid": [val, $scope.currentStep]});
+                    }
+                }
+            });
 
             if (!angular.isUndefinedOrNull($scope.asset.id)) {
                 $scope.state = "E";
@@ -280,7 +288,6 @@ angular.module('app').directive('assetsForm', function () {
 
         },
         link: function (scope, rootScope, element, attrs, compile) {
-
 
         }
     }

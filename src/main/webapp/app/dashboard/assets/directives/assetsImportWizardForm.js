@@ -27,7 +27,9 @@ angular.module('app').directive('assetsImportWizardForm', function () {
                 }
             });
             // var wizard = {};
-            var wizard = $element.children().first();
+            var vm = this;
+            var wizard = angular.element($element[0].getElementsByClassName('asset-import-wizard'));
+            var forms = [];
             $scope.assetImportData = [];
             $scope.branch;
             $scope.parentId = null;
@@ -48,7 +50,7 @@ angular.module('app').directive('assetsImportWizardForm', function () {
 
             $scope.addStep = function (value) {
                 if (value && !angular.isUndefined(value)) {
-                    var index = $scope.assetImportData.length + 1;
+                    var index = $scope.assetImportData.length;
                     assetWizardStepAdd(index);
                 }
                 else if (angular.isUndefined(value)) {
@@ -74,12 +76,12 @@ angular.module('app').directive('assetsImportWizardForm', function () {
 
                 var pane;
                 if (!angular.isObject(branch)) {
-                    pane = $compile('<assets-form update-asset-callback="getAsset(index)" data-parent-id="'+$scope.branch.id+'" data-parent-step="'+$scope.parentStep+'" data-current-step="'+index+'" step-change="addStep(value)"></assets-form>')($scope);
+                    pane = $compile('<assets-form update-asset-callback="getAsset(index)" data-parent-id="' + $scope.branch.id + '" data-parent-step="' + $scope.parentStep + '" data-current-step="' + index + '" step-change="addStep(value)" is-valid-call-back="isFormValid(valid)"></assets-form>')($scope);
                 }
                 else {
                     $scope.parentId = branch.id;
                     var newIndex = index - 1;
-                    pane = $compile('<assets-form update-asset-callback="getAsset(index)" data-parent-id="'+$scope.branch.id+'" data-parent-step="'+$scope.parentStep+'" data-current-step="'+index+'" step-change="addStep(value)" asset="wizardStepFormBranch[' + newIndex + ']" ></assets-form>')($scope);
+                    pane = $compile('<assets-form update-asset-callback="getAsset(index)" data-parent-id="' + $scope.branch.id + '" data-parent-step="' + $scope.parentStep + '" data-current-step="' + index + '" step-change="addStep(value)" is-valid-call-back="isFormValid(valid)" asset="wizardStepFormBranch[' + newIndex + ']" ></assets-form>')($scope);
                 }
 
                 wizard.wizard('addSteps', index, [
@@ -90,6 +92,10 @@ angular.module('app').directive('assetsImportWizardForm', function () {
                     }
                 ]);
                 $scope.parentStep = index;
+            }
+
+            $scope.isFormValid = function (valid) {
+                forms[valid[1]] = valid[0];
             }
 
             $scope.getAsset = function (index) {
@@ -114,7 +120,9 @@ angular.module('app').directive('assetsImportWizardForm', function () {
 
             function assetWizardStepRemove(index, howMany) {
                 wizard.wizard('removeSteps', index, howMany);
-
+                for (var i = 0; i < howMany - 1; i++) {
+                    $scope.assetImportData.pop();
+                }
             }
 
             function tree2line(branch) {
@@ -134,9 +142,28 @@ angular.module('app').directive('assetsImportWizardForm', function () {
             }
 
             wizard.on('finished.fu.wizard', function (evt, data) {
-                console.log("Form finished");
+                evt.preventDefault();
+                if (data.step > 1 && data.direction === 'next' && !forms[data.step].$valid) {
+                }
+                else {
+                    evt.preventDefault();
+                    console.log("Form finished");
+                    $('.asset-import-form', $(evt.currentTarget)).triggerHandler('submit');
+                }
+            });
 
-                $('.asset-import-form', $(evt.currentTarget)).triggerHandler('submit');
+
+            wizard.on('changed.fu.wizard', function (evt, data) {
+                if (data.step > 1 && data.direction === 'next' && !forms[data.step].$valid) {
+                    evt.preventDefault();
+                }
+            });
+            wizard.on('actionclicked.fu.wizard', function (evt, data) {
+                if (data.step > 1)
+                    console.log("form step " +data.step + " validation is " + forms[data.step].$valid);
+                if (data.step > 1 && data.direction === 'next' && !forms[data.step].$valid) {
+                    evt.preventDefault();
+                }
             });
 
             $scope.wizard2CompleteCallback = function (wizardData) {
