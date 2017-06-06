@@ -126,27 +126,6 @@ public class AssetResource {
         return assetService.findAll();
     }
 
-    @GetMapping("/assets/manufactures")
-    @Timed
-    public List<String> getAllManufactures() {
-        log.debug("REST request to get all Assets Manufactures");
-        return assetService.findAllManufactures();
-    }
-
-    @GetMapping("/assets/names")
-    @Timed
-    public List<String> getAllAssetNames() {
-        log.debug("REST request to get all Asset names");
-        return assetService.findAllAssetNames();
-    }
-
-    @GetMapping("/assets/locations")
-    @Timed
-    public List<String> getAllAssetLocations() {
-        log.debug("REST request to get all Asset locations");
-        return assetService.findAllAssetLocations();
-    }
-
     /**
      * GET  /assets/:id : get the "id" asset.
      *

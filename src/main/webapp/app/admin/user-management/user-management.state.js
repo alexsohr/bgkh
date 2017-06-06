@@ -81,7 +81,7 @@
                     }).result.then(function () {
                         $state.go('app.admin.user-management', null, {reload: true});
                     }, function () {
-                        $state.go('app.admin.user-management');
+                        $state.go('app.admin.user-management', null, {reload: true});
                     });
                 }]
             })
@@ -105,7 +105,7 @@
                 }).result.then(function() {
                     $state.go('app.admin.user-management', null, { reload: true });
                 }, function() {
-                    $state.go('^');
+                    $state.go('app.admin.user-management', null, { reload: true });
                 });
             }]
         })
@@ -128,7 +128,7 @@
                     }).result.then(function() {
                         $state.go('app.admin.user-management', null, { reload: true });
                     }, function() {
-                        $state.go('^');
+                        $state.go('app.admin.user-management', null, { reload: true });
                     });
                 }]
             });

@@ -123,8 +123,10 @@ public class UserService {
             );
             user.setAuthorities(authorities);
         }
-        String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
-        user.setPassword(encryptedPassword);
+        if (managedUserVM.getPassword() != null && !managedUserVM.getPassword().trim().isEmpty()) {
+            String encryptedPassword = passwordEncoder.encode(managedUserVM.getPassword());
+            user.setPassword(encryptedPassword);
+        }
         user.setResetKey(RandomUtil.generateResetKey());
         user.setResetDate(ZonedDateTime.now());
         user.setActivated(true);
@@ -144,7 +146,12 @@ public class UserService {
     }
 
     public void updateUser(Long id, String login, String firstName, String lastName, String email,
-        boolean activated, String langKey, Set<String> authorities) {
+                           boolean activated, String langKey, Set<String> authorities) {
+        updateUser(id, login, firstName, lastName, email, activated, langKey, authorities, null);
+    }
+
+    public void updateUser(Long id, String login, String firstName, String lastName, String email,
+        boolean activated, String langKey, Set<String> authorities, String password) {
 
         Optional.of(userRepository
             .findOne(id))
@@ -153,6 +160,9 @@ public class UserService {
                 user.setFirstName(firstName);
                 user.setLastName(lastName);
                 user.setEmail(email);
+                if(password != null && !password.trim().isEmpty()) {
+                    user.setPassword(passwordEncoder.encode(password));
+                }
                 user.setActivated(activated);
                 user.setLangKey(langKey);
                 Set<Authority> managedAuthorities = user.getAuthorities();

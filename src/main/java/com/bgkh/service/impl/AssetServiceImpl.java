@@ -10,21 +10,17 @@ import com.bgkh.repository.AssetRepository;
 import com.bgkh.repository.AssetSpecificationTypeFieldRepository;
 import com.bgkh.repository.AssetSpecificationTypeRepository;
 import com.bgkh.repository.AssetSpecificationTypeValueRepository;
-import com.bgkh.service.AssetService;
 import com.bgkh.service.dto.AssetDTO;
 import com.bgkh.service.dto.AssetDTOs;
 import com.bgkh.service.dto.AssetSpecificationTypeDataDTO;
-import com.bgkh.service.dto.AssetSpecificationTypeFieldDTO;
 import com.bgkh.service.mapper.AssetMapper;
 import com.bgkh.service.mapper.AssetSpecificationTypeFieldMapper;
 import com.bgkh.service.mapper.AssetSpecificationTypeValueMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -256,6 +252,12 @@ public class AssetServiceImpl implements AssetService {
         return assetDTO;
     }
 
+    private void findAllChildrens(Long id, List<Asset> assets) {
+        assets = assetRepository.findAllByParentId(id);
+        for (Asset asset: assets) {
+            findAllChildrens(asset.getId(), assets);
+        }
+    }
     /**
      * Delete the  asset by id.
      *
@@ -263,6 +265,10 @@ public class AssetServiceImpl implements AssetService {
      */
     public void delete(Long id) {
         log.debug("Request to delete Asset : {}", id);
-        assetRepository.delete(id);
+        Asset asset = assetRepository.findOneWithEagerRelationships(id);
+        List<Asset> assets = new ArrayList<>();
+        assets.add(asset);
+        findAllChildrens(id, assets);
+        assetRepository.delete(assets);
     }
 }

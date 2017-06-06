@@ -64,29 +64,34 @@ angular.module('app').directive('assetsTreeGrid', function () {
                         deleteConfirm: function (id) {
                             if (!$scope.deleteCalled) {
                                 $.SmartMessageBox({
-                                    title: "Smart Alert!",
-                                    content: "This is a confirmation box. Can be programmed for button callback",
+                                    title: $rootScope.getWord("Alert!"),
+                                    content: $rootScope.getWord("Are you sure to delete this Asset?"),
                                     buttons: '[No][Yes]'
                                 }, function (ButtonPressed) {
                                     if (ButtonPressed === "Yes") {
-                                        $.smallBox({
-                                            title: "Callback function",
-                                            content: "<i class='fa fa-clock-o'></i> <i>You pressed Yes...</i>",
-                                            color: "#659265",
-                                            iconSmall: "fa fa-check fa-2x fadeInRight animated",
-                                            timeout: 4000
+                                        Asset.delete({id: id}).$promise.then(function (result) {
+                                            $.smallBox({
+                                                title: $rootScope.getWord("Notification"),
+                                                content: "<i class='fa fa-clock-o'></i> <i>" + $rootScope.getWord('Asset deleted!') + "</i>",
+                                                color: "#659265",
+                                                iconSmall: "fa fa-check fa-2x fadeInRight animated",
+                                                timeout: 4000
+                                            });
+                                            $scope.$emit('app:assetUpdate', result);
+                                        }, function (msg) {
+                                            console.error(msg);
+                                            $.smallBox({
+                                                title: $rootScope.getWord("Notification"),
+                                                content: "<i class='fa fa-clock-o'></i> <i>" + msg + "</i>",
+                                                color: "#C46A69",
+                                                iconSmall: "fa fa-check fa-2x fadeInRight animated",
+                                                timeout: 4000
+                                            });
                                         });
                                     }
-                                    if (ButtonPressed === "No") {
-                                        $.smallBox({
-                                            title: "Callback function",
-                                            content: "<i class='fa fa-clock-o'></i> <i>You pressed No...</i>",
-                                            color: "#C46A69",
-                                            iconSmall: "fa fa-times fa-2x fadeInRight animated",
-                                            timeout: 4000
-                                        });
-                                    }
+                                    $scope.deleteCalled = false;
                                 });
+                                $scope.deleteCalled = true;
                             }
                         },
                         openAssetEditModal: function (branchId) {
@@ -110,7 +115,6 @@ angular.module('app').directive('assetsTreeGrid', function () {
                             }
                         },
                         submitDataWithSuccessAlert: function () {
-                            console.log("submitDataWithSuccessAlert")
                             $.smallBox({
                                 title: $rootScope.getWord("Data submitted successfully") + "!",
                                 content: "<i class='fa fa-clock-o'></i> <i>" + $rootScope.getWord('1 second ago') + "...</i>",

@@ -20,19 +20,24 @@
             </div>
             <div class="row">
                 <div class="col-md-12 ">
-                    <div class="col-md-10">
-                        <label class="radio radio-inline">
-                            <input type="radio" class="radiobox" name="strategic{{scopeId}}" ng-model="asset.strategic"
-                                   value="true"
-                                   ng-disabled="disableForm">
-                            <span>{{$root.getWord('Strategic')}}</span>
-                        </label>
-                        <label class="radio radio-inline">
-                            <input type="radio" class="radiobox" name="strategic{{scopeId}}" ng-model="asset.strategic"
-                                   value="false"
-                                   ng-disabled="disableForm">
-                            <span>{{$root.getWord('Not Strategic')}}</span>
-                        </label>
+                    <div class="col-md-10" ng-class="{ 'has-error' : !asset.strategic}">
+                        <ng-form name="assetStrategic">
+                            <label class="radio radio-inline">
+                                <input type="radio" class="radiobox" name="strategic{{scopeId}}" ng-model="asset.strategic"
+                                       value="true"
+                                       ng-required="!asset.strategic"
+                                       ng-disabled="disableForm">
+                                <span>{{$root.getWord('Strategic')}}</span>
+                            </label>
+                            <label class="radio radio-inline">
+                                <input type="radio" class="radiobox" name="strategic{{scopeId}}" ng-model="asset.strategic"
+                                       value="false"
+                                       ng-required="!asset.strategic"
+                                       ng-disabled="disableForm">
+                                <span>{{$root.getWord('Not Strategic')}}</span>
+                            </label>
+                            <p class="help-block" ng-show="!asset.strategic">{{$root.getWord('Strategic type is required!')}}</p>
+                        </ng-form>
                     </div>
                 </div>
             </div>
@@ -40,27 +45,27 @@
         <br>
         <fieldset ng-show="hasSubTree">
             <div class="row">
-                <div class="col-md-6" ng-class="{ 'has-error' : assetGroupName.assetGroupName.$invalid }">
+                <div class="col-md-6" ng-class="{ 'has-error' : !asset.name && asset.assetType == 'ASSET_GROUP' }">
                     <ng-form name="assetGroupName">
                         <label class="control-label">{{$root.getWord('Asset Group Name')}}</label>
                         <div class="col-md-12">
                             <input class="form-control" placeholder="{{$root.getWord('Type something')}}..." type="text"
                                    list="groupNames" name="assetGroupName" ng-model="asset.name" ng-disabled="disableForm"
-                                    required>
+                                    ng-required="!asset.name && asset.assetType == 'ASSET_GROUP'">
                             <datalist id="groupNames">
                                 <option ng-repeat="name in names" value="{{name}}">{{name}}</option>
                             </datalist>
-                            <p class="help-block" ng-show="assetGroupName.assetGroupName.$invalid">{{$root.getWord('Asset Group Name is required!')}}</p>
+                            <p class="help-block" ng-show="!asset.name && asset.assetType == 'ASSET_GROUP'">{{$root.getWord('Asset Group Name is required!')}}</p>
                         </div>
                     </ng-form>
                 </div>
-                <div class="col-md-6" ng-class="{ 'has-error' : assetGroupCode.assetGroupCode.$invalid }">
+                <div class="col-md-6" ng-class="{ 'has-error' : !asset.code && asset.assetType == 'ASSET_GROUP' }">
                     <ng-form name="assetGroupCode">
                         <label class="control-label">{{$root.getWord('Asset Code')}}</label>
                         <div class="col-md-12">
                             <input type="text" name="assetGroupCode" class="form-control"
-                                   ng-model="asset.code" ng-disabled="disableForm" required>
-                            <p class="help-block" ng-show="assetGroupCode.assetGroupCode.$invalid">
+                                   ng-model="asset.code" ng-disabled="disableForm" ng-required="!asset.code && asset.assetType == 'ASSET_GROUP'">
+                            <p class="help-block" ng-show="!asset.code && asset.assetType == 'ASSET_GROUP'">
                                 {{$root.getWord('Asset Code is required!')}}</p>
                         </div>
                     </ng-form>
@@ -69,40 +74,45 @@
         </fieldset>
         <fieldset ng-hide="hasSubTree">
             <div class="row">
-                <div class="col-md-6" ng-class="{ 'has-error' : assetName.assetName.$invalid }">
+                <div class="col-md-6" ng-class="{ 'has-error' : !asset.name && asset.assetType!= 'ASSET_GROUP' }">
                     <ng-form name="assetName">
                     <label class="control-label">{{$root.getWord('Asset Name')}}</label>
                     <div class="col-md-12">
                         <input class="form-control" placeholder="{{$root.getWord('Type something')}}..." type="text"
-                               list="names" name="assetName" ng-model="asset.name" ng-disabled="disableForm" required>
+                               list="names" name="assetName" ng-model="asset.name" ng-disabled="disableForm"
+                        ng-required="!asset.name && asset.assetType!= 'ASSET_GROUP'">
                         <datalist id="names">
                             <option ng-repeat="name in names" value="{{name}}">{{name}}</option>
                         </datalist>
-                        <p class="help-block" ng-show="assetName.assetName.$invalid">{{$root.getWord('Asset Name is required!')}}</p>
+                        <p class="help-block" ng-show="!asset.name && asset.assetType!= 'ASSET_GROUP'">{{$root.getWord('Asset Name is required!')}}</p>
                     </div>
                     </ng-form>
                 </div>
 
-                <div class="col-md-6" ng-class="{ 'has-error' : assetName.assetName.$invalid }">
+                <div class="col-md-6" ng-class="{ 'has-error' : !asset.code && asset.assetType!= 'ASSET_GROUP' }">
                     <ng-form name="assetCode">
                     <label class="control-label">{{$root.getWord('Asset Code')}}</label>
                     <div class="col-md-12">
                         <input type="text" name="assetCode" class="form-control" ng-model="asset.code"
-                               ng-disabled="disableForm" required>
+                               ng-disabled="disableForm" ng-required="!asset.code && asset.assetType!= 'ASSET_GROUP'">
+                    <p class="help-block" ng-show="!asset.code && asset.assetType!= 'ASSET_GROUP'">{{$root.getWord('Asset Code is required!')}}</p>
                     </div>
-                    <p class="help-block" ng-show="assetCode.assetCode.$invalid">{{$root.getWord('Asset Code is required!')}}</p>
                     </ng-form>
                 </div>
             </div>
             <div class="row">
                 <div ng-show="assetSpecificationTypeSelect">
-                    <div class="col-md-6">
-                        <label class="control-label">{{$root.getWord('Asset Type')}}</label>
-                        <div class="col-md-12">
-                            <select class="form-control" ng-model="asset.assetSpecificationTypeId"
-                                    ng-change="assetSpecificationTypeIdChange()" ng-disabled="disableForm"
-                                    ng-options="assetSpecificationType.id as assetSpecificationType.name for assetSpecificationType in assetSpecificationTypes"></select>
-                        </div>
+                    <div class="col-md-6" ng-class="{ 'has-error' : !asset.assetSpecificationTypeName && asset.assetType!= 'ASSET_GROUP' }">
+                        <ng-form name="assetType">
+                            <label class="control-label">{{$root.getWord('Asset Type')}}</label>
+                            <div class="col-md-12">
+                                <select class="form-control" name="assetType" ng-model="asset.assetSpecificationTypeId"
+                                        ng-required="!asset.assetSpecificationTypeName && asset.assetType!= 'ASSET_GROUP'"
+                                        ng-change="assetSpecificationTypeIdChange()" ng-disabled="disableForm"
+                                        ng-options="assetSpecificationType.id as assetSpecificationType.name for assetSpecificationType in assetSpecificationTypes"></select>
+                            <p class="help-block" ng-show="!asset.assetSpecificationTypeName && asset.assetType!= 'ASSET_GROUP'">{{$root.getWord('Asset Type is required!')}}</p>
+                            </div>
+                        </ng-form>
                     </div>
                     <div class="col-md-6" ng-hide="disableForm">
                         <label class="control-label">&nbsp;</label>
@@ -114,13 +124,17 @@
                 </div>
 
                 <div ng-hide="assetSpecificationTypeSelect">
-                    <div class="col-md-6">
-                        <label class="control-label">{{$root.getWord('Asset Type')}}</label>
-                        <div class="col-md-12">
-                            <input class="form-control" placeholder="{{$root.getWord('Type something')}}..." type="text"
-                                   ng-disabled="disableForm"
-                                   ng-model="asset.assetSpecificationTypeName">
-                        </div>
+                    <div class="col-md-6" ng-class="{ 'has-error' : !asset.assetSpecificationTypeName && asset.assetType!= 'ASSET_GROUP' }">
+                        <ng-form name="assetType">
+                            <label class="control-label">{{$root.getWord('Asset Type')}}</label>
+                            <div class="col-md-12">
+                                <input class="form-control" name="assetType" placeholder="{{$root.getWord('Type something')}}..." type="text"
+                                       ng-required="!asset.assetSpecificationTypeId && asset.assetType!= 'ASSET_GROUP'"
+                                       ng-disabled="disableForm"
+                                       ng-model="asset.assetSpecificationTypeName">
+                            <p class="help-block" ng-show="!asset.assetSpecificationTypeName && asset.assetType!= 'ASSET_GROUP'">{{$root.getWord('Asset Type is required!')}}</p>
+                            </div>
+                        </ng-form>
                     </div>
                     <div class="col-md-6">
                         <label class="control-label">&nbsp;</label>
@@ -169,31 +183,34 @@
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <div class="col-md-6 no-padding">
-                        <label class="control-label">{{$root.getWord('Capacity')}}</label>
-
-                        <div class="col-md-12">
-                        <span ng-if="disableForm">
-                            <input class="form-control" value="1"
-                                   min="1" ng-model="asset.capacity" ng-disabled="disableForm">
-                        </span>
+                    <div class="col-md-6 no-padding" ng-class="{ 'has-error' : !asset.capacity && asset.assetType!= 'ASSET_GROUP' }">
+                        <ng-form name="assetCapacity">
+                            <label class="control-label">{{$root.getWord('Capacity')}}</label>
+                            <div class="col-md-12">
+                            <span ng-if="disableForm">
+                                <input class="form-control" value="1" type="number"
+                                       min="1" ng-model="asset.capacity" ng-disabled="disableForm">
+                            </span>
                             <span ng-if="!disableForm">
-                            <input class="form-control" name="spinner" value="1"
-                                   min="1" ng-model="asset.capacity">
-                        </span>
-
-                        </div>
+                                <input class="form-control" name="capacity" type="number" name="spinner" value="1"
+                                       min="1" ng-required="!asset.capacity && asset.assetType!= 'ASSET_GROUP' " ng-model="asset.capacity">
+                            </span>
+                            <p class="help-block" ng-show="!asset.capacity && asset.assetType!= 'ASSET_GROUP' ">{{$root.getWord('Capacity is required!')}}</p>
+                            </div>
+                        </ng-form>
                     </div>
-                    <div class="col-md-6 no-padding">
-                        <label class="control-label">{{$root.getWord('Capacity Unit')}}</label>
-
-                        <div class="col-md-12">
-                            <input class="form-control" placeholder="{{$root.getWord('Type something')}}..." type="text"
-                                   list="locations" ng-model="asset.unit" ng-disabled="disableForm">
-                            <datalist id="capacityUnit">
-                                <option ng-repeat="location in locations" value="{{location}}">{{location}}</option>
-                            </datalist>
-                        </div>
+                    <div class="col-md-6 no-padding" ng-class="{ 'has-error' : !asset.unit && asset.assetType!= 'ASSET_GROUP' }">
+                        <ng-form name="assetCapacityUnit">
+                            <label class="control-label">{{$root.getWord('Capacity Unit')}}</label>
+                                <div class="col-md-12">
+                                <input class="form-control" name="capacityUnit" placeholder="{{$root.getWord('Type something')}}..." type="text"
+                                       ng-required="!asset.unit && asset.assetType!= 'ASSET_GROUP'" list="locations" ng-model="asset.unit" ng-disabled="disableForm">
+                                <datalist id="capacityUnit">
+                                    <option ng-repeat="location in locations" value="{{location}}">{{location}}</option>
+                                </datalist>
+                            <p class="help-block" ng-show="!asset.unit && asset.assetType!= 'ASSET_GROUP'">{{$root.getWord('Capacity unit is required!')}}</p>
+                            </div>
+                        </ng-form>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -220,13 +237,16 @@
                     </div>
                 </div>
 
-                <div class="col-md-6 ">
-                    <label class="control-label">{{$root.getWord('Manufacture Year')}}</label>
-                    <div class="col-md-12">
-                        <select class="form-control" ng-model="asset.year" ng-disabled="disableForm"
-                                ng-options="o as o for o in years">
-                        </select> <i></i>
-                    </div>
+                <div class="col-md-6 " ng-class="{ 'has-error' : !asset.year && asset.assetType!= 'ASSET_GROUP' }">
+                    <ng-form name="assetManufactureYear">
+                        <label class="control-label">{{$root.getWord('Manufacture Year')}}</label>
+                        <div class="col-md-12">
+                            <select class="form-control" name="manufactureYear" ng-model="asset.year" ng-disabled="disableForm"
+                                    ng-required="!asset.year && asset.assetType!= 'ASSET_GROUP'" ng-options="o as o for o in years">
+                            </select>
+                            <p class="help-block" ng-show="!asset.year && asset.assetType!= 'ASSET_GROUP'">{{$root.getWord('Manufacture Year is required!')}}</p>
+                        </div>
+                    </ng-form>
                 </div>
             </div>
             <div class="row">

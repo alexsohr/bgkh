@@ -143,9 +143,7 @@ angular.module('app').directive('assetsImportWizardForm', function () {
 
             wizard.on('finished.fu.wizard', function (evt, data) {
                 evt.preventDefault();
-                if (data.step > 1 && data.direction === 'next' && !forms[data.step].$valid) {
-                }
-                else {
+                if (forms[forms.length - 1].$valid) {
                     evt.preventDefault();
                     console.log("Form finished");
                     $('.asset-import-form', $(evt.currentTarget)).triggerHandler('submit');
@@ -155,12 +153,15 @@ angular.module('app').directive('assetsImportWizardForm', function () {
 
             wizard.on('changed.fu.wizard', function (evt, data) {
                 if (data.step > 1 && data.direction === 'next' && !forms[data.step].$valid) {
+                    console.log(forms[data.step]);
                     evt.preventDefault();
                 }
             });
             wizard.on('actionclicked.fu.wizard', function (evt, data) {
-                if (data.step > 1)
+                if (data.step > 1) {
+                    console.log(forms[data.step]);
                     console.log("form step " +data.step + " validation is " + forms[data.step].$valid);
+                }
                 if (data.step > 1 && data.direction === 'next' && !forms[data.step].$valid) {
                     evt.preventDefault();
                 }
