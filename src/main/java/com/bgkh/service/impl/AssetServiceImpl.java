@@ -227,6 +227,12 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
+    public List<String> findAllCapacityUnits() {
+        List<String> allCapacityUnits = assetRepository.findAllCapacityUnits();
+        return allCapacityUnits;
+    }
+
+    @Override
     public List<String> findAllAssetNames() {
         List<String> allManufactures = assetRepository.findAllAssetNames();
         return allManufactures;
@@ -252,10 +258,11 @@ public class AssetServiceImpl implements AssetService {
         return assetDTO;
     }
 
-    private void findAllChildrens(Long id, List<Asset> assets) {
-        assets = assetRepository.findAllByParentId(id);
-        for (Asset asset: assets) {
-            findAllChildrens(asset.getId(), assets);
+    private void findAllChildren(Long id, List<Asset> assets) {
+        List<Asset> allByParentId = assetRepository.findAllByParentId(id);
+        assets.addAll(allByParentId);
+        for (Asset asset: allByParentId) {
+            findAllChildren(asset.getId(), assets);
         }
     }
     /**
@@ -263,12 +270,16 @@ public class AssetServiceImpl implements AssetService {
      *
      * @param id the id of the entity
      */
+    @Transactional
     public void delete(Long id) {
         log.debug("Request to delete Asset : {}", id);
-        Asset asset = assetRepository.findOneWithEagerRelationships(id);
+        Asset asset = assetRepository.findOne(id);
         List<Asset> assets = new ArrayList<>();
+        findAllChildren(id, assets);
         assets.add(asset);
-        findAllChildrens(id, assets);
+        log.debug("*********************************************");
+        log.debug(assets.toString());
+        log.debug("*********************************************");
         assetRepository.delete(assets);
     }
 }

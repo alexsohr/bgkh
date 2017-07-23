@@ -32,15 +32,15 @@ public class Asset implements Serializable {
     private Long parentId;
 
     @NotNull
-    @Size(min = 3, max = 100)
+    @Size(min = 1, max = 100)
     @Column(name = "name", length = 100, nullable = false)
     private String name;
 
-    @Size(min = 3, max = 250)
+    @Size(min = 1, max = 250)
     @Column(name = "location", length = 250)
     private String location;
 
-    @Size(min = 3, max = 500)
+    @Size(min = 1, max = 500)
     @Column(name = "details", length = 500)
     private String details;
 
@@ -82,19 +82,22 @@ public class Asset implements Serializable {
     @ManyToOne
     private User technician;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JoinTable(name = "asset_maps",
                joinColumns = @JoinColumn(name="assets_id", referencedColumnName="ID"),
                inverseJoinColumns = @JoinColumn(name="maps_id", referencedColumnName="ID"))
     private Set<UploadFile> maps = new HashSet<>();
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JoinTable(name = "asset_other_files",
                joinColumns = @JoinColumn(name="assets_id", referencedColumnName="ID"),
                inverseJoinColumns = @JoinColumn(name="other_files_id", referencedColumnName="ID"))
     private Set<UploadFile> otherFiles = new HashSet<>();
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy="asset")
+    private Set<AssetSpecificationTypeValue> assetSpecificationTypeValues;
 
     @ManyToOne
     private AssetSpecificationType assetSpecificationType;
@@ -372,6 +375,14 @@ public class Asset implements Serializable {
             return false;
         }
         return Objects.equals(id, asset.id);
+    }
+
+    public Set<AssetSpecificationTypeValue> getAssetSpecificationTypeValues() {
+        return assetSpecificationTypeValues;
+    }
+
+    public void setAssetSpecificationTypeValues(Set<AssetSpecificationTypeValue> assetSpecificationTypeValues) {
+        this.assetSpecificationTypeValues = assetSpecificationTypeValues;
     }
 
     @Override

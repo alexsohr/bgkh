@@ -3,6 +3,7 @@ package com.bgkh.service;
 import com.bgkh.service.dto.AssetDTO;
 import com.bgkh.service.dto.AssetDTOs;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -43,6 +44,8 @@ public interface AssetService {
 
 
     List<String> findAllManufactures();
+
+    List<String> findAllCapacityUnits();
 
     List<String> findAllAssetNames();
 

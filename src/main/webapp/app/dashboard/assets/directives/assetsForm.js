@@ -15,7 +15,7 @@ angular.module('app').directive('assetsForm', function () {
             isValidCallBack: '&',
             updateAssetCallback: '&?'
         },
-        controller: function ($scope, $filter, $compile, User, UploadFile, AssetManufacture, AssetNames, AssetLocations, Upload, AssetSpecificationType, AssetSpecificationTypeFieldByType, AssetSpecificationTypeValue, AlertService) {
+        controller: function ($scope, $filter, $compile, User, UploadFile, AssetManufacture, AssetCapacityUnit, AssetNames, AssetLocations, Upload, AssetSpecificationType, AssetSpecificationTypeFieldByType, AssetSpecificationTypeValue, AlertService) {
 
             if (angular.isUndefinedOrNull($scope.currentStep)) {
                 $scope.currentStep = 1;
@@ -24,6 +24,7 @@ angular.module('app').directive('assetsForm', function () {
             $scope.disableForm = false;
             $scope.users = [];
             $scope.manufactures = [];
+            $scope.capacityUnits = [];
             $scope.locations = [];
             $scope.names = [];
             $scope.scopeId = $scope.$id;
@@ -42,6 +43,7 @@ angular.module('app').directive('assetsForm', function () {
 
             loadAllAssetSpecificationTypes();
             loadAllManufactures();
+            loadAllCapacityUnit();
             loadAllLocations();
             loadAllNames();
             loadAllUsers();
@@ -101,6 +103,10 @@ angular.module('app').directive('assetsForm', function () {
                 AssetManufacture.query({}, onSuccessManufacture, onError);
             }
 
+            function loadAllCapacityUnit() {
+                AssetCapacityUnit.query({}, onSuccessCapacityUnit, onError);
+            }
+
             function loadAllNames() {
                 AssetNames.query({}, function (data) {
                     $scope.names = data
@@ -132,6 +138,11 @@ angular.module('app').directive('assetsForm', function () {
                 $scope.manufactures = data;
             }
 
+            function onSuccessCapacityUnit(data) {
+                $scope.capacityUnits = data;
+                console.log($scope.capacityUnits);
+            }
+
             function onSuccess(data) {
                 for (var i = 0; i < data.length; i++) {
                     if (angular.isUndefinedOrNull(data[i].firstName) && angular.isUndefinedOrNull(data[i].lastName)) {
@@ -150,6 +161,7 @@ angular.module('app').directive('assetsForm', function () {
 
 
             $scope.assetSpecificationTypeIdChange = function () {
+                $scope.asset.assetSpecificationTypeName = null;
                 loadAllAssetSpecificationTypeFields($scope.asset.assetSpecificationTypeId);
             };
 

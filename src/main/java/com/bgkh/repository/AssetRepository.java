@@ -23,6 +23,9 @@ public interface AssetRepository extends JpaRepository<Asset,Long> {
     @Query("select asset.manufacture from Asset asset where asset.manufacture <> '' AND asset.manufacture is not null group by asset.manufacture")
     List<String> findAllManufactures();
 
+    @Query("select asset.unit from Asset asset where asset.unit <> '' AND asset.unit is not null group by asset.unit")
+    List<String> findAllCapacityUnits();
+
     @Query("select asset.name from Asset asset where asset.code <> 'ROOT' group by asset.name")
     List<String> findAllAssetNames();
 

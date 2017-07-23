@@ -102,15 +102,15 @@
             </div>
             <div class="row">
                 <div ng-show="assetSpecificationTypeSelect">
-                    <div class="col-md-6" ng-class="{ 'has-error' : !asset.assetSpecificationTypeName && asset.assetType!= 'ASSET_GROUP' }">
+                    <div class="col-md-6" ng-class="{ 'has-error' : !asset.assetSpecificationTypeId && asset.assetType!= 'ASSET_GROUP' }">
                         <ng-form name="assetType">
                             <label class="control-label">{{$root.getWord('Asset Type')}}</label>
                             <div class="col-md-12">
                                 <select class="form-control" name="assetType" ng-model="asset.assetSpecificationTypeId"
-                                        ng-required="!asset.assetSpecificationTypeName && asset.assetType!= 'ASSET_GROUP'"
+                                        ng-required="!asset.assetSpecificationTypeId && asset.assetType!= 'ASSET_GROUP'"
                                         ng-change="assetSpecificationTypeIdChange()" ng-disabled="disableForm"
                                         ng-options="assetSpecificationType.id as assetSpecificationType.name for assetSpecificationType in assetSpecificationTypes"></select>
-                            <p class="help-block" ng-show="!asset.assetSpecificationTypeName && asset.assetType!= 'ASSET_GROUP'">{{$root.getWord('Asset Type is required!')}}</p>
+                            <p class="help-block" ng-show="!asset.assetSpecificationTypeId && asset.assetType!= 'ASSET_GROUP'">{{$root.getWord('Asset Type is required!')}}</p>
                             </div>
                         </ng-form>
                     </div>
@@ -129,7 +129,7 @@
                             <label class="control-label">{{$root.getWord('Asset Type')}}</label>
                             <div class="col-md-12">
                                 <input class="form-control" name="assetType" placeholder="{{$root.getWord('Type something')}}..." type="text"
-                                       ng-required="!asset.assetSpecificationTypeId && asset.assetType!= 'ASSET_GROUP'"
+                                       ng-required="!asset.assetSpecificationTypeName && asset.assetType!= 'ASSET_GROUP'"
                                        ng-disabled="disableForm"
                                        ng-model="asset.assetSpecificationTypeName">
                             <p class="help-block" ng-show="!asset.assetSpecificationTypeName && asset.assetType!= 'ASSET_GROUP'">{{$root.getWord('Asset Type is required!')}}</p>
@@ -206,7 +206,7 @@
                                 <input class="form-control" name="capacityUnit" placeholder="{{$root.getWord('Type something')}}..." type="text"
                                        ng-required="!asset.unit && asset.assetType!= 'ASSET_GROUP'" list="locations" ng-model="asset.unit" ng-disabled="disableForm">
                                 <datalist id="capacityUnit">
-                                    <option ng-repeat="location in locations" value="{{location}}">{{location}}</option>
+                                    <option ng-repeat="capacityUnit in capacityUnits" value="{{capacityUnit}}">{{capacityUnit}}</option>
                                 </datalist>
                             <p class="help-block" ng-show="!asset.unit && asset.assetType!= 'ASSET_GROUP'">{{$root.getWord('Capacity unit is required!')}}</p>
                             </div>

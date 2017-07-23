@@ -5187,6 +5187,7 @@ angular.module('app').controller('TodoCtrl', ["$scope", "$timeout", "Todo", func
         .factory('AssetImport', AssetImport)
         .factory('AssetCopy', AssetCopy)
         .factory('AssetManufacture', AssetManufacture)
+        .factory('AssetCapacityUnit', AssetCapacityUnit)
         .factory('AssetNames', AssetNames)
         .factory('AssetLocations', AssetLocations);
 
@@ -5194,11 +5195,19 @@ angular.module('app').controller('TodoCtrl', ["$scope", "$timeout", "Todo", func
     AssetImport.$inject = ['$resource'];
     AssetCopy.$inject = ['$resource'];
     AssetManufacture.$inject = ['$resource'];
+    AssetCapacityUnit.$inject = ['$resource'];
     AssetLocations.$inject = ['$resource'];
     AssetNames.$inject = ['$resource'];
 
     function AssetManufacture($resource) {
         var resourceUrl = 'api/assets/manufactures';
+        return $resource(resourceUrl, {}, {
+            'query': { method: 'GET', isArray: true}
+        });
+    }
+
+    function AssetCapacityUnit($resource) {
+        var resourceUrl = 'api/assets/capacityUnits';
         return $resource(resourceUrl, {}, {
             'query': { method: 'GET', isArray: true}
         });
@@ -8378,6 +8387,100 @@ angular
 
     }]);
 
+'use strict';
+
+angular
+    .module('app')
+    .factory('Principal', ["$q", "Account", function ($q, Account) {
+        var _identity,
+            _authenticated = false;
+
+        var service = {
+            authenticate: authenticate,
+            hasAnyAuthority: hasAnyAuthority,
+            hasAuthority: hasAuthority,
+            identity: identity,
+            isAuthenticated: isAuthenticated,
+            isIdentityResolved: isIdentityResolved
+        };
+
+        return service;
+
+        function authenticate(identity) {
+            _identity = identity;
+            _authenticated = identity !== null;
+        }
+
+        function hasAnyAuthority(authorities) {
+            if (!_authenticated || !_identity || !_identity.authorities) {
+                return false;
+            }
+
+            for (var i = 0; i < authorities.length; i++) {
+                if (_identity.authorities.indexOf(authorities[i]) !== -1) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        function hasAuthority(authority) {
+            if (!_authenticated) {
+                return $q.when(false);
+            }
+
+            return this.identity().then(function (_id) {
+                return _id.authorities && _id.authorities.indexOf(authority) !== -1;
+            }, function () {
+                return false;
+            });
+        }
+
+        function identity(force) {
+            var deferred = $q.defer();
+
+            if (force === true) {
+                _identity = undefined;
+            }
+
+            // check and see if we have retrieved the identity data from the server.
+            // if we have, reuse it by immediately resolving
+            if (angular.isDefined(_identity)) {
+                deferred.resolve(_identity);
+
+                return deferred.promise;
+            }
+
+            // retrieve the identity data from the server, update the identity object, and then resolve.
+            Account.get().$promise
+                .then(getAccountThen)
+                .catch(getAccountCatch);
+
+            return deferred.promise;
+
+            function getAccountThen(account) {
+                _identity = account.data;
+                _authenticated = true;
+                deferred.resolve(_identity);
+            }
+
+            function getAccountCatch() {
+                _identity = null;
+                _authenticated = false;
+                deferred.resolve(_identity);
+            }
+        }
+
+        function isAuthenticated() {
+            return _authenticated;
+        }
+
+        function isIdentityResolved() {
+            return angular.isDefined(_identity);
+        }
+    }]);
+
 (function(){angular.module("app").run(["$templateCache", function($templateCache) {$templateCache.put("app/dashboard/live-feeds.tpl.html","<div jarvis-widget id=\"live-feeds-widget\" data-widget-togglebutton=\"false\" data-widget-editbutton=\"false\" data-widget-fullscreenbutton=\"false\" data-widget-colorbutton=\"false\" data-widget-deletebutton=\"false\"><!-- widget options:\r\n    usage: <div class=\"jarviswidget\" id=\"wid-id-0\" data-widget-editbutton=\"false\">\r\n\r\n    data-widget-colorbutton=\"false\"\r\n    data-widget-editbutton=\"false\"\r\n    data-widget-togglebutton=\"false\"\r\n    data-widget-deletebutton=\"false\"\r\n    data-widget-fullscreenbutton=\"false\"\r\n    data-widget-custombutton=\"false\"\r\n    data-widget-collapsed=\"true\"\r\n    data-widget-sortable=\"false\"\r\n\r\n    --><header><span class=\"widget-icon\"><i class=\"glyphicon glyphicon-stats txt-color-darken\"></i></span><h2>{{getWord(\'Statistics\')}}</h2><ul class=\"nav nav-tabs pull-right in\" id=\"myTab\"><li class=\"active\"><a data-toggle=\"tab\" href=\"#s1\"><i class=\"fa fa-clock-o\"></i> {{getWord(\'Work time/Designated time\')}}</a></li><li><a data-toggle=\"tab\" href=\"#s2\"><i class=\"fa fa-bolt\"></i> <span class=\"hidden-mobile hidden-tablet\">{{getWord(\'Electricity & Water/Time\')}}</span></a></li></ul></header><!-- widget div--><div class=\"no-padding\"><div class=\"widget-body\"><!-- content --><div id=\"myTabContent\" class=\"tab-content\"><div class=\"tab-pane fade active in padding-10 no-padding-bottom\" id=\"s1\"><div class=\"widget-body-toolbar bg-color-white\"><div class=\"col-sm-12 col-md-12 col-lg-8\"><form class=\"form-inline\" role=\"form\"><div class=\"form-group\"><label>{{getWord(\'From/To\')}}</label><div class=\"input-group\"><input type=\"text\" class=\"form-control\" style=\"direction: ltr\" data-smart-masked-input=\"1399/99/99\" data-mask-placeholder=\"-\"> <span class=\"input-group-addon\"><i class=\"fa fa-calendar\"></i></span></div><div class=\"input-group\"><input type=\"text\" class=\"form-control\" style=\"direction: ltr\" data-smart-masked-input=\"1399/99/99\" data-mask-placeholder=\"-\"> <span class=\"input-group-addon\"><i class=\"fa fa-calendar\"></i></span></div></div></form></div><div class=\"col-sm-12 col-md-12 col-lg-4\"><div class=\"smart-form\" id=\"work-toggles\"><div class=\"inline-group pull-right\"><label for=\"gra-0\" class=\"checkbox\"><input type=\"checkbox\" id=\"gra-0\" ng-model=\"workOrderShow\"> <i></i> {{getWord(\'Work orders time\')}}</label><label for=\"gra-1\" class=\"checkbox\"><input type=\"checkbox\" id=\"gra-1\" ng-model=\"designatedTimeShow\"> <i></i> {{getWord(\'Designated time\')}}</label></div></div></div></div><div class=\"padding-10\"><div id=\"statsChart\" class=\"chart-large has-legend-unique\" flot-basic flot-data=\"statsData\" flot-options=\"statsDisplayOptions\"></div></div></div><!-- end s2 tab pane --><div class=\"tab-pane fade in padding-10 no-padding-bottom\" id=\"s2\"><div class=\"widget-body-toolbar bg-color-white smart-form\" id=\"rev-toggles\"><div class=\"inline-group\"><label for=\"gra-3\" class=\"checkbox\"><input type=\"checkbox\" id=\"gra-3\" ng-model=\"electricityShow\"> <i></i> {{getWord(\'Electricity\')}}</label><label for=\"gra-4\" class=\"checkbox\"><input type=\"checkbox\" id=\"gra-4\" ng-model=\"waterShow\"> <i></i> {{getWord(\'Water\')}}</label></div></div><div class=\"padding-10\"><div id=\"flotcontainer\" class=\"chart-large has-legend-unique padding-10\" flot-basic flot-data=\"revenewData\" flot-options=\"revenewDisplayOptions\"></div></div></div><!-- end s3 tab pane --></div><!-- end content --></div></div><!-- end widget div --></div>");
 $templateCache.put("app/home/welcome.tpl.html","<!-- MAIN CONTENT --><div id=\"content\"><!-- widget grid --><section id=\"widget-grid1\" widget-grid><!-- row --><div class=\"row\"><article class=\"col-sm-6 span7 center\"><div jarvis-widget data-widget-editbutton=\"false\" data-widget-deletebutton=\"false\" data-widget-fullscreenbutton=\"false\" data-widget-togglebutton=\"false\" data-widget-color=\"blue\"><header><span class=\"widget-icon\"><i class=\"fa fa-user txt-color-white\"></i></span><h2>Login</h2></header><!-- widget div--><div><div class=\"widget-body no-padding\"><!-- content goes here --><div class=\"row\"><div class=\"col-md-4 col-md-offset-4\"><h1></h1></div><div class=\"col-md-8 col-md-offset-2\"><div class=\"alert alert-danger\" ng-show=\"vm.authenticationError\"><strong>Failed to sign in!</strong> Please check your credentials and try again.</div></div><div class=\"col-md-8 col-md-offset-2\"><form class=\"form\" role=\"form\" ng-submit=\"vm.login($event)\"><div class=\"form-group\"><label for=\"username\">Login</label><input type=\"text\" class=\"form-control\" id=\"username\" placeholder=\"Your username\" ng-model=\"vm.username\"></div><div class=\"form-group\"><label for=\"password\">Password</label><input type=\"password\" class=\"form-control\" id=\"password\" placeholder=\"Your password\" ng-model=\"vm.password\"></div><div class=\"form-group\"><label for=\"rememberMe\"><input type=\"checkbox\" id=\"rememberMe\" ng-model=\"vm.rememberMe\" checked=\"checked\"> <span>Remember me</span></label></div><button type=\"submit\" class=\"btn btn-primary\">Sign in</button></form><p></p><div>&nbsp;</div><!--<div class=\"alert alert-warning\">--><!--<a class=\"alert-link\" href=\"\" ng-click=\"vm.requestResetPassword()\">Did you--><!--forget--><!--your--><!--password?</a>--><!--</div>--><!--<div class=\"alert alert-warning\">--><!--You don\'t have an account yet? <a class=\"alert-link\" href=\"\"--><!--ng-click=\"vm.register()\">Register a--><!--new--><!--account</a>--><!--</div>--></div></div><!-- end content --></div></div><!-- end widget div --></div></article></div></section></div>");
 $templateCache.put("app/layout/layout.tpl.html","<!-- HEADER --><div data-smart-include=\"app/layout/partials/header.tpl.html\" class=\"placeholder-header\"></div><!-- END HEADER --><!-- Left panel : Navigation area --><!-- Note: This width of the aside area can be adjusted through LESS variables --><div data-smart-include=\"app/layout/partials/navigation.tpl.html\" class=\"placeholder-left-panel\"></div><!-- END NAVIGATION --><!-- MAIN PANEL --><div id=\"main\" role=\"main\"><demo-states></demo-states><!-- RIBBON --><div id=\"ribbon\"><span class=\"ribbon-button-alignment\"><span id=\"refresh\" class=\"btn btn-ribbon\" reset-widgets tooltip-placement=\"bottom\" smart-tooltip-html=\"<i class=\'text-warning fa fa-warning\'></i> Warning! This will reset all your widget settings.\"><i class=\"fa fa-refresh\"></i> </span></span><!-- breadcrumb --><state-breadcrumbs></state-breadcrumbs><!-- end breadcrumb --></div><!-- END RIBBON --><div data-smart-router-animation-wrap=\"content content@app\" data-wrap-for=\"#content\"><div data-ui-view=\"content\" data-autoscroll=\"false\"></div></div></div><!-- END MAIN PANEL --><!-- PAGE FOOTER --><div data-smart-include=\"app/layout/partials/footer.tpl.html\"></div><div data-smart-include=\"app/layout/shortcut/shortcut.tpl.html\"></div><!-- END PAGE FOOTER -->");
@@ -8400,7 +8503,7 @@ $templateCache.put("app/_common/modal/directives/reusable-modal.tpl.html","<div>
 $templateCache.put("app/dashboard/assets/directives/asset-copy-form.tpl.html","<div><form name=\"assetCopyForm\" class=\"asset-copy-form form-group\" role=\"form\" novalidate show-validation ng-submit=\"assetCopyVm.save()\"><div class=\"modal-header\"><button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\" ng-click=\"assetCopyVm.clear()\">&times;</button><h4 class=\"modal-title\" id=\"myAssetLabel\">Copy a Asset</h4></div><div class=\"modal-body\"><div class=\"step-content\"><input type=\"hidden\" ng-model=\"assetCopyVm.asset.id\" name=\"id\"> <input type=\"hidden\" ng-model=\"assetCopyVm.asset.parentId\" name=\"parentId\"><assets-tree-grid-checkbox selected-tree-node=\"duplicatedAsset\" on-select=\"assetCopyVm.selectedParentTree(branch)\"></assets-tree-grid-checkbox></div><div class=\"modal-footer\"><button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" ng-click=\"assetCopyVm.clear()\"><span class=\"glyphicon glyphicon-ban-circle\"></span>&nbsp;<span>Cancel</span></button> <button type=\"submit\" ng-disabled=\"copyForm.$invalid || assetCopyVm.isSaving\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-save\"></span>&nbsp;<span>Save</span></button></div></div></form></div>");
 $templateCache.put("app/dashboard/assets/directives/asset-detail-form.tpl.html","<div><form name=\"assetDetailForm\" class=\"asset-detail-form form-group\" role=\"form\" novalidate show-validation><div class=\"modal-header\"><button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\" ng-click=\"assetEditVm.clear()\">&times;</button><h4 class=\"modal-title\" id=\"myAssetLabel\">Create or edit a Asset</h4></div><div class=\"modal-body\"><div class=\"step-content\"><assets-form asset=\"assetEditVm.asset\" data-display-details=\"true\"></assets-form></div><div class=\"modal-footer\"><button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" ng-click=\"assetEditVm.clear()\"><span class=\"glyphicon glyphicon-ban-circle\"></span>&nbsp;<span>Cancel</span></button></div></div></form></div>");
 $templateCache.put("app/dashboard/assets/directives/asset-edit-form.tpl.html","<div><form name=\"assetEditForm\" class=\"asset-edit-form form-group\" role=\"form\" novalidate show-validation ng-submit=\"assetEditVm.save()\"><div class=\"modal-header\"><button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\" ng-click=\"assetEditVm.clear()\">&times;</button><h4 class=\"modal-title\" id=\"myAssetLabel\">Create or edit a Asset</h4></div><div class=\"modal-body\"><div class=\"step-content\"><assets-form asset=\"assetEditVm.asset\"></assets-form></div><div class=\"modal-footer\"><button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" ng-click=\"assetEditVm.clear()\"><span class=\"glyphicon glyphicon-ban-circle\"></span>&nbsp;<span>Cancel</span></button> <button type=\"submit\" ng-disabled=\"editForm.$invalid || assetEditVm.isSaving\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-save\"></span>&nbsp;<span>Save</span></button></div></div></form></div>");
-$templateCache.put("app/dashboard/assets/directives/asset-form.tpl.html","<div class=\"form-horizontal\"><form name=\"forms.assetImportWizardForm\" novalidate><header>{{$root.getWord(\'Asset Details\')}}</header><input type=\"hidden\" name=\"assetParent[{{currentStep}}]\" value=\"{{parentStep}}\"><fieldset><div class=\"row\"><div class=\"col-md-12\"><label class=\"control-label\">{{$root.getWord(\'Type\')}}</label><div class=\"col-md-12\"><select class=\"form-control\" ng-model=\"asset.assetType\" ng-disabled=\"disableForm\" ng-change=\"toggleAssetForm()\"><option value=\"ASSET_GROUP\">{{$root.getWord(\'Asset Group\')}}</option><option value=\"ASSET\">{{$root.getWord(\'Asset\')}}</option><option value=\"SUB_ASSET\">{{$root.getWord(\'Sub Asset\')}}</option></select></div></div></div><div class=\"row\"><div class=\"col-md-12\"><div class=\"col-md-10\" ng-class=\"{ \'has-error\' : !asset.strategic}\"><ng-form name=\"assetStrategic\"><label class=\"radio radio-inline\"><input type=\"radio\" class=\"radiobox\" name=\"strategic{{scopeId}}\" ng-model=\"asset.strategic\" value=\"true\" ng-required=\"!asset.strategic\" ng-disabled=\"disableForm\"> <span>{{$root.getWord(\'Strategic\')}}</span></label><label class=\"radio radio-inline\"><input type=\"radio\" class=\"radiobox\" name=\"strategic{{scopeId}}\" ng-model=\"asset.strategic\" value=\"false\" ng-required=\"!asset.strategic\" ng-disabled=\"disableForm\"> <span>{{$root.getWord(\'Not Strategic\')}}</span></label><p class=\"help-block\" ng-show=\"!asset.strategic\">{{$root.getWord(\'Strategic type is required!\')}}</p></ng-form></div></div></div></fieldset><br><fieldset ng-show=\"hasSubTree\"><div class=\"row\"><div class=\"col-md-6\" ng-class=\"{ \'has-error\' : !asset.name && asset.assetType == \'ASSET_GROUP\' }\"><ng-form name=\"assetGroupName\"><label class=\"control-label\">{{$root.getWord(\'Asset Group Name\')}}</label><div class=\"col-md-12\"><input class=\"form-control\" placeholder=\"{{$root.getWord(\'Type something\')}}...\" type=\"text\" list=\"groupNames\" name=\"assetGroupName\" ng-model=\"asset.name\" ng-disabled=\"disableForm\" ng-required=\"!asset.name && asset.assetType == \'ASSET_GROUP\'\"><datalist id=\"groupNames\"><option ng-repeat=\"name in names\" value=\"{{name}}\">{{name}}</option></datalist><p class=\"help-block\" ng-show=\"!asset.name && asset.assetType == \'ASSET_GROUP\'\">{{$root.getWord(\'Asset Group Name is required!\')}}</p></div></ng-form></div><div class=\"col-md-6\" ng-class=\"{ \'has-error\' : !asset.code && asset.assetType == \'ASSET_GROUP\' }\"><ng-form name=\"assetGroupCode\"><label class=\"control-label\">{{$root.getWord(\'Asset Code\')}}</label><div class=\"col-md-12\"><input type=\"text\" name=\"assetGroupCode\" class=\"form-control\" ng-model=\"asset.code\" ng-disabled=\"disableForm\" ng-required=\"!asset.code && asset.assetType == \'ASSET_GROUP\'\"><p class=\"help-block\" ng-show=\"!asset.code && asset.assetType == \'ASSET_GROUP\'\">{{$root.getWord(\'Asset Code is required!\')}}</p></div></ng-form></div></div></fieldset><fieldset ng-hide=\"hasSubTree\"><div class=\"row\"><div class=\"col-md-6\" ng-class=\"{ \'has-error\' : !asset.name && asset.assetType!= \'ASSET_GROUP\' }\"><ng-form name=\"assetName\"><label class=\"control-label\">{{$root.getWord(\'Asset Name\')}}</label><div class=\"col-md-12\"><input class=\"form-control\" placeholder=\"{{$root.getWord(\'Type something\')}}...\" type=\"text\" list=\"names\" name=\"assetName\" ng-model=\"asset.name\" ng-disabled=\"disableForm\" ng-required=\"!asset.name && asset.assetType!= \'ASSET_GROUP\'\"><datalist id=\"names\"><option ng-repeat=\"name in names\" value=\"{{name}}\">{{name}}</option></datalist><p class=\"help-block\" ng-show=\"!asset.name && asset.assetType!= \'ASSET_GROUP\'\">{{$root.getWord(\'Asset Name is required!\')}}</p></div></ng-form></div><div class=\"col-md-6\" ng-class=\"{ \'has-error\' : !asset.code && asset.assetType!= \'ASSET_GROUP\' }\"><ng-form name=\"assetCode\"><label class=\"control-label\">{{$root.getWord(\'Asset Code\')}}</label><div class=\"col-md-12\"><input type=\"text\" name=\"assetCode\" class=\"form-control\" ng-model=\"asset.code\" ng-disabled=\"disableForm\" ng-required=\"!asset.code && asset.assetType!= \'ASSET_GROUP\'\"><p class=\"help-block\" ng-show=\"!asset.code && asset.assetType!= \'ASSET_GROUP\'\">{{$root.getWord(\'Asset Code is required!\')}}</p></div></ng-form></div></div><div class=\"row\"><div ng-show=\"assetSpecificationTypeSelect\"><div class=\"col-md-6\" ng-class=\"{ \'has-error\' : !asset.assetSpecificationTypeName && asset.assetType!= \'ASSET_GROUP\' }\"><ng-form name=\"assetType\"><label class=\"control-label\">{{$root.getWord(\'Asset Type\')}}</label><div class=\"col-md-12\"><select class=\"form-control\" name=\"assetType\" ng-model=\"asset.assetSpecificationTypeId\" ng-required=\"!asset.assetSpecificationTypeName && asset.assetType!= \'ASSET_GROUP\'\" ng-change=\"assetSpecificationTypeIdChange()\" ng-disabled=\"disableForm\" ng-options=\"assetSpecificationType.id as assetSpecificationType.name for assetSpecificationType in assetSpecificationTypes\"></select><p class=\"help-block\" ng-show=\"!asset.assetSpecificationTypeName && asset.assetType!= \'ASSET_GROUP\'\">{{$root.getWord(\'Asset Type is required!\')}}</p></div></ng-form></div><div class=\"col-md-6\" ng-hide=\"disableForm\"><label class=\"control-label\">&nbsp;</label><div class=\"col-md-12\"><span class=\"btn btn-success\" ng-click=\"changeToNewSpecType()\"><i class=\"fa fa-plus-square\"></i> {{$root.getWord(\'Add new Specification Type\')}}</span></div></div></div><div ng-hide=\"assetSpecificationTypeSelect\"><div class=\"col-md-6\" ng-class=\"{ \'has-error\' : !asset.assetSpecificationTypeName && asset.assetType!= \'ASSET_GROUP\' }\"><ng-form name=\"assetType\"><label class=\"control-label\">{{$root.getWord(\'Asset Type\')}}</label><div class=\"col-md-12\"><input class=\"form-control\" name=\"assetType\" placeholder=\"{{$root.getWord(\'Type something\')}}...\" type=\"text\" ng-required=\"!asset.assetSpecificationTypeId && asset.assetType!= \'ASSET_GROUP\'\" ng-disabled=\"disableForm\" ng-model=\"asset.assetSpecificationTypeName\"><p class=\"help-block\" ng-show=\"!asset.assetSpecificationTypeName && asset.assetType!= \'ASSET_GROUP\'\">{{$root.getWord(\'Asset Type is required!\')}}</p></div></ng-form></div><div class=\"col-md-6\"><label class=\"control-label\">&nbsp;</label><div class=\"col-md-12\"><span class=\"btn btn-primary\" ng-click=\"changeToSelectSpecType()\"><i class=\"fa fa-arrow-circle-up\"></i> {{$root.getWord(\'Select Specification Type\')}}</span></div></div></div></div><div class=\"asset-type-container{{scopeId}}\"></div><div class=\"row\" ng-hide=\"disableForm\"><div class=\"col-md-12\"><label class=\"control-label\">{{$root.getWord(\'Installation Map\')}}</label><div class=\"col-md-12\"><div class=\"dropzone\" data-smart-dropzone=\"mapsDropzoneConfig\"><div class=\"dz-default dz-message\"><span><span class=\"text-center\"><span class=\"font-lg visible-xs-block visible-sm-block visible-lg-block\"><span class=\"font-lg\"><i class=\"fa fa-caret-right text-danger\"></i> Drop files <span class=\"font-xs\">to upload</span></span><span>&nbsp;&nbsp;<h4 class=\"display-inline\">(Or Click)</h4></span></span></span></span></div></div></div></div></div><div class=\"row\"><div class=\"col-md-12 padding-top-10\" data-ng-repeat=\"map in asset.maps\"><div class=\"col-md-6\"><input find-file-name class=\"form-control\" ng-model=\"map.location\" readonly=\"readonly\"></div><div class=\"col-md-6\"><a ng-hide=\"disableForm\" class=\"btn btn-labeled btn-danger\" ng-click=\"deleteFromMapFiles(map.id)\"><span class=\"btn-label\"><i class=\"glyphicon glyphicon-trash\"></i></span>{{$root.getWord(\'Remove file\')}} </a>&nbsp; <a href=\"api/upload-files/download/{{map.id}}\" target=\"_blank\" class=\"btn btn-labeled btn-primary\"><span class=\"btn-label\"><i class=\"glyphicon glyphicon-download-alt\"></i></span>{{$root.getWord(\'Download\')}}</a></div></div></div><div class=\"row\"><div class=\"col-md-6\"><div class=\"col-md-6 no-padding\" ng-class=\"{ \'has-error\' : !asset.capacity && asset.assetType!= \'ASSET_GROUP\' }\"><ng-form name=\"assetCapacity\"><label class=\"control-label\">{{$root.getWord(\'Capacity\')}}</label><div class=\"col-md-12\"><span ng-if=\"disableForm\"><input class=\"form-control\" value=\"1\" type=\"number\" min=\"1\" ng-model=\"asset.capacity\" ng-disabled=\"disableForm\"> </span><span ng-if=\"!disableForm\"><input class=\"form-control\" name=\"capacity\" type=\"number\" name=\"spinner\" value=\"1\" min=\"1\" ng-required=\"!asset.capacity && asset.assetType!= \'ASSET_GROUP\' \" ng-model=\"asset.capacity\"></span><p class=\"help-block\" ng-show=\"!asset.capacity && asset.assetType!= \'ASSET_GROUP\' \">{{$root.getWord(\'Capacity is required!\')}}</p></div></ng-form></div><div class=\"col-md-6 no-padding\" ng-class=\"{ \'has-error\' : !asset.unit && asset.assetType!= \'ASSET_GROUP\' }\"><ng-form name=\"assetCapacityUnit\"><label class=\"control-label\">{{$root.getWord(\'Capacity Unit\')}}</label><div class=\"col-md-12\"><input class=\"form-control\" name=\"capacityUnit\" placeholder=\"{{$root.getWord(\'Type something\')}}...\" type=\"text\" ng-required=\"!asset.unit && asset.assetType!= \'ASSET_GROUP\'\" list=\"locations\" ng-model=\"asset.unit\" ng-disabled=\"disableForm\"><datalist id=\"capacityUnit\"><option ng-repeat=\"location in locations\" value=\"{{location}}\">{{location}}</option></datalist><p class=\"help-block\" ng-show=\"!asset.unit && asset.assetType!= \'ASSET_GROUP\'\">{{$root.getWord(\'Capacity unit is required!\')}}</p></div></ng-form></div></div><div class=\"col-md-6\"><label class=\"control-label\">{{$root.getWord(\'Installation Location\')}}</label><div class=\"col-md-12\"><input class=\"form-control\" placeholder=\"{{$root.getWord(\'Type something\')}}...\" type=\"text\" list=\"locations\" ng-model=\"asset.location\" ng-disabled=\"disableForm\"><datalist id=\"locations\"><option ng-repeat=\"location in locations\" value=\"{{location}}\">{{location}}</option></datalist></div></div></div><div class=\"row\"><div class=\"col-md-6\"><label class=\"control-label\">{{$root.getWord(\'Manufacture\')}}</label><div class=\"col-md-12\"><input class=\"form-control\" placeholder=\"{{$root.getWord(\'Type something\')}}...\" type=\"text\" list=\"manufactures\" ng-model=\"asset.manufacture\" ng-disabled=\"disableForm\"><datalist id=\"manufactures\"><option ng-repeat=\"manufacture in manufactures\" value=\"{{manufacture}}\">{{manufacture}}</option></datalist></div></div><div class=\"col-md-6\" ng-class=\"{ \'has-error\' : !asset.year && asset.assetType!= \'ASSET_GROUP\' }\"><ng-form name=\"assetManufactureYear\"><label class=\"control-label\">{{$root.getWord(\'Manufacture Year\')}}</label><div class=\"col-md-12\"><select class=\"form-control\" name=\"manufactureYear\" ng-model=\"asset.year\" ng-disabled=\"disableForm\" ng-required=\"!asset.year && asset.assetType!= \'ASSET_GROUP\'\" ng-options=\"o as o for o in years\"></select><p class=\"help-block\" ng-show=\"!asset.year && asset.assetType!= \'ASSET_GROUP\'\">{{$root.getWord(\'Manufacture Year is required!\')}}</p></div></ng-form></div></div><div class=\"row\"><div class=\"col-md-6\"><label class=\"control-label\">{{$root.getWord(\'Supervisor\')}}</label><div class=\"col-md-12\"><!--user.name for user in users track by user.id--><select class=\"form-control\" ng-model=\"asset.supervisorId\" ng-disabled=\"disableForm\" ng-options=\"user.id as user.name for user in users\"></select><i></i></div></div><div class=\"col-md-6\"><label class=\"control-label\">{{$root.getWord(\'Technician\')}}</label><div class=\"col-md-12\"><select class=\"form-control\" ng-model=\"asset.technicianId\" ng-disabled=\"disableForm\" ng-options=\"user.id as user.name for user in users\"></select><i></i></div></div></div></fieldset><br><fieldset ng-hide=\"hasSubTree\"><div class=\"row\" ng-hide=\"disableForm\"><div class=\"col-md-12\"><label class=\"control-label\">{{$root.getWord(\'Attachments\')}}</label><div class=\"col-md-12\"><div class=\"dropzone\" data-smart-dropzone=\"otherDropzoneConfig\"><div class=\"dz-default dz-message\"><span><span class=\"text-center\"><span class=\"font-lg visible-xs-block visible-sm-block visible-lg-block\"><span class=\"font-lg\"><i class=\"fa fa-caret-right text-danger\"></i> Drop files <span class=\"font-xs\">to upload</span></span><span>&nbsp;&nbsp;<h4 class=\"display-inline\">(Or Click)</h4></span></span></span></span></div></div></div></div></div><div class=\"row\"><div class=\"col-md-12 padding-top-10\" data-ng-repeat=\"otherFile in asset.otherFiles\"><div class=\"col-md-6\"><input find-file-name class=\"form-control\" ng-model=\"otherFile.location\" readonly=\"readonly\"></div><div class=\"col-md-6\"><a ng-hide=\"disableForm\" class=\"btn btn-labeled btn-danger\" ng-click=\"deleteFromOtherFiles(otherFile.id)\"><span class=\"btn-label\"><i class=\"glyphicon glyphicon-trash\"></i></span>{{$root.getWord(\'Remove file\')}} </a>&nbsp; <a href=\"api/upload-files/download/{{otherFile.id}}\" target=\"_blank\" class=\"btn btn-labeled btn-primary\"><span class=\"btn-label\"><i class=\"glyphicon glyphicon-download-alt\"></i></span>{{$root.getWord(\'Download\')}}</a></div></div></div><div class=\"row\"><div class=\"col-md-12\"><label class=\"control-label\">{{$root.getWord(\'Details\')}}</label><div class=\"col-md-12 textarea textarea-expandable\"><textarea rows=\"3\" ng-model=\"asset.details\" class=\"custom-scroll form-control\" ng-disabled=\"disableForm\">{{assetList.details}}</textarea></div></div></div></fieldset><br><fieldset ng-show=\"state == \'A\'\"><div class=\"row\"><div class=\"col-md-12 form-group\"><label class=\"col-md-2 control-label\">{{$root.getWord(\'Next Step Configuration\')}}</label><div class=\"col-md-10\"><div class=\"checkbox\"><label><input type=\"checkbox\" class=\"checkbox style-0\" name=\"hasNextStep\" ng-model=\"hasNextStep\" value=\"1\"> <span>{{$root.getWord(\'Has Next Step\')}}</span></label></div></div></div></div></fieldset></form></div>");
+$templateCache.put("app/dashboard/assets/directives/asset-form.tpl.html","<div class=\"form-horizontal\"><form name=\"forms.assetImportWizardForm\" novalidate><header>{{$root.getWord(\'Asset Details\')}}</header><input type=\"hidden\" name=\"assetParent[{{currentStep}}]\" value=\"{{parentStep}}\"><fieldset><div class=\"row\"><div class=\"col-md-12\"><label class=\"control-label\">{{$root.getWord(\'Type\')}}</label><div class=\"col-md-12\"><select class=\"form-control\" ng-model=\"asset.assetType\" ng-disabled=\"disableForm\" ng-change=\"toggleAssetForm()\"><option value=\"ASSET_GROUP\">{{$root.getWord(\'Asset Group\')}}</option><option value=\"ASSET\">{{$root.getWord(\'Asset\')}}</option><option value=\"SUB_ASSET\">{{$root.getWord(\'Sub Asset\')}}</option></select></div></div></div><div class=\"row\"><div class=\"col-md-12\"><div class=\"col-md-10\" ng-class=\"{ \'has-error\' : !asset.strategic}\"><ng-form name=\"assetStrategic\"><label class=\"radio radio-inline\"><input type=\"radio\" class=\"radiobox\" name=\"strategic{{scopeId}}\" ng-model=\"asset.strategic\" value=\"true\" ng-required=\"!asset.strategic\" ng-disabled=\"disableForm\"> <span>{{$root.getWord(\'Strategic\')}}</span></label><label class=\"radio radio-inline\"><input type=\"radio\" class=\"radiobox\" name=\"strategic{{scopeId}}\" ng-model=\"asset.strategic\" value=\"false\" ng-required=\"!asset.strategic\" ng-disabled=\"disableForm\"> <span>{{$root.getWord(\'Not Strategic\')}}</span></label><p class=\"help-block\" ng-show=\"!asset.strategic\">{{$root.getWord(\'Strategic type is required!\')}}</p></ng-form></div></div></div></fieldset><br><fieldset ng-show=\"hasSubTree\"><div class=\"row\"><div class=\"col-md-6\" ng-class=\"{ \'has-error\' : !asset.name && asset.assetType == \'ASSET_GROUP\' }\"><ng-form name=\"assetGroupName\"><label class=\"control-label\">{{$root.getWord(\'Asset Group Name\')}}</label><div class=\"col-md-12\"><input class=\"form-control\" placeholder=\"{{$root.getWord(\'Type something\')}}...\" type=\"text\" list=\"groupNames\" name=\"assetGroupName\" ng-model=\"asset.name\" ng-disabled=\"disableForm\" ng-required=\"!asset.name && asset.assetType == \'ASSET_GROUP\'\"><datalist id=\"groupNames\"><option ng-repeat=\"name in names\" value=\"{{name}}\">{{name}}</option></datalist><p class=\"help-block\" ng-show=\"!asset.name && asset.assetType == \'ASSET_GROUP\'\">{{$root.getWord(\'Asset Group Name is required!\')}}</p></div></ng-form></div><div class=\"col-md-6\" ng-class=\"{ \'has-error\' : !asset.code && asset.assetType == \'ASSET_GROUP\' }\"><ng-form name=\"assetGroupCode\"><label class=\"control-label\">{{$root.getWord(\'Asset Code\')}}</label><div class=\"col-md-12\"><input type=\"text\" name=\"assetGroupCode\" class=\"form-control\" ng-model=\"asset.code\" ng-disabled=\"disableForm\" ng-required=\"!asset.code && asset.assetType == \'ASSET_GROUP\'\"><p class=\"help-block\" ng-show=\"!asset.code && asset.assetType == \'ASSET_GROUP\'\">{{$root.getWord(\'Asset Code is required!\')}}</p></div></ng-form></div></div></fieldset><fieldset ng-hide=\"hasSubTree\"><div class=\"row\"><div class=\"col-md-6\" ng-class=\"{ \'has-error\' : !asset.name && asset.assetType!= \'ASSET_GROUP\' }\"><ng-form name=\"assetName\"><label class=\"control-label\">{{$root.getWord(\'Asset Name\')}}</label><div class=\"col-md-12\"><input class=\"form-control\" placeholder=\"{{$root.getWord(\'Type something\')}}...\" type=\"text\" list=\"names\" name=\"assetName\" ng-model=\"asset.name\" ng-disabled=\"disableForm\" ng-required=\"!asset.name && asset.assetType!= \'ASSET_GROUP\'\"><datalist id=\"names\"><option ng-repeat=\"name in names\" value=\"{{name}}\">{{name}}</option></datalist><p class=\"help-block\" ng-show=\"!asset.name && asset.assetType!= \'ASSET_GROUP\'\">{{$root.getWord(\'Asset Name is required!\')}}</p></div></ng-form></div><div class=\"col-md-6\" ng-class=\"{ \'has-error\' : !asset.code && asset.assetType!= \'ASSET_GROUP\' }\"><ng-form name=\"assetCode\"><label class=\"control-label\">{{$root.getWord(\'Asset Code\')}}</label><div class=\"col-md-12\"><input type=\"text\" name=\"assetCode\" class=\"form-control\" ng-model=\"asset.code\" ng-disabled=\"disableForm\" ng-required=\"!asset.code && asset.assetType!= \'ASSET_GROUP\'\"><p class=\"help-block\" ng-show=\"!asset.code && asset.assetType!= \'ASSET_GROUP\'\">{{$root.getWord(\'Asset Code is required!\')}}</p></div></ng-form></div></div><div class=\"row\"><div ng-show=\"assetSpecificationTypeSelect\"><div class=\"col-md-6\" ng-class=\"{ \'has-error\' : !asset.assetSpecificationTypeId && asset.assetType!= \'ASSET_GROUP\' }\"><ng-form name=\"assetType\"><label class=\"control-label\">{{$root.getWord(\'Asset Type\')}}</label><div class=\"col-md-12\"><select class=\"form-control\" name=\"assetType\" ng-model=\"asset.assetSpecificationTypeId\" ng-required=\"!asset.assetSpecificationTypeId && asset.assetType!= \'ASSET_GROUP\'\" ng-change=\"assetSpecificationTypeIdChange()\" ng-disabled=\"disableForm\" ng-options=\"assetSpecificationType.id as assetSpecificationType.name for assetSpecificationType in assetSpecificationTypes\"></select><p class=\"help-block\" ng-show=\"!asset.assetSpecificationTypeId && asset.assetType!= \'ASSET_GROUP\'\">{{$root.getWord(\'Asset Type is required!\')}}</p></div></ng-form></div><div class=\"col-md-6\" ng-hide=\"disableForm\"><label class=\"control-label\">&nbsp;</label><div class=\"col-md-12\"><span class=\"btn btn-success\" ng-click=\"changeToNewSpecType()\"><i class=\"fa fa-plus-square\"></i> {{$root.getWord(\'Add new Specification Type\')}}</span></div></div></div><div ng-hide=\"assetSpecificationTypeSelect\"><div class=\"col-md-6\" ng-class=\"{ \'has-error\' : !asset.assetSpecificationTypeName && asset.assetType!= \'ASSET_GROUP\' }\"><ng-form name=\"assetType\"><label class=\"control-label\">{{$root.getWord(\'Asset Type\')}}</label><div class=\"col-md-12\"><input class=\"form-control\" name=\"assetType\" placeholder=\"{{$root.getWord(\'Type something\')}}...\" type=\"text\" ng-required=\"!asset.assetSpecificationTypeName && asset.assetType!= \'ASSET_GROUP\'\" ng-disabled=\"disableForm\" ng-model=\"asset.assetSpecificationTypeName\"><p class=\"help-block\" ng-show=\"!asset.assetSpecificationTypeName && asset.assetType!= \'ASSET_GROUP\'\">{{$root.getWord(\'Asset Type is required!\')}}</p></div></ng-form></div><div class=\"col-md-6\"><label class=\"control-label\">&nbsp;</label><div class=\"col-md-12\"><span class=\"btn btn-primary\" ng-click=\"changeToSelectSpecType()\"><i class=\"fa fa-arrow-circle-up\"></i> {{$root.getWord(\'Select Specification Type\')}}</span></div></div></div></div><div class=\"asset-type-container{{scopeId}}\"></div><div class=\"row\" ng-hide=\"disableForm\"><div class=\"col-md-12\"><label class=\"control-label\">{{$root.getWord(\'Installation Map\')}}</label><div class=\"col-md-12\"><div class=\"dropzone\" data-smart-dropzone=\"mapsDropzoneConfig\"><div class=\"dz-default dz-message\"><span><span class=\"text-center\"><span class=\"font-lg visible-xs-block visible-sm-block visible-lg-block\"><span class=\"font-lg\"><i class=\"fa fa-caret-right text-danger\"></i> Drop files <span class=\"font-xs\">to upload</span></span><span>&nbsp;&nbsp;<h4 class=\"display-inline\">(Or Click)</h4></span></span></span></span></div></div></div></div></div><div class=\"row\"><div class=\"col-md-12 padding-top-10\" data-ng-repeat=\"map in asset.maps\"><div class=\"col-md-6\"><input find-file-name class=\"form-control\" ng-model=\"map.location\" readonly=\"readonly\"></div><div class=\"col-md-6\"><a ng-hide=\"disableForm\" class=\"btn btn-labeled btn-danger\" ng-click=\"deleteFromMapFiles(map.id)\"><span class=\"btn-label\"><i class=\"glyphicon glyphicon-trash\"></i></span>{{$root.getWord(\'Remove file\')}} </a>&nbsp; <a href=\"api/upload-files/download/{{map.id}}\" target=\"_blank\" class=\"btn btn-labeled btn-primary\"><span class=\"btn-label\"><i class=\"glyphicon glyphicon-download-alt\"></i></span>{{$root.getWord(\'Download\')}}</a></div></div></div><div class=\"row\"><div class=\"col-md-6\"><div class=\"col-md-6 no-padding\" ng-class=\"{ \'has-error\' : !asset.capacity && asset.assetType!= \'ASSET_GROUP\' }\"><ng-form name=\"assetCapacity\"><label class=\"control-label\">{{$root.getWord(\'Capacity\')}}</label><div class=\"col-md-12\"><span ng-if=\"disableForm\"><input class=\"form-control\" value=\"1\" type=\"number\" min=\"1\" ng-model=\"asset.capacity\" ng-disabled=\"disableForm\"> </span><span ng-if=\"!disableForm\"><input class=\"form-control\" name=\"capacity\" type=\"number\" name=\"spinner\" value=\"1\" min=\"1\" ng-required=\"!asset.capacity && asset.assetType!= \'ASSET_GROUP\' \" ng-model=\"asset.capacity\"></span><p class=\"help-block\" ng-show=\"!asset.capacity && asset.assetType!= \'ASSET_GROUP\' \">{{$root.getWord(\'Capacity is required!\')}}</p></div></ng-form></div><div class=\"col-md-6 no-padding\" ng-class=\"{ \'has-error\' : !asset.unit && asset.assetType!= \'ASSET_GROUP\' }\"><ng-form name=\"assetCapacityUnit\"><label class=\"control-label\">{{$root.getWord(\'Capacity Unit\')}}</label><div class=\"col-md-12\"><input class=\"form-control\" name=\"capacityUnit\" placeholder=\"{{$root.getWord(\'Type something\')}}...\" type=\"text\" ng-required=\"!asset.unit && asset.assetType!= \'ASSET_GROUP\'\" list=\"locations\" ng-model=\"asset.unit\" ng-disabled=\"disableForm\"><datalist id=\"capacityUnit\"><option ng-repeat=\"capacityUnit in capacityUnits\" value=\"{{capacityUnit}}\">{{capacityUnit}}</option></datalist><p class=\"help-block\" ng-show=\"!asset.unit && asset.assetType!= \'ASSET_GROUP\'\">{{$root.getWord(\'Capacity unit is required!\')}}</p></div></ng-form></div></div><div class=\"col-md-6\"><label class=\"control-label\">{{$root.getWord(\'Installation Location\')}}</label><div class=\"col-md-12\"><input class=\"form-control\" placeholder=\"{{$root.getWord(\'Type something\')}}...\" type=\"text\" list=\"locations\" ng-model=\"asset.location\" ng-disabled=\"disableForm\"><datalist id=\"locations\"><option ng-repeat=\"location in locations\" value=\"{{location}}\">{{location}}</option></datalist></div></div></div><div class=\"row\"><div class=\"col-md-6\"><label class=\"control-label\">{{$root.getWord(\'Manufacture\')}}</label><div class=\"col-md-12\"><input class=\"form-control\" placeholder=\"{{$root.getWord(\'Type something\')}}...\" type=\"text\" list=\"manufactures\" ng-model=\"asset.manufacture\" ng-disabled=\"disableForm\"><datalist id=\"manufactures\"><option ng-repeat=\"manufacture in manufactures\" value=\"{{manufacture}}\">{{manufacture}}</option></datalist></div></div><div class=\"col-md-6\" ng-class=\"{ \'has-error\' : !asset.year && asset.assetType!= \'ASSET_GROUP\' }\"><ng-form name=\"assetManufactureYear\"><label class=\"control-label\">{{$root.getWord(\'Manufacture Year\')}}</label><div class=\"col-md-12\"><select class=\"form-control\" name=\"manufactureYear\" ng-model=\"asset.year\" ng-disabled=\"disableForm\" ng-required=\"!asset.year && asset.assetType!= \'ASSET_GROUP\'\" ng-options=\"o as o for o in years\"></select><p class=\"help-block\" ng-show=\"!asset.year && asset.assetType!= \'ASSET_GROUP\'\">{{$root.getWord(\'Manufacture Year is required!\')}}</p></div></ng-form></div></div><div class=\"row\"><div class=\"col-md-6\"><label class=\"control-label\">{{$root.getWord(\'Supervisor\')}}</label><div class=\"col-md-12\"><!--user.name for user in users track by user.id--><select class=\"form-control\" ng-model=\"asset.supervisorId\" ng-disabled=\"disableForm\" ng-options=\"user.id as user.name for user in users\"></select><i></i></div></div><div class=\"col-md-6\"><label class=\"control-label\">{{$root.getWord(\'Technician\')}}</label><div class=\"col-md-12\"><select class=\"form-control\" ng-model=\"asset.technicianId\" ng-disabled=\"disableForm\" ng-options=\"user.id as user.name for user in users\"></select><i></i></div></div></div></fieldset><br><fieldset ng-hide=\"hasSubTree\"><div class=\"row\" ng-hide=\"disableForm\"><div class=\"col-md-12\"><label class=\"control-label\">{{$root.getWord(\'Attachments\')}}</label><div class=\"col-md-12\"><div class=\"dropzone\" data-smart-dropzone=\"otherDropzoneConfig\"><div class=\"dz-default dz-message\"><span><span class=\"text-center\"><span class=\"font-lg visible-xs-block visible-sm-block visible-lg-block\"><span class=\"font-lg\"><i class=\"fa fa-caret-right text-danger\"></i> Drop files <span class=\"font-xs\">to upload</span></span><span>&nbsp;&nbsp;<h4 class=\"display-inline\">(Or Click)</h4></span></span></span></span></div></div></div></div></div><div class=\"row\"><div class=\"col-md-12 padding-top-10\" data-ng-repeat=\"otherFile in asset.otherFiles\"><div class=\"col-md-6\"><input find-file-name class=\"form-control\" ng-model=\"otherFile.location\" readonly=\"readonly\"></div><div class=\"col-md-6\"><a ng-hide=\"disableForm\" class=\"btn btn-labeled btn-danger\" ng-click=\"deleteFromOtherFiles(otherFile.id)\"><span class=\"btn-label\"><i class=\"glyphicon glyphicon-trash\"></i></span>{{$root.getWord(\'Remove file\')}} </a>&nbsp; <a href=\"api/upload-files/download/{{otherFile.id}}\" target=\"_blank\" class=\"btn btn-labeled btn-primary\"><span class=\"btn-label\"><i class=\"glyphicon glyphicon-download-alt\"></i></span>{{$root.getWord(\'Download\')}}</a></div></div></div><div class=\"row\"><div class=\"col-md-12\"><label class=\"control-label\">{{$root.getWord(\'Details\')}}</label><div class=\"col-md-12 textarea textarea-expandable\"><textarea rows=\"3\" ng-model=\"asset.details\" class=\"custom-scroll form-control\" ng-disabled=\"disableForm\">{{assetList.details}}</textarea></div></div></div></fieldset><br><fieldset ng-show=\"state == \'A\'\"><div class=\"row\"><div class=\"col-md-12 form-group\"><label class=\"col-md-2 control-label\">{{$root.getWord(\'Next Step Configuration\')}}</label><div class=\"col-md-10\"><div class=\"checkbox\"><label><input type=\"checkbox\" class=\"checkbox style-0\" name=\"hasNextStep\" ng-model=\"hasNextStep\" value=\"1\"> <span>{{$root.getWord(\'Has Next Step\')}}</span></label></div></div></div></div></fieldset></form></div>");
 $templateCache.put("app/dashboard/assets/directives/asset-import-wizard-form.tpl.html","<div><div class=\"widget-body fuelux asset-import-wizard\" data-smart-fuelux-wizard data-smart-wizard-callback=\"wizard2CompleteCallback\"><div class=\"wizard\"><ul class=\"steps\"><li data-step=\"1\" class=\"active\"><span class=\"badge badge-info\">1</span><span class=\"chevron\"></span></li></ul><div class=\"actions\"><button type=\"button\" class=\"btn btn-sm btn-primary btn-prev\"><i class=\"fa fa-arrow-left\"></i>قبلی</button> <button type=\"button\" class=\"btn btn-sm btn-success btn-next\" data-last=\"ذخیره\">بعدی<i class=\"fa fa-arrow-right\"></i></button></div></div><div class=\"step-content\"><div smart-include=\"app/dashboard/assets/directives/assetTreeModalContent.tpl.html\"></div></div></div><div>&nbsp;</div></div>");
 $templateCache.put("app/dashboard/assets/directives/asset-import-wizard.tpl.html","<div><div class=\"modal-header\"><button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\" ng-click=\"assetVm.clear()\">&times;</button><h4 class=\"modal-title\" id=\"myAssetLabel\">Import Assets</h4></div><div class=\"padding-10\"><assets-import-wizard-form on-submit=\"assetVm.submitWizard(data)\"></assets-import-wizard-form></div></div>");
 $templateCache.put("app/dashboard/assets/directives/asset-move-form.tpl.html","<div><form name=\"assetMoveForm\" class=\"asset-move-form form-group\" role=\"form\" novalidate show-validation ng-submit=\"assetMoveVm.save()\"><div class=\"modal-header\"><button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\" ng-click=\"assetMoveVm.clear()\">&times;</button><h4 class=\"modal-title\" id=\"myAssetLabel\">Move a Asset</h4></div><div class=\"modal-body\"><div class=\"step-content\"><input type=\"hidden\" ng-model=\"assetMoveVm.asset.id\" name=\"id\"> <input type=\"hidden\" ng-model=\"assetMoveVm.asset.parentId\" name=\"parentId\"><assets-tree-grid-checkbox selected-tree-node=\"duplicatedAsset\" on-select=\"assetMoveVm.selectedParentTree(branch)\"></assets-tree-grid-checkbox></div><div class=\"modal-footer\"><button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" ng-click=\"assetMoveVm.clear()\"><span class=\"glyphicon glyphicon-ban-circle\"></span>&nbsp;<span>Cancel</span></button> <button type=\"submit\" ng-disabled=\"moveForm.$invalid || assetMoveVm.isSaving\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-save\"></span>&nbsp;<span>Save</span></button></div></div></form></div>");
@@ -8528,100 +8631,6 @@ $templateCache.put("app/forms/views/form-layouts/form-layouts-demo.html","<!-- M
 $templateCache.put("app/forms/views/form-layouts/order-form.html","<form id=\"order-form\" class=\"smart-form\" novalidate=\"novalidate\"><header>Order services</header><fieldset><div class=\"row\"><section class=\"col col-6\"><label class=\"input\"><i class=\"icon-append fa fa-user\"></i> <input type=\"text\" name=\"name\" placeholder=\"Name\"></label></section><section class=\"col col-6\"><label class=\"input\"><i class=\"icon-append fa fa-briefcase\"></i> <input type=\"text\" name=\"company\" placeholder=\"Company\"></label></section></div><div class=\"row\"><section class=\"col col-6\"><label class=\"input\"><i class=\"icon-append fa fa-envelope-o\"></i> <input type=\"email\" name=\"email\" placeholder=\"E-mail\"></label></section><section class=\"col col-6\"><label class=\"input\"><i class=\"icon-append fa fa-phone\"></i> <input type=\"tel\" name=\"phone\" placeholder=\"Phone\" data-smart-masked-input=\"(999) 999-9999\"></label></section></div></fieldset><fieldset><div class=\"row\"><section class=\"col col-6\"><label class=\"select\"><select name=\"interested\"><option value=\"0\" selected=\"\" disabled=\"\">Interested in</option><option value=\"1\">design</option><option value=\"1\">development</option><option value=\"2\">illustration</option><option value=\"2\">branding</option><option value=\"3\">video</option></select><i></i></label></section><section class=\"col col-6\"><label class=\"select\"><select name=\"budget\"><option value=\"0\" selected=\"\" disabled=\"\">Budget</option><option value=\"1\">less than 5000$</option><option value=\"2\">5000$ - 10000$</option><option value=\"3\">10000$ - 20000$</option><option value=\"4\">more than 20000$</option></select><i></i></label></section></div><div class=\"row\"><section class=\"col col-6\"><label class=\"input\"><i class=\"icon-append fa fa-calendar\"></i> <input type=\"text\" name=\"startdate\" id=\"startdate\" data-smart-datepicker data-min-restrict=\"#finishdate\" placeholder=\"Expected start date\"></label></section><section class=\"col col-6\"><label class=\"input\"><i class=\"icon-append fa fa-calendar\"></i> <input type=\"text\" name=\"finishdate\" id=\"finishdate\" data-smart-datepicker data-max-restrict=\"#startdate\" placeholder=\"Expected finish date\"></label></section></div><section><div class=\"input input-file\"><span class=\"button\"><input id=\"file2\" type=\"file\" name=\"file2\" onchange=\"this.parentNode.nextSibling.value = this.value\">Browse</span><input type=\"text\" placeholder=\"Include some files\" readonly=\"\"></div></section><section><label class=\"textarea\"><i class=\"icon-append fa fa-comment\"></i><textarea rows=\"5\" name=\"comment\" placeholder=\"Tell us about your project\"></textarea></label></section></fieldset><footer><button type=\"submit\" class=\"btn btn-primary\">Validate Form</button></footer></form>");
 $templateCache.put("app/forms/views/form-layouts/registration-form.html","<form id=\"smart-form-register\" class=\"smart-form\" data-smart-registration-form><header>Registration form</header><fieldset><section><label class=\"input\"><i class=\"icon-append fa fa-user\"></i> <input type=\"text\" name=\"username\" placeholder=\"Username\"> <b class=\"tooltip tooltip-bottom-right\">Needed to enter the website</b></label></section><section><label class=\"input\"><i class=\"icon-append fa fa-envelope-o\"></i> <input type=\"email\" name=\"email\" placeholder=\"Email address\"> <b class=\"tooltip tooltip-bottom-right\">Needed to verify your account</b></label></section><section><label class=\"input\"><i class=\"icon-append fa fa-lock\"></i> <input type=\"password\" name=\"password\" placeholder=\"Password\" id=\"password\"> <b class=\"tooltip tooltip-bottom-right\">Don\'t forget your password</b></label></section><section><label class=\"input\"><i class=\"icon-append fa fa-lock\"></i> <input type=\"password\" name=\"passwordConfirm\" placeholder=\"Confirm password\"> <b class=\"tooltip tooltip-bottom-right\">Don\'t forget your password</b></label></section></fieldset><fieldset><div class=\"row\"><section class=\"col col-6\"><label class=\"input\"><input type=\"text\" name=\"firstname\" placeholder=\"First name\" ng-model=\"registration.firstname\"></label></section><section class=\"col col-6\"><label class=\"input\"><input type=\"text\" name=\"lastname\" placeholder=\"Last name\" ng-model=\"registration.lastname\"></label></section></div><div class=\"row\"><section class=\"col col-6\"><label class=\"select\"><select name=\"gender\"><option value=\"0\" selected=\"\" disabled=\"\">Gender</option><option value=\"1\">Male</option><option value=\"2\">Female</option><option value=\"3\">Prefer not to answer</option></select><i></i></label></section><section class=\"col col-6\"><label class=\"input\"><i class=\"icon-append fa fa-calendar\"></i> <input type=\"text\" name=\"request\" placeholder=\"Request activation on\" data-smart-datepicker data-dateformat=\"dd/mm/yy\" ng-model=\"registration.date\"></label></section></div><section><label class=\"checkbox\"><input type=\"checkbox\" name=\"subscription\" id=\"subscription\"> <i></i>I want to receive news and special offers</label><label class=\"checkbox\"><input type=\"checkbox\" name=\"terms\" id=\"terms\"> <i></i>I agree with the Terms and Conditions</label></section></fieldset><footer><button type=\"submit\" class=\"btn btn-primary\">Validate Form</button></footer></form>");
 $templateCache.put("app/forms/views/form-layouts/review-form.html","<form id=\"review-form\" class=\"smart-form\"><header>Review form</header><fieldset><section><label class=\"input\"><i class=\"icon-append fa fa-user\"></i> <input type=\"text\" name=\"name\" id=\"name\" placeholder=\"Your name\"></label></section><section><label class=\"input\"><i class=\"icon-append fa fa-envelope-o\"></i> <input type=\"email\" name=\"email\" id=\"email\" placeholder=\"Your e-mail\"></label></section><section><label class=\"label\"></label><label class=\"textarea\"><i class=\"icon-append fa fa-comment\"></i><textarea rows=\"3\" name=\"review\" id=\"review\" placeholder=\"Text of the review\"></textarea></label></section><section><div class=\"rating\"><input type=\"radio\" name=\"quality\" id=\"quality-5\"><label for=\"quality-5\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"quality\" id=\"quality-4\"><label for=\"quality-4\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"quality\" id=\"quality-3\"><label for=\"quality-3\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"quality\" id=\"quality-2\"><label for=\"quality-2\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"quality\" id=\"quality-1\"><label for=\"quality-1\"><i class=\"fa fa-star\"></i></label>Quality of the product</div><div class=\"rating\"><input type=\"radio\" name=\"reliability\" id=\"reliability-5\"><label for=\"reliability-5\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"reliability\" id=\"reliability-4\"><label for=\"reliability-4\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"reliability\" id=\"reliability-3\"><label for=\"reliability-3\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"reliability\" id=\"reliability-2\"><label for=\"reliability-2\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"reliability\" id=\"reliability-1\"><label for=\"reliability-1\"><i class=\"fa fa-star\"></i></label>Reliability of the product</div><div class=\"rating\"><input type=\"radio\" name=\"overall\" id=\"overall-5\"><label for=\"overall-5\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"overall\" id=\"overall-4\"><label for=\"overall-4\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"overall\" id=\"overall-3\"><label for=\"overall-3\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"overall\" id=\"overall-2\"><label for=\"overall-2\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"overall\" id=\"overall-1\"><label for=\"overall-1\"><i class=\"fa fa-star\"></i></label>Overall rating</div></section></fieldset><footer><button type=\"submit\" class=\"btn btn-primary\">Validate Form</button></footer></form>");}]);})();
-'use strict';
-
-angular
-    .module('app')
-    .factory('Principal', ["$q", "Account", function ($q, Account) {
-        var _identity,
-            _authenticated = false;
-
-        var service = {
-            authenticate: authenticate,
-            hasAnyAuthority: hasAnyAuthority,
-            hasAuthority: hasAuthority,
-            identity: identity,
-            isAuthenticated: isAuthenticated,
-            isIdentityResolved: isIdentityResolved
-        };
-
-        return service;
-
-        function authenticate(identity) {
-            _identity = identity;
-            _authenticated = identity !== null;
-        }
-
-        function hasAnyAuthority(authorities) {
-            if (!_authenticated || !_identity || !_identity.authorities) {
-                return false;
-            }
-
-            for (var i = 0; i < authorities.length; i++) {
-                if (_identity.authorities.indexOf(authorities[i]) !== -1) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        function hasAuthority(authority) {
-            if (!_authenticated) {
-                return $q.when(false);
-            }
-
-            return this.identity().then(function (_id) {
-                return _id.authorities && _id.authorities.indexOf(authority) !== -1;
-            }, function () {
-                return false;
-            });
-        }
-
-        function identity(force) {
-            var deferred = $q.defer();
-
-            if (force === true) {
-                _identity = undefined;
-            }
-
-            // check and see if we have retrieved the identity data from the server.
-            // if we have, reuse it by immediately resolving
-            if (angular.isDefined(_identity)) {
-                deferred.resolve(_identity);
-
-                return deferred.promise;
-            }
-
-            // retrieve the identity data from the server, update the identity object, and then resolve.
-            Account.get().$promise
-                .then(getAccountThen)
-                .catch(getAccountCatch);
-
-            return deferred.promise;
-
-            function getAccountThen(account) {
-                _identity = account.data;
-                _authenticated = true;
-                deferred.resolve(_identity);
-            }
-
-            function getAccountCatch() {
-                _identity = null;
-                _authenticated = false;
-                deferred.resolve(_identity);
-            }
-        }
-
-        function isAuthenticated() {
-            return _authenticated;
-        }
-
-        function isIdentityResolved() {
-            return angular.isDefined(_identity);
-        }
-    }]);
-
 'use strict';
 
 angular
@@ -11697,7 +11706,7 @@ angular.module('app').directive('assetsForm', function () {
             isValidCallBack: '&',
             updateAssetCallback: '&?'
         },
-        controller: ["$scope", "$filter", "$compile", "User", "UploadFile", "AssetManufacture", "AssetNames", "AssetLocations", "Upload", "AssetSpecificationType", "AssetSpecificationTypeFieldByType", "AssetSpecificationTypeValue", "AlertService", function ($scope, $filter, $compile, User, UploadFile, AssetManufacture, AssetNames, AssetLocations, Upload, AssetSpecificationType, AssetSpecificationTypeFieldByType, AssetSpecificationTypeValue, AlertService) {
+        controller: ["$scope", "$filter", "$compile", "User", "UploadFile", "AssetManufacture", "AssetCapacityUnit", "AssetNames", "AssetLocations", "Upload", "AssetSpecificationType", "AssetSpecificationTypeFieldByType", "AssetSpecificationTypeValue", "AlertService", function ($scope, $filter, $compile, User, UploadFile, AssetManufacture, AssetCapacityUnit, AssetNames, AssetLocations, Upload, AssetSpecificationType, AssetSpecificationTypeFieldByType, AssetSpecificationTypeValue, AlertService) {
 
             if (angular.isUndefinedOrNull($scope.currentStep)) {
                 $scope.currentStep = 1;
@@ -11706,6 +11715,7 @@ angular.module('app').directive('assetsForm', function () {
             $scope.disableForm = false;
             $scope.users = [];
             $scope.manufactures = [];
+            $scope.capacityUnits = [];
             $scope.locations = [];
             $scope.names = [];
             $scope.scopeId = $scope.$id;
@@ -11724,6 +11734,7 @@ angular.module('app').directive('assetsForm', function () {
 
             loadAllAssetSpecificationTypes();
             loadAllManufactures();
+            loadAllCapacityUnit();
             loadAllLocations();
             loadAllNames();
             loadAllUsers();
@@ -11783,6 +11794,10 @@ angular.module('app').directive('assetsForm', function () {
                 AssetManufacture.query({}, onSuccessManufacture, onError);
             }
 
+            function loadAllCapacityUnit() {
+                AssetCapacityUnit.query({}, onSuccessCapacityUnit, onError);
+            }
+
             function loadAllNames() {
                 AssetNames.query({}, function (data) {
                     $scope.names = data
@@ -11814,6 +11829,11 @@ angular.module('app').directive('assetsForm', function () {
                 $scope.manufactures = data;
             }
 
+            function onSuccessCapacityUnit(data) {
+                $scope.capacityUnits = data;
+                console.log($scope.capacityUnits);
+            }
+
             function onSuccess(data) {
                 for (var i = 0; i < data.length; i++) {
                     if (angular.isUndefinedOrNull(data[i].firstName) && angular.isUndefinedOrNull(data[i].lastName)) {
@@ -11832,6 +11852,7 @@ angular.module('app').directive('assetsForm', function () {
 
 
             $scope.assetSpecificationTypeIdChange = function () {
+                $scope.asset.assetSpecificationTypeName = null;
                 loadAllAssetSpecificationTypeFields($scope.asset.assetSpecificationTypeId);
             };
 
@@ -13261,6 +13282,11 @@ angular.module('app').factory('Todo', ["Restangular", "APP_CONFIG", "$httpBacken
 }]);
 "use strict";
 
+angular.module('app').factory('WorkOrders', ["$http", "APP_CONFIG", function ($http, APP_CONFIG) {
+    return $http.get(APP_CONFIG.apiRootUrl + '/work-orders.json');
+}]);
+"use strict";
+
 angular.module('app').directive('nestedDataForm', function () {
     return {
         restrict: 'EA',
@@ -13630,11 +13656,6 @@ angular.module('app').directive('workOrdersAssetsTreeGrid', function () {
     }
 });
 
-"use strict";
-
-angular.module('app').factory('WorkOrders', ["$http", "APP_CONFIG", function ($http, APP_CONFIG) {
-    return $http.get(APP_CONFIG.apiRootUrl + '/work-orders.json');
-}]);
 'use strict';
 
 angular.module('app.graphs').directive('chartjsBarChart', function () {

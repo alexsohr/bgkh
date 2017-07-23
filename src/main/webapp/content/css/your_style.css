@@ -177,3 +177,7 @@ ul#strengthBar {
     margin-right:1px;
     width:20px;
 }
+
+.has-error input , .has-error textarea, .has-error select {
+    background-color: #f2cbd1;
+}

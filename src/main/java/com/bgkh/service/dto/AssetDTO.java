@@ -19,13 +19,13 @@ public class AssetDTO implements Serializable {
     private Long parentId;
 
     @NotNull
-    @Size(min = 3, max = 100)
+    @Size(min = 1, max = 100)
     private String name;
 
-    @Size(min = 3, max = 250)
+    @Size(min = 1, max = 250)
     private String location;
 
-    @Size(min = 3, max = 500)
+    @Size(min = 1, max = 500)
     private String details;
 
     @NotNull
@@ -34,7 +34,7 @@ public class AssetDTO implements Serializable {
 
     private AssetType assetType;
 
-    @Size(min = 3, max = 250)
+    @Size(min = 1, max = 250)
     private String manufacture;
 
     @Min(value = 0)

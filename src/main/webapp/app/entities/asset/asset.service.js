@@ -6,6 +6,7 @@
         .factory('AssetImport', AssetImport)
         .factory('AssetCopy', AssetCopy)
         .factory('AssetManufacture', AssetManufacture)
+        .factory('AssetCapacityUnit', AssetCapacityUnit)
         .factory('AssetNames', AssetNames)
         .factory('AssetLocations', AssetLocations);
 
@@ -13,11 +14,19 @@
     AssetImport.$inject = ['$resource'];
     AssetCopy.$inject = ['$resource'];
     AssetManufacture.$inject = ['$resource'];
+    AssetCapacityUnit.$inject = ['$resource'];
     AssetLocations.$inject = ['$resource'];
     AssetNames.$inject = ['$resource'];
 
     function AssetManufacture($resource) {
         var resourceUrl = 'api/assets/manufactures';
+        return $resource(resourceUrl, {}, {
+            'query': { method: 'GET', isArray: true}
+        });
+    }
+
+    function AssetCapacityUnit($resource) {
+        var resourceUrl = 'api/assets/capacityUnits';
         return $resource(resourceUrl, {}, {
             'query': { method: 'GET', isArray: true}
         });
