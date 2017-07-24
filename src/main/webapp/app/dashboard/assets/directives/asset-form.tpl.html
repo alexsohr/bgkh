@@ -43,7 +43,7 @@
             </div>
         </fieldset>
         <br>
-        <fieldset ng-show="hasSubTree">
+        <fieldset ng-if="hasSubTree">
             <div class="row">
                 <div class="col-md-6" ng-class="{ 'has-error' : !asset.name && asset.assetType == 'ASSET_GROUP' }">
                     <ng-form name="assetGroupName">
@@ -72,7 +72,7 @@
                 </div>
             </div>
         </fieldset>
-        <fieldset ng-hide="hasSubTree">
+        <fieldset ng-if="!hasSubTree">
             <div class="row">
                 <div class="col-md-6" ng-class="{ 'has-error' : !asset.name && asset.assetType!= 'ASSET_GROUP' }">
                     <ng-form name="assetName">
@@ -101,7 +101,7 @@
                 </div>
             </div>
             <div class="row">
-                <div ng-show="assetSpecificationTypeSelect">
+                <div ng-if="assetSpecificationTypeSelect">
                     <div class="col-md-6" ng-class="{ 'has-error' : !asset.assetSpecificationTypeId && asset.assetType!= 'ASSET_GROUP' }">
                         <ng-form name="assetType">
                             <label class="control-label">{{$root.getWord('Asset Type')}}</label>
@@ -123,7 +123,7 @@
                     </div>
                 </div>
 
-                <div ng-hide="assetSpecificationTypeSelect">
+                <div ng-if="!assetSpecificationTypeSelect">
                     <div class="col-md-6" ng-class="{ 'has-error' : !asset.assetSpecificationTypeName && asset.assetType!= 'ASSET_GROUP' }">
                         <ng-form name="assetType">
                             <label class="control-label">{{$root.getWord('Asset Type')}}</label>
@@ -204,7 +204,7 @@
                             <label class="control-label">{{$root.getWord('Capacity Unit')}}</label>
                                 <div class="col-md-12">
                                 <input class="form-control" name="capacityUnit" placeholder="{{$root.getWord('Type something')}}..." type="text"
-                                       ng-required="!asset.unit && asset.assetType!= 'ASSET_GROUP'" list="locations" ng-model="asset.unit" ng-disabled="disableForm">
+                                       ng-required="!asset.unit && asset.assetType!= 'ASSET_GROUP'" list="capacityUnit" ng-model="asset.unit" ng-disabled="disableForm">
                                 <datalist id="capacityUnit">
                                     <option ng-repeat="capacityUnit in capacityUnits" value="{{capacityUnit}}">{{capacityUnit}}</option>
                                 </datalist>
@@ -272,7 +272,7 @@
             </div>
         </fieldset>
         <br>
-        <fieldset ng-hide="hasSubTree">
+        <fieldset ng-if="!hasSubTree">
             <div class="row" ng-hide="disableForm">
 
                 <div class="col-md-12">

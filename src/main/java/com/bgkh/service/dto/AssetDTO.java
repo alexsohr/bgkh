@@ -45,7 +45,6 @@ public class AssetDTO implements Serializable {
 
     private String unit;
 
-
     private Long supervisorId;
 
     private Long technicianId;

@@ -34,6 +34,9 @@ public class AssetSpecificationTypeField implements Serializable {
     @Column(name = "field_type", nullable = false)
     private String fieldType;
 
+    @Column(name = "capacity_unit")
+    private String capacityUnit;
+
     @ManyToOne
     private AssetSpecificationType assetSpecificationType;
 
@@ -49,22 +52,12 @@ public class AssetSpecificationTypeField implements Serializable {
         return fieldLabel;
     }
 
-    public AssetSpecificationTypeField fieldLabel(String fieldLabel) {
-        this.fieldLabel = fieldLabel;
-        return this;
-    }
-
     public void setFieldLabel(String fieldLabel) {
         this.fieldLabel = fieldLabel;
     }
 
     public String getFieldName() {
         return fieldName;
-    }
-
-    public AssetSpecificationTypeField fieldName(String fieldName) {
-        this.fieldName = fieldName;
-        return this;
     }
 
     public void setFieldName(String fieldName) {
@@ -75,22 +68,20 @@ public class AssetSpecificationTypeField implements Serializable {
         return fieldType;
     }
 
-    public AssetSpecificationTypeField fieldType(String fieldType) {
-        this.fieldType = fieldType;
-        return this;
-    }
-
     public void setFieldType(String fieldType) {
         this.fieldType = fieldType;
     }
 
-    public AssetSpecificationType getAssetSpecificationType() {
-        return assetSpecificationType;
+    public String getCapacityUnit() {
+        return capacityUnit;
     }
 
-    public AssetSpecificationTypeField assetSpecificationType(AssetSpecificationType assetSpecificationType) {
-        this.assetSpecificationType = assetSpecificationType;
-        return this;
+    public void setCapacityUnit(String capacityUnit) {
+        this.capacityUnit = capacityUnit;
+    }
+
+    public AssetSpecificationType getAssetSpecificationType() {
+        return assetSpecificationType;
     }
 
     public void setAssetSpecificationType(AssetSpecificationType assetSpecificationType) {
@@ -124,6 +115,7 @@ public class AssetSpecificationTypeField implements Serializable {
             ", fieldLabel='" + fieldLabel + "'" +
             ", fieldName='" + fieldName + "'" +
             ", fieldType='" + fieldType + "'" +
+            ", capacityUnit='" + capacityUnit + "'" +
             '}';
     }
 }

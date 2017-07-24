@@ -1,9 +1,7 @@
 package com.bgkh.service.dto;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
 
 
@@ -23,6 +21,8 @@ public class AssetSpecificationTypeFieldDTO implements Serializable {
     @NotNull
     private String fieldType;
 
+    private String capacityUnit;
+
 
     private Long assetSpecificationTypeId;
 
@@ -33,6 +33,7 @@ public class AssetSpecificationTypeFieldDTO implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
     public String getFieldLabel() {
         return fieldLabel;
     }
@@ -40,6 +41,7 @@ public class AssetSpecificationTypeFieldDTO implements Serializable {
     public void setFieldLabel(String fieldLabel) {
         this.fieldLabel = fieldLabel;
     }
+
     public String getFieldName() {
         return fieldName;
     }
@@ -47,12 +49,21 @@ public class AssetSpecificationTypeFieldDTO implements Serializable {
     public void setFieldName(String fieldName) {
         this.fieldName = fieldName;
     }
+
     public String getFieldType() {
         return fieldType;
     }
 
     public void setFieldType(String fieldType) {
         this.fieldType = fieldType;
+    }
+
+    public String getCapacityUnit() {
+        return capacityUnit;
+    }
+
+    public void setCapacityUnit(String capacityUnit) {
+        this.capacityUnit = capacityUnit;
     }
 
     public Long getAssetSpecificationTypeId() {
@@ -74,7 +85,7 @@ public class AssetSpecificationTypeFieldDTO implements Serializable {
 
         AssetSpecificationTypeFieldDTO assetSpecificationTypeFieldDTO = (AssetSpecificationTypeFieldDTO) o;
 
-        if ( ! Objects.equals(id, assetSpecificationTypeFieldDTO.id)) return false;
+        if (!Objects.equals(id, assetSpecificationTypeFieldDTO.id)) return false;
 
         return true;
     }
@@ -91,6 +102,7 @@ public class AssetSpecificationTypeFieldDTO implements Serializable {
             ", fieldLabel='" + fieldLabel + "'" +
             ", fieldName='" + fieldName + "'" +
             ", fieldType='" + fieldType + "'" +
+            ", capacityUnit='" + capacityUnit + "'" +
             '}';
     }
 }

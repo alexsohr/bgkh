@@ -16,9 +16,10 @@
             "detail": {
                 "title": "Asset Specification Type Field"
             },
-            "fieldLabel": "Field label",
+            "fieldLabel": "Field Label",
             "fieldName": "Field Name",
             "fieldType": "Field Type",
+            "capacityUnit": "Capacity Unit",
             "assetSpecificationType": "Asset Specification Type"
         }
     }

@@ -19,9 +19,10 @@
             <thead>
                 <tr>
                     <th><span data-translate="global.field.id">ID</span></th>
-                    <th><span data-translate="appApp.assetSpecificationTypeField.fieldLabel">Field label</span></th>
+                    <th><span data-translate="appApp.assetSpecificationTypeField.fieldLabel">Field Label</span></th>
                     <th><span data-translate="appApp.assetSpecificationTypeField.fieldName">Field Name</span></th>
                     <th><span data-translate="appApp.assetSpecificationTypeField.fieldType">Field Type</span></th>
+                    <th><span data-translate="appApp.assetSpecificationTypeField.capacityUnit">Capacity Unit</span></th>
                     <th><span data-translate="appApp.assetSpecificationTypeField.assetSpecificationType">Asset Specification Type</span></th>
                     <th></th>
                 </tr>
@@ -32,6 +33,7 @@
                     <td>{{assetSpecificationTypeField.fieldLabel}}</td>
                     <td>{{assetSpecificationTypeField.fieldName}}</td>
                     <td>{{assetSpecificationTypeField.fieldType}}</td>
+                    <td>{{assetSpecificationTypeField.capacityUnit}}</td>
                     <td>
                         <a ui-sref="asset-specification-type-detail({id:assetSpecificationTypeField.assetSpecificationTypeId})">{{assetSpecificationTypeField.assetSpecificationTypeId}}</a>
                     </td>

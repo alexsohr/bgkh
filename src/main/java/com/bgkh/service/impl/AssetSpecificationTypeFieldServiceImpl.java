@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import java.util.LinkedList;
@@ -63,9 +64,21 @@ public class AssetSpecificationTypeFieldServiceImpl implements AssetSpecificatio
 
     @Override
     public List<AssetSpecificationTypeFieldDTO> findAllByAssetSpecificationTypeId(Long id) {
-        List<AssetSpecificationTypeFieldDTO> assetSpecificationTypeFields = assetSpecificationTypeFieldRepository.findAllByTypeId(id).stream()
-            .map(assetSpecificationTypeFieldMapper::assetSpecificationTypeFieldToAssetSpecificationTypeFieldDTO)
-            .collect(Collectors.toCollection(LinkedList::new));
+        List<AssetSpecificationTypeField> allByTypeId = assetSpecificationTypeFieldRepository.findAllByTypeId(id);
+        List<AssetSpecificationTypeFieldDTO> assetSpecificationTypeFields = new LinkedList<>();
+        for(AssetSpecificationTypeField field: allByTypeId) {
+            AssetSpecificationTypeFieldDTO dto = new AssetSpecificationTypeFieldDTO();
+            dto.setAssetSpecificationTypeId(field.getAssetSpecificationType().getId());
+            dto.setCapacityUnit(field.getCapacityUnit());
+            dto.setFieldLabel(field.getFieldLabel());
+            dto.setFieldName(field.getFieldName());
+            dto.setId(field.getId());
+            dto.setFieldType(field.getFieldType());
+            assetSpecificationTypeFields.add(dto);
+        }
+//        List<AssetSpecificationTypeFieldDTO> assetSpecificationTypeFields = assetSpecificationTypeFieldRepository.findAllByTypeId(id).stream()
+//            .map(assetSpecificationTypeFieldMapper::assetSpecificationTypeFieldToAssetSpecificationTypeFieldDTO)
+//            .collect(Collectors.toCollection(LinkedList::new));
 
         return assetSpecificationTypeFields;
     }

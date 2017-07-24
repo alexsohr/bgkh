@@ -23,10 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -159,6 +156,7 @@ public class AssetServiceImpl implements AssetService {
             assetSpecificationTypeField.setFieldLabel(specificationTypeDataDTO.getFieldLabel());
             assetSpecificationTypeField.setFieldType(specificationTypeDataDTO.getFieldType());
             assetSpecificationTypeField.setFieldName(specificationTypeDataDTO.getFieldLabel());
+            assetSpecificationTypeField.setCapacityUnit(specificationTypeDataDTO.getCapacityUnit());
             assetSpecificationTypeField.setAssetSpecificationType(asset.getAssetSpecificationType());
             assetSpecificationTypeField = assetSpecificationTypeFieldRepository.save(assetSpecificationTypeField);
 
@@ -229,6 +227,10 @@ public class AssetServiceImpl implements AssetService {
     @Override
     public List<String> findAllCapacityUnits() {
         List<String> allCapacityUnits = assetRepository.findAllCapacityUnits();
+        List<String> fieldAllCapacityUnits = assetSpecificationTypeFieldRepository.findAllCapacityUnits();
+        Set<String> capacities = new HashSet<>(allCapacityUnits);
+        capacities.addAll(fieldAllCapacityUnits);
+        allCapacityUnits = new ArrayList<>(capacities);
         return allCapacityUnits;
     }
 

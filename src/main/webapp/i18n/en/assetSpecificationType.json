@@ -16,7 +16,8 @@
             "detail": {
                 "title": "Asset Specification Type"
             },
-            "name": "Name"
+            "name": "Name",
+            "unit": "Unit"
         }
     }
 }

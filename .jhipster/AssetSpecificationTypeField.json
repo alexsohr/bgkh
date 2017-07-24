@@ -29,6 +29,10 @@
             "fieldValidateRules": [
                 "required"
             ]
+        },
+        {
+            "fieldName": "capacityUnit",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20170219232038",

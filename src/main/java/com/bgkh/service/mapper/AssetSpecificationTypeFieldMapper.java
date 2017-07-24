@@ -13,11 +13,13 @@ import java.util.List;
 public interface AssetSpecificationTypeFieldMapper {
 
     @Mapping(source = "assetSpecificationType.id", target = "assetSpecificationTypeId")
+    @Mapping(source = "capacityUnit", target = "capacityUnit")
     AssetSpecificationTypeFieldDTO assetSpecificationTypeFieldToAssetSpecificationTypeFieldDTO(AssetSpecificationTypeField assetSpecificationTypeField);
 
     List<AssetSpecificationTypeFieldDTO> assetSpecificationTypeFieldsToAssetSpecificationTypeFieldDTOs(List<AssetSpecificationTypeField> assetSpecificationTypeFields);
 
     @Mapping(source = "assetSpecificationTypeId", target = "assetSpecificationType")
+    @Mapping(source = "capacityUnit", target = "capacityUnit")
     AssetSpecificationTypeField assetSpecificationTypeFieldDTOToAssetSpecificationTypeField(AssetSpecificationTypeFieldDTO assetSpecificationTypeFieldDTO);
 
     List<AssetSpecificationTypeField> assetSpecificationTypeFieldDTOsToAssetSpecificationTypeFields(List<AssetSpecificationTypeFieldDTO> assetSpecificationTypeFieldDTOs);

@@ -107,6 +107,7 @@
                                 fieldLabel: null,
                                 fieldName: null,
                                 fieldType: null,
+                                capacityUnit: null,
                                 id: null
                             };
                         }

@@ -14,7 +14,7 @@
                     ng-model="vm.assetSpecificationTypeField.id" readonly />
         </div>
         <div class="form-group">
-            <label class="control-label" data-translate="appApp.assetSpecificationTypeField.fieldLabel" for="field_fieldLabel">Field label</label>
+            <label class="control-label" data-translate="appApp.assetSpecificationTypeField.fieldLabel" for="field_fieldLabel">Field Label</label>
             <input type="text" class="form-control" name="fieldLabel" id="field_fieldLabel"
                     ng-model="vm.assetSpecificationTypeField.fieldLabel"
                     required />
@@ -48,6 +48,12 @@
                     This field is required.
                 </p>
             </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="appApp.assetSpecificationTypeField.capacityUnit" for="field_capacityUnit">Capacity Unit</label>
+            <input type="text" class="form-control" name="capacityUnit" id="field_capacityUnit"
+                    ng-model="vm.assetSpecificationTypeField.capacityUnit"
+                     />
         </div>
 
         <div class="form-group">

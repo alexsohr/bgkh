@@ -5,19 +5,31 @@
         </div>
     </div>
     <div class="row padding-top-10" data-ng-repeat="assetSpecTypeFieldVal in assetSpecTypeFieldVals">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="col-md-12">
                 <input type="hidden" class="form-control" ng-model="assetSpecTypeFieldVal.typeId">
-                <input type="text" class="form-control" ng-model="assetSpecTypeFieldVal.fieldLabel" ng-change="changeFormValue()" placeholder="Filed name" ng-disabled="disableForm">
+                <input type="text" class="form-control" ng-model="assetSpecTypeFieldVal.fieldLabel"
+                       ng-change="changeFormValue()" placeholder="Filed name" ng-disabled="disableForm">
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
+            <div class="col-md-12">
+                <input class="form-control" name="capacityUnit" placeholder="{{$root.getWord('Type unit name')}}..."
+                       type="text"
+                       list="{{ 'capacityUnit' + assetSpecTypeFieldVal.typeId}}" ng-model="assetSpecTypeFieldVal.capacityUnit" ng-disabled="disableForm">
+                <datalist id="{{ 'capacityUnit' + assetSpecTypeFieldVal.typeId}}">
+                    <option ng-repeat="capacityUnit in capacityUnits" value="{{capacityUnit}}">{{capacityUnit}}</option>
+                </datalist>
+            </div>
+        </div>
+        <div class="col-md-4">
             <div class="col-md-12 input-group">
                 <input type="hidden" class="form-control" ng-model="assetSpecTypeFieldVal.valId">
                 <input type="text" class="form-control" ng-disabled="disableForm"
-                       ng-model="assetSpecTypeFieldVal.value" placeholder="Filed value"  ng-change="changeFormValue()">
-                <div class="input-group-btn">
-                    <span class="btn btn-danger" ng-click="removeChoice(assetSpecTypeFieldVal)"><i class="fa fa-minus-square"></i></span>
+                       ng-model="assetSpecTypeFieldVal.value" placeholder="Filed value" ng-change="changeFormValue()">
+                <div class="input-group-btn" ng-if="!disableForm">
+                    <span class="btn btn-danger" ng-click="removeChoice(assetSpecTypeFieldVal)"><i
+                        class="fa fa-minus-square"></i></span>
                 </div>
             </div>
         </div>

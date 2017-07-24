@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Mapper for the entity Asset and its DTO AssetDTO.
  */
-@Mapper(componentModel = "spring", uses = {UserMapper.class, UserMapper.class, UploadFileMapper.class, UploadFileMapper.class, })
+@Mapper(componentModel = "spring", uses = {UserMapper.class, UserMapper.class, UploadFileMapper.class, UploadFileMapper.class})
 public interface AssetMapper {
 
     @Mapping(source = "supervisor.id", target = "supervisorId")

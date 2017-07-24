@@ -8,6 +8,7 @@ angular.module('app').directive('assetTypeFieldForm', function () {
         scope: {
             asset: '=?asset',
             assetTypeFields: '=?assetTypeFields',
+            units: '=?units',
             assetTypeValues: '=?assetTypeValues',
             disableForm: '=?disableForm',
             destroyElement: '=?destroyElement'
@@ -18,15 +19,22 @@ angular.module('app').directive('assetTypeFieldForm', function () {
         },
         link: function (scope, rootScope, element, attrs) {
             scope.assetSpecTypeFieldVals = [];
+            scope.capacityUnits = [];
+            if (!angular.isUndefinedOrNull(scope.units)) {
+                scope.capacityUnits = scope.units;
+            }
 
             if (!angular.isUndefinedOrNull(scope.assetTypeFields)) {
                 for (var i = 0; i < scope.assetTypeFields.length; i++) {
-                    scope.assetSpecTypeFieldVals.push({
-                        typeId: scope.assetTypeFields[i].id,
-                        fieldLabel: scope.assetTypeFields[i].fieldLabel,
-                        valId: !angular.isUndefinedOrNull(scope.assetTypeValues) && scope.assetTypeValues.length > 0 ? scope.assetTypeValues[i].id : "",
-                        value: !angular.isUndefinedOrNull(scope.assetTypeValues) && scope.assetTypeValues.length > 0 ? scope.assetTypeValues[i].fieldValue : ""
-                    });
+                    if (!angular.isUndefinedOrNull(scope.assetTypeFields[i].fieldLabel)) {
+                        scope.assetSpecTypeFieldVals.push({
+                            typeId: scope.assetTypeFields[i].id,
+                            fieldLabel: scope.assetTypeFields[i].fieldLabel,
+                            capacityUnit: scope.assetTypeFields[i].capacityUnit,
+                            valId: !angular.isUndefinedOrNull(scope.assetTypeValues) && scope.assetTypeValues.length > 0 ? scope.assetTypeValues[i].id : "",
+                            value: !angular.isUndefinedOrNull(scope.assetTypeValues) && scope.assetTypeValues.length > 0 ? scope.assetTypeValues[i].fieldValue : ""
+                        });
+                    }
                 }
             }
 
@@ -45,15 +53,20 @@ angular.module('app').directive('assetTypeFieldForm', function () {
             scope.changeFormValue = function () {
                 scope.asset.assetSpecificationTypeData = [];
                 for (var i = 0; i < scope.assetSpecTypeFieldVals.length; i++) {
-                    var data = scope.assetSpecTypeFieldVals[i];
-                    var dataObject = {fieldId: data.typeId, fieldLabel: data.fieldLabel, fieldType: 'string'};
-                    if (!angular.isUndefinedOrNull(scope.asset.id)) {
-                        dataObject.valueId = data.valId;
-                        dataObject.fieldValue = data.value;
+                        var data = scope.assetSpecTypeFieldVals[i];
+                        var dataObject = {
+                            fieldId: data.typeId,
+                            fieldLabel: data.fieldLabel,
+                            capacityUnit: data.capacityUnit,
+                            fieldType: 'string'
+                        };
+                        if (!angular.isUndefinedOrNull(scope.asset.id)) {
+                            dataObject.valueId = data.valId;
+                            dataObject.assetId = scope.asset.id;
+                        }
                         dataObject.assetSpecificationTypeFieldId = scope.asset.assetSpecificationTypeId;
-                        dataObject.assetId = scope.asset.id;
-                    }
-                    scope.asset.assetSpecificationTypeData.push(dataObject);
+                        dataObject.fieldValue = data.value;
+                        scope.asset.assetSpecificationTypeData.push(dataObject);
                 }
             }
             scope.$watch(scope.destroyElement, function () {
@@ -64,4 +77,5 @@ angular.module('app').directive('assetTypeFieldForm', function () {
             });
         }
     }
-});
+})
+;

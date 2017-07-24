@@ -16,6 +16,8 @@ public class AssetSpecificationTypeDataDTO implements Serializable {
 
     private String fieldLabel;
 
+    private String capacityUnit;
+
     @NotNull
     private String fieldType;
 
@@ -79,6 +81,14 @@ public class AssetSpecificationTypeDataDTO implements Serializable {
         this.valueId = valueId;
     }
 
+    public String getCapacityUnit() {
+        return capacityUnit;
+    }
+
+    public void setCapacityUnit(String capacityUnit) {
+        this.capacityUnit = capacityUnit;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -97,6 +107,7 @@ public class AssetSpecificationTypeDataDTO implements Serializable {
         result = 31 * result + (assetSpecificationTypeFieldId != null ? assetSpecificationTypeFieldId.hashCode() : 0);
         result = 31 * result + (fieldValue != null ? fieldValue.hashCode() : 0);
         result = 31 * result + (fieldLabel != null ? fieldLabel.hashCode() : 0);
+        result = 31 * result + (capacityUnit != null ? capacityUnit.hashCode() : 0);
         result = 31 * result + (fieldType != null ? fieldType.hashCode() : 0);
         result = 31 * result + (fieldId != null ? fieldId.hashCode() : 0);
         result = 31 * result + (valueId != null ? valueId.hashCode() : 0);
@@ -110,6 +121,7 @@ public class AssetSpecificationTypeDataDTO implements Serializable {
             ", assetSpecificationTypeFieldId=" + assetSpecificationTypeFieldId +
             ", fieldValue='" + fieldValue + '\'' +
             ", fieldLabel='" + fieldLabel + '\'' +
+            ", capacityUnit='" + capacityUnit + '\'' +
             ", fieldType='" + fieldType + '\'' +
             ", fieldId=" + fieldId +
             ", valueId=" + valueId +

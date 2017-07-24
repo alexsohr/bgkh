@@ -49,7 +49,7 @@ angular.module('app').directive('assetsForm', function () {
             loadAllUsers();
 
             addTypeFieldElements();
-
+            loadAllAssetSpecificationTypeFields($scope.asset.assetSpecificationTypeId);
             $scope.changeToNewSpecType = function () {
                 $scope.destroySpecTypeElement = true;
                 $scope.assetSpecificationTypeSelect = false;
@@ -90,7 +90,7 @@ angular.module('app').directive('assetsForm', function () {
                 var specTypeFormDir = document.querySelector(".asset-type-container" + $scope.scopeId);
                 angular.element(specTypeFormDir).html("");
                 // $scope.destroySpecTypeElement = false;
-                angular.element(specTypeFormDir).append($compile("<asset-type-field-form asset=\"asset\" asset-type-fields=\"assetSpecificationTypeFields\" asset-type-values=\"assetSpecificationTypeValue\" disable-form=\"disableForm\" destroy-element=\"destroySpecTypeElement\"></asset-type-field-form>")($scope));
+                angular.element(specTypeFormDir).append($compile("<asset-type-field-form asset=\"asset\" units=\"capacityUnits\" asset-type-fields=\"assetSpecificationTypeFields\" asset-type-values=\"assetSpecificationTypeValue\" disable-form=\"disableForm\" destroy-element=\"destroySpecTypeElement\"></asset-type-field-form>")($scope));
             }
 
             function loadAllAssetSpecificationTypes() {
@@ -158,7 +158,6 @@ angular.module('app').directive('assetsForm', function () {
             function onError(error) {
                 AlertService.error(error.data.message);
             }
-
 
             $scope.assetSpecificationTypeIdChange = function () {
                 $scope.asset.assetSpecificationTypeName = null;
@@ -297,7 +296,6 @@ angular.module('app').directive('assetsForm', function () {
                     }
                 });
             };
-
         },
         link: function (scope, rootScope, element, attrs, compile) {
 
