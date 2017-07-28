@@ -64,6 +64,7 @@ public class AssetServiceImpl implements AssetService {
     public AssetDTO save(AssetDTO assetDTO) {
         log.debug("Request to save Asset : {}", assetDTO);
         Asset asset = assetMapper.assetDTOToAsset(assetDTO);
+        attachUploadFilesFromIds(asset);
         saveOrUpdateSpecificType(asset, assetDTO);
         asset = assetRepository.save(asset);
 //        saveOrUpdateSpecificType(asset, assetDTO);
