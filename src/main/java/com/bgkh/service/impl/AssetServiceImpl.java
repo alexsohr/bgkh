@@ -1,15 +1,9 @@
 package com.bgkh.service.impl;
 
+import com.bgkh.domain.*;
+import com.bgkh.repository.*;
 import com.bgkh.service.AssetService;
-import com.bgkh.domain.Asset;
-import com.bgkh.domain.AssetSpecificationType;
-import com.bgkh.domain.AssetSpecificationTypeField;
-import com.bgkh.domain.AssetSpecificationTypeValue;
 import com.bgkh.domain.enumeration.AssetType;
-import com.bgkh.repository.AssetRepository;
-import com.bgkh.repository.AssetSpecificationTypeFieldRepository;
-import com.bgkh.repository.AssetSpecificationTypeRepository;
-import com.bgkh.repository.AssetSpecificationTypeValueRepository;
 import com.bgkh.service.dto.AssetDTO;
 import com.bgkh.service.dto.AssetDTOs;
 import com.bgkh.service.dto.AssetSpecificationTypeDataDTO;
@@ -19,6 +13,7 @@ import com.bgkh.service.mapper.AssetSpecificationTypeValueMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,6 +51,9 @@ public class AssetServiceImpl implements AssetService {
 
     @Inject
     private AssetSpecificationTypeFieldMapper assetSpecificationTypeFieldMapper;
+
+    @Inject
+    private UploadFileRepository uploadFileRepository;
 
     /**
      * Save a asset.
@@ -190,6 +188,7 @@ public class AssetServiceImpl implements AssetService {
                     asset.setParentId(lastUpdatedAsset.getId());
                 }
 
+                attachUploadFilesFromIds(asset);
                 saveOrUpdateSpecificType(asset, assetDTO);
                 asset = assetRepository.save(asset);
                 saveOrUpdateSpecificTypeFieldsAndValues(asset, assetDTO);
@@ -201,6 +200,28 @@ public class AssetServiceImpl implements AssetService {
         }
         assetDTOs.setAssetList(response);
         return assetDTOs;
+    }
+
+
+    private void attachUploadFilesFromIds(Asset asset) {
+        Iterator<UploadFile> iterator = asset.getMaps().iterator();
+        Set<UploadFile> maps = new HashSet<>();
+        while(iterator.hasNext()) {
+            UploadFile uploadFile = iterator.next();
+            Example<UploadFile> uploadFileExample = Example.of(uploadFile);
+            UploadFile one = uploadFileRepository.findOne(uploadFileExample);
+            maps.add(one);
+        }
+        asset.setMaps(maps);
+        iterator = asset.getOtherFiles().iterator();
+        Set<UploadFile> otherFiles = new HashSet<>();
+        while(iterator.hasNext()) {
+            UploadFile uploadFile = iterator.next();
+            Example<UploadFile> uploadFileExample = Example.of(uploadFile);
+            UploadFile one = uploadFileRepository.findOne(uploadFileExample);
+            otherFiles.add(one);
+        }
+        asset.setOtherFiles(otherFiles);
     }
 
     /**
