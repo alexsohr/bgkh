@@ -27,15 +27,22 @@ angular.module('app').directive('assetTypeFieldForm', function () {
             if (!angular.isUndefinedOrNull(scope.assetTypeFields)) {
                 for (var i = 0; i < scope.assetTypeFields.length; i++) {
                     if (!angular.isUndefinedOrNull(scope.assetTypeFields[i].fieldLabel)) {
-                        scope.assetSpecTypeFieldVals.push({
+                        var formData = {
                             typeId: scope.assetTypeFields[i].id,
                             fieldLabel: scope.assetTypeFields[i].fieldLabel,
-                            capacityUnit: scope.assetTypeFields[i].capacityUnit,
-                            valId: !angular.isUndefinedOrNull(scope.assetTypeValues) && scope.assetTypeValues.length > 0 ? scope.assetTypeValues[i].id : "",
-                            value: !angular.isUndefinedOrNull(scope.assetTypeValues) && scope.assetTypeValues.length > 0 ? scope.assetTypeValues[i].fieldValue : ""
+                            capacityUnit: scope.assetTypeFields[i].capacityUnit
+                        };
+                        scope.assetTypeValues.forEach(function(assetTypeValue) {
+                            if (assetTypeValue.assetSpecificationTypeFieldId === scope.assetTypeFields[i].id) {
+                                formData.valId = !angular.isUndefinedOrNull(assetTypeValue.id) ? assetTypeValue.id : "";
+                                formData.value = !angular.isUndefinedOrNull(assetTypeValue.fieldValue) ? assetTypeValue.fieldValue : "";
+                                console.log(assetTypeValue.id)
+                            }
                         });
+                        scope.assetSpecTypeFieldVals.push(formData);
                     }
                 }
+                console.log(scope.assetSpecTypeFieldVals)
             }
 
             scope.addNewChoice = function () {
