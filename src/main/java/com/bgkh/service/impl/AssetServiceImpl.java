@@ -73,7 +73,6 @@ public class AssetServiceImpl implements AssetService {
         return result;
     }
 
-
     private void saveOrUpdateSpecificType(Asset asset, AssetDTO assetDTO) {
         if (!asset.getAssetType().equals(AssetType.ASSET_GROUP)) {
             AssetSpecificationType assetSpecificationType = new AssetSpecificationType();
@@ -100,7 +99,20 @@ public class AssetServiceImpl implements AssetService {
         return assetDTOs;
     }
 
+    private void findAndCopyChildren(Asset asset, Long parentId, List<AssetDTO> response) {
+
+
+        AssetDTO newAssetDTO = saveNewAsset(asset, parentId);
+        response.add(newAssetDTO);
+
+        List<Asset> allChileAssets = assetRepository.findAllByParentId(asset.getId());
+        for (Asset child : allChileAssets) {
+            findAndCopyChildren(child, newAssetDTO.getId(), response);
+        }
+    }
+
     private AssetDTO saveNewAsset(Asset asset, Long parentId) {
+        List<AssetSpecificationTypeValue> allByAssetId = assetSpecificationTypeValueRepository.findAllByAssetId(asset.getId());
         Asset newAssetEntity = new Asset();
 
         BeanUtils.copyProperties(asset, newAssetEntity);
@@ -111,9 +123,9 @@ public class AssetServiceImpl implements AssetService {
         newAssetEntity.setName(asset.getName() + "_NEW");
         newAssetEntity.setMaps(null);
         newAssetEntity.setOtherFiles(null);
+        newAssetEntity.setAssetSpecificationTypeValues(null);
         Asset newAsset = assetRepository.save(newAssetEntity);
         List<AssetSpecificationTypeValue> assetSpecificationTypeValues = new ArrayList<>();
-        List<AssetSpecificationTypeValue> allByAssetId = assetSpecificationTypeValueRepository.findAllByAssetId(asset.getId());
         for (AssetSpecificationTypeValue typeValue : allByAssetId) {
             AssetSpecificationTypeValue assetSpecificationTypeValue = new AssetSpecificationTypeValue();
             BeanUtils.copyProperties(typeValue, assetSpecificationTypeValue);
@@ -121,20 +133,10 @@ public class AssetServiceImpl implements AssetService {
             assetSpecificationTypeValue.setAsset(newAsset);
             assetSpecificationTypeValues.add(assetSpecificationTypeValue);
         }
+        if (assetSpecificationTypeValues.size() > 0)
         assetSpecificationTypeValueRepository.save(assetSpecificationTypeValues);
         AssetDTO assetDTO = assetMapper.assetToAssetDTO(newAsset);
         return assetDTO;
-    }
-
-    private void findAndCopyChildren(Asset asset, Long parentId, List<AssetDTO> response) {
-
-        AssetDTO newAssetDTO = saveNewAsset(asset, parentId);
-        response.add(newAssetDTO);
-
-        List<Asset> allChileAssets = assetRepository.findAllByParentId(asset.getId());
-        for (Asset child : allChileAssets) {
-            findAndCopyChildren(child, newAssetDTO.getId(), response);
-        }
     }
 
     private void saveOrUpdateSpecificTypeFieldsAndValues(Asset asset, AssetDTO assetDTO) {
