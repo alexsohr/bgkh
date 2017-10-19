@@ -189,11 +189,11 @@
                             <div class="col-md-12">
                             <span ng-if="disableForm">
                                 <input class="form-control" value="1" type="number"
-                                       min="1" ng-model="asset.capacity" ng-disabled="disableForm">
+                                       min="0" ng-model="asset.capacity" ng-disabled="disableForm">
                             </span>
                             <span ng-if="!disableForm">
                                 <input class="form-control" name="capacity" type="number" name="spinner" value="1"
-                                       min="1" ng-required="!asset.capacity && asset.assetType!= 'ASSET_GROUP' " ng-model="asset.capacity">
+                                       min="0" ng-required="!asset.capacity && asset.assetType!= 'ASSET_GROUP' " ng-model="asset.capacity">
                             </span>
                             <p class="help-block" ng-show="!asset.capacity && asset.assetType!= 'ASSET_GROUP' ">{{$root.getWord('Capacity is required!')}}</p>
                             </div>
