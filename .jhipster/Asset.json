@@ -111,7 +111,7 @@
         },
         {
             "fieldName": "capacity",
-            "fieldType": "Integer",
+            "fieldType": "BigDecimal",
             "fieldValidateRules": [
                 "min"
             ],

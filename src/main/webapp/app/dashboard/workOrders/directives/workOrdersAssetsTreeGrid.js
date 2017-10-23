@@ -8,7 +8,7 @@ angular.module('app').directive('workOrdersAssetsTreeGrid', function () {
         templateUrl: 'app/dashboard/workOrders/directives/work-order-assets-tree-grid.tpl.html',
         scope: true,
         controllerAs: 'workOrdersAssetsTreeGrid',
-        controller: function ($scope, $rootScope, $compile, $element, $sce, $templateCache, Asset) {
+        controller: function ($scope, $rootScope, $compile, $element, $sce, $templateCache, Asset, WorkOrderAddModalService) {
             var tree;
             $scope.work_order_assets_tree = tree = {};
 
@@ -61,6 +61,17 @@ angular.module('app').directive('workOrdersAssetsTreeGrid', function () {
                 $scope.workOrderAssetImportHeader = "";
                 $scope.workOrderAssetImportBody = "<div></div>";
                 $scope.workOrderAssetImportFooter = "";
+            }
+
+            $scope.openWorkOrderAddModal = function () {
+                console.log("Opening work order modal");
+                if (!WorkOrderAddModalService.isOpen()) {
+                    WorkOrderAddModalService.openAdd();
+                }
+                // var header = $rootScope.getWord('Add Work order');
+                // var body = $compile('<work-order-form></work-order-form>')($scope);
+                // var footer = $sce.trustAsHtml("<button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\" ng-click='submitDataWithSuccessAlert()'>" + $rootScope.getWord('Save') + "</button>");
+                // setFormData(header, body, footer);
             }
 
             function getTree(data, primaryIdName, parentIdName) {

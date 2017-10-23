@@ -11,7 +11,7 @@ angular.module('app').directive('workOrder', function () {
             nested: '@nested'
         },
         templateUrl: 'app/dashboard/workOrders/directives/work-order.tpl.html',
-        controller: function ($scope, $rootScope, $compile, $sce, $element, $ctrl) {
+        controller: function ($scope, $rootScope, $compile, $sce, $element, $ctrl, WorkOrderAddModalService) {
             $ctrl.
             $scope.workOrderModalClass = "work-order-modal";
             var workOrderData = $scope.workOrders.data;
@@ -110,12 +110,16 @@ angular.module('app').directive('workOrder', function () {
                 var footer = "";
                 setFormData(header, body, footer);
             };
-            $scope.openWorkOrderAddModal = function (data) {
-                var header = $rootScope.getWord('Add Work order');
-                var body = $compile('<work-order-form></work-order-form>')($scope);
-                var footer = $sce.trustAsHtml("<button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\" ng-click='submitDataWithSuccessAlert()'>" + $rootScope.getWord('Save') + "</button>");
-                setFormData(header, body, footer);
-            }
+            // $scope.openWorkOrderAddModal = function () {
+            //     console.log("Opening work order modal");
+            //     if (WorkOrderAddModalService.isOpen()) {
+            //         WorkOrderAddModalService.open();
+            //     }
+                // var header = $rootScope.getWord('Add Work order');
+                // var body = $compile('<work-order-form></work-order-form>')($scope);
+                // var footer = $sce.trustAsHtml("<button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\" ng-click='submitDataWithSuccessAlert()'>" + $rootScope.getWord('Save') + "</button>");
+                // setFormData(header, body, footer);
+            // }
 
             function setFormData(header, body, footer) {
                 console.log("Setting form data");

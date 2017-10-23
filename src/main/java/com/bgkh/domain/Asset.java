@@ -7,6 +7,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
@@ -58,8 +59,8 @@ public class Asset implements Serializable {
     private String manufacture;
 
     @Min(value = 0)
-    @Column(name = "capacity")
-    private Integer capacity;
+    @Column(name = "capacity", precision=10, scale=2)
+    private BigDecimal capacity;
 
     @Min(value = 1800)
     @Column(name = "year")
@@ -201,16 +202,16 @@ public class Asset implements Serializable {
         this.manufacture = manufacture;
     }
 
-    public Integer getCapacity() {
+    public BigDecimal getCapacity() {
         return capacity;
     }
 
-    public Asset capacity(Integer capacity) {
+    public Asset capacity(BigDecimal capacity) {
         this.capacity = capacity;
         return this;
     }
 
-    public void setCapacity(Integer capacity) {
+    public void setCapacity(BigDecimal capacity) {
         this.capacity = capacity;
     }
 

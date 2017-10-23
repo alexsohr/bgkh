@@ -1,292 +1,108 @@
-<div class="widget-body">
-    <form class="form-horizontal">
-        <fieldset>
-            <div class="row">
-                <div class="col-md-12">
-                    <label>{{$root.getWord('Assets')}}</label>
-                    <select data-smart-select2 class="select2 col-xs-12 col-sm-12 col-md-12"
-                            ng-model="workOrder.assetId">
-                        <optgroup label="{{$root.getWord('Assets')}}">
-                            <option ng-repeat="asset in assets" value="{{asset.id}}">{{asset.name}}</option>
-                        </optgroup>
-                    </select>
-                </div>
-            </div>
-        </fieldset>
-        <fieldset>
-            <legend>
-            </legend>
-            <div class="row">
-                <div class="col-md-6 ">
-                    <label class="control-label">{{$root.getWord('Code')}}</label>
-                    <div class="col-md-12">
-                        <input type="text" class="form-control" ng-model="workOrder.code" ng-disabled="disableForm">
-                    </div>
-                </div>
+<div>
+    <form name="assetEditForm" class="asset-edit-form form-group" role="form" novalidate show-validation>
 
-
-                <div class="col-md-6">
-                    <label class="control-label">{{$root.getWord('Number')}}</label>
-                    <div class="col-md-12">
-                        <input type="text" class="form-control" ng-model="workOrder.number" ng-disabled="disableForm">
-                    </div>
-                </div>
-            </div>
-        </fieldset>
-        <fieldset>
-            <legend>
-            </legend>
-            <div class="row">
-                <div class="col-md-12">
-                    <label class="col-md-2 control-label">{{$root.getWord('Work order state')}}</label>
-                    <div class="col-md-10 padding-bottom-10">
-                        <div class="radio">
-                            <label>
-                                <input type="radio" class="radiobox style-0" name="state" value="N" ng-model="workOrderState">
-                                <span>{{$root.getWord('Normal')}}</span>
-                            </label>
-                            <label>
-                                <input type="radio" class="radiobox style-0" name="state" value="E" ng-model="workOrderState">
-                                <span>{{$root.getWord('Emergency')}}</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div ng-hide="workOrderState == 'E'" class="well well-light">
-                <div class="row">
-                    <div class="col-xs-12 col-sm-4 col-md-4">
-                        <div class="panel panel-primary height-150">
-                            <div class="panel-heading bg-color-blueDark txt-color-white">
-                                <h3 class="panel-title">
-                                    {{$root.getWord('Weekday')}}</h3>
-                            </div>
-                            <div class="panel-body no-padding">
-                                <div class="row">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="workOrderAddVm.clear()">&times;</button>
+            <h4 class="modal-title" id="myAssetLabel">{{$root.getWord('Create or edit a Work Order Template')}}</h4>
+        </div>
+        <div class="modal-body">
+            <div class="step-content">
+                <div class="form-horizontal">
+                        <fieldset>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="control-label">{{$root.getWord('Work order group')}}</label>
                                     <div class="col-md-12">
-                                        <div class="radio">
-                                            <label>
-                                                <input type="radio" class="radiobox style-0" ng-model="workOrderWeek" value="EW"
-                                                       name="weekday">
-                                                <span>{{$root.getWord('Every Weekday')}}</span>
-                                            </label>
-                                        </div>
-                                        <div class="radio">
-                                            <label>
-                                                <input type="radio" class="radiobox style-0" name="weekday" ng-model="workOrderWeek" value="MF">
-                                                <span>{{$root.getWord('Monday-Friday')}}</span>
-                                            </label>
-                                        </div>
-                                        <div class="radio">
-                                            <label>
-                                                <input type="radio" class="radiobox style-0" name="weekday" ng-model="workOrderWeek" value="WD">
-                                                <span>{{$root.getWord('Weekend Days')}}</span>
-                                            </label>
-                                        </div>
-                                        <div class="radio">
-                                            <label>
-                                                <input type="radio" class="radiobox style-0" name="weekday" ng-model="workOrderWeek" value="W">
-                                                <span>{{$root.getWord('Week Day')}}</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row padding-10">
-                                    <div class="col-md-12">
-                                        <select multiple="multiple" id="multiselect1" class="form-control custom-scroll" ng-disabled="workOrderWeek != 'W'"
-                                                title="Select days">
-                                            <option value="0">Sat</option>
-                                            <option value="0">Sun</option>
-                                            <option value="0">Mon</option>
-                                            <option value="0">Tue</option>
-                                            <option value="0">Wed</option>
-                                            <option value="0">Thu</option>
-                                            <option value="0">Fri</option>
+                                        <select class="form-control"
+                                                ng-model="workOrder.assetId">
+                                            <optgroup label="{{$root.getWord('Group')}}">
+                                                <option ng-repeat="asset in assets" value="{{asset.id}}">{{asset.name}}</option>
+                                            </optgroup>
                                         </select>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-sm-4 col-md-4">
-                        <div class="panel panel-primary height-150">
-                            <div class="panel-heading bg-color-blueDark txt-color-white">
-                                <h3 class="panel-title">
-                                    {{$root.getWord('Months')}}</h3>
-                            </div>
-                            <div class="panel-body no-padding">
-                                <div class="row">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="control-label">{{$root.getWord('Code')}}</label>
                                     <div class="col-md-12">
+                                        <input type="text" class="form-control" ng-model="workOrder.code" ng-disabled="disableForm">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="control-label">{{$root.getWord('Number')}}</label>
+                                    <div class="col-md-12">
+                                        <input type="text" class="form-control" ng-model="workOrder.number" ng-disabled="disableForm">
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="col-md-2 control-label">{{$root.getWord('Work order type')}}</label>
+                                    <div class="col-md-10 padding-bottom-10">
                                         <div class="radio">
                                             <label>
-                                                <input type="radio" checked="checked" class="radiobox style-0" ng-model="workOrderMonth" value="EVM"
-                                                       name="month">
-                                                <span>{{$root.getWord('Every Month')}}</span>
+                                                <input type="radio" class="radiobox style-0" name="type" value="D" ng-checked="workOrder.workOrderType == 'D'" ng-model="workOrder.workOrderType">
+                                                <span>{{$root.getWord('Daily based')}}</span>
                                             </label>
-                                        </div>
-                                        <div class="radio">
                                             <label>
-                                                <input type="radio" class="radiobox style-0" name="month" ng-model="workOrderMonth" value="EM">
-                                                <span>{{$root.getWord('Even Months')}}</span>
-                                            </label>
-                                        </div>
-                                        <div class="radio">
-                                            <label>
-                                                <input type="radio" class="radiobox style-0" name="month" ng-model="workOrderMonth" value="OM">
-                                                <span>{{$root.getWord('Odd Months')}}</span>
-                                            </label>
-                                        </div>
-                                        <div class="radio">
-                                            <label>
-                                                <input type="radio" class="radiobox style-0" name="month" ng-model="workOrderMonth" value="E4M">
-                                                <span>{{$root.getWord('Every 4 Months')}}</span>
-                                            </label>
-                                        </div>
-                                        <div class="radio">
-                                            <label>
-                                                <input type="radio" class="radiobox style-0" name="month" ng-model="workOrderMonth" value="EHY">
-                                                <span>{{$root.getWord('Every Half Year')}}</span>
-                                            </label>
-                                        </div>
-                                        <div class="radio">
-                                            <label>
-                                                <input type="radio" class="radiobox style-0" name="month" ng-model="workOrderMonth" value="M">
-                                                <span>{{$root.getWord('Month(s)')}}</span>
+                                                <input type="radio" class="radiobox style-0" name="type" value="H" ng-model="workOrder.workOrderType">
+                                                <span>{{$root.getWord('Hourly base')}}</span>
                                             </label>
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="row padding-10 bottom-element">
+                            </div>
+                            <div class="row" ng-if="workOrder.workOrderType == 'D'">
+                                <div class="col-md-12">
+                                    <label class="control-label">{{$root.getWord('Number of days')}}</label>
                                     <div class="col-md-12">
-                                        <select multiple="multiple" id="multiselect2" class="form-control custom-scroll" ng-disabled="workOrderMonth != 'M'"
-                                                title="Select days">
-                                            <option value="1">Jan</option>
-                                            <option value="2">Feb</option>
-                                            <option value="3">Mar</option>
-                                            <option value="4">Apr</option>
-                                            <option value="5">May</option>
-                                            <option value="6">Jun</option>
-                                            <option value="7">Jul</option>
-                                            <option value="8">Aug</option>
-                                            <option value="9">Sep</option>
-                                            <option value="10">Oct</option>
-                                            <option value="11">Nov</option>
-                                            <option value="12">Dec</option>
-                                        </select>
+                                        <input class="form-control" name="numberOfDays" type="number" name="spinner" value="1"
+                                               min="1" ng-model="workOrder.numberOfDays">
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-sm-4 col-md-4">
-                        <div class="panel panel-primary">
-                            <div class="panel-heading bg-color-blueDark txt-color-white">
-                                <h3 class="panel-title">
-                                    {{$root.getWord('Days')}}</h3>
-                            </div>
-                            <div class="panel-body no-padding">
-                                <div class="row">
+                            <div class="row" ng-if="workOrder.workOrderType == 'H'">
+                                <div class="col-md-6">
+                                    <label class="control-label">{{$root.getWord('Asset identifier')}}</label>
                                     <div class="col-md-12">
-                                        <div class="radio">
-                                            <label>
-                                                <input type="radio" checked="checked" class="radiobox style-0" ng-model="workOrderDay" value="EVD"
-                                                       name="days">
-                                                <span>{{$root.getWord('Every Day')}}</span>
-                                            </label>
-                                        </div>
-                                        <div class="radio">
-                                            <label>
-                                                <input type="radio" class="radiobox style-0" name="days" ng-model="workOrderDay" value="ED">
-                                                <span>{{$root.getWord('Even Days')}}</span>
-                                            </label>
-                                        </div>
-                                        <div class="radio">
-                                            <label>
-                                                <input type="radio" class="radiobox style-0" name="days" ng-model="workOrderDay" value="OD">
-                                                <span>{{$root.getWord('Odd Days')}}</span>
-                                            </label>
-                                        </div>
-                                        <div class="radio">
-                                            <label>
-                                                <input type="radio" class="radiobox style-0" name="days" ng-model="workOrderDay" value="E5D">
-                                                <span>{{$root.getWord('Every 5 Days')}}</span>
-                                            </label>
-                                        </div>
-                                        <div class="radio">
-                                            <label>
-                                                <input type="radio" class="radiobox style-0" name="days" ng-model="workOrderDay" value="E10D">
-                                                <span>{{$root.getWord('Every 10 Days')}}</span>
-                                            </label>
-                                        </div>
-                                        <div class="radio">
-                                            <label>
-                                                <input type="radio" class="radiobox style-0" name="style-0" ng-model="workOrderDay" value="EHM">
-                                                <span>{{$root.getWord('Every Half Month')}}</span>
-                                            </label>
-                                        </div>
-                                        <div class="radio">
-                                            <label>
-                                                <input type="radio" class="radiobox style-0" name="style-0" ng-model="workOrderDay" value="D">
-                                                <span>{{$root.getWord('Day(s)')}}</span>
-                                            </label>
-                                        </div>
+                                        <input class="form-control" name="identifier" type="text" ng-model="workOrder.identifier">
                                     </div>
                                 </div>
-
-                                <div class="row padding-10">
+                                <div class="col-md-6">
+                                    <label class="control-label">{{$root.getWord('Number of hours')}}</label>
                                     <div class="col-md-12">
-                                        <select multiple="multiple" id="multiselect3" class="form-control custom-scroll" ng-disabled="workOrderDay != 'D'"
-                                                title="Select days">
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
-                                            <option value="6">6</option>
-                                            <option value="7">7</option>
-                                            <option value="8">8</option>
-                                            <option value="9">9</option>
-                                            <option value="10">10</option>
-                                            <option value="11">11</option>
-                                            <option value="12">12</option>
-                                            <option value="13">13</option>
-                                            <option value="14">14</option>
-                                            <option value="15">15</option>
-                                            <option value="16">16</option>
-                                            <option value="17">17</option>
-                                            <option value="18">18</option>
-                                            <option value="19">19</option>
-                                            <option value="20">20</option>
-                                            <option value="21">21</option>
-                                            <option value="22">22</option>
-                                            <option value="23">23</option>
-                                            <option value="24">24</option>
-                                            <option value="25">25</option>
-                                            <option value="26">26</option>
-                                            <option value="27">27</option>
-                                            <option value="28">28</option>
-                                            <option value="29">29</option>
-                                            <option value="30">30</option>
-                                            <option value="31">31</option>
-                                        </select>
+                                        <input class="form-control" name="hours" type="number" name="spinner" value="1"
+                                               min="1" ng-model="workOrder.hours">
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        </fieldset>
+                        <fieldset>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="control-label">{{$root.getWord('Work order description')}}</label>
+                                    <div class="col-md-12 textarea textarea-expandable">
+                                        <textarea type="text" class="custom-scroll form-control" rows="8" ng-model="workOrder.desc" ng-disabled="disableForm"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <label class="control-label">{{$root.getWord('Work order description')}}</label>
-                    <div class="col-md-12">
-                        <textarea type="text" class="form-control" ng-model="workOrder.desc" ng-disabled="disableForm"></textarea>
-                    </div>
-                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="workOrderAddVm.clear()">
+                    <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" class="btn btn-primary" ng-click="workOrderAddVm.clear()">
+                    <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span>
+                </button>
             </div>
-        </fieldset>
+        </div>
     </form>
-
 </div>
+

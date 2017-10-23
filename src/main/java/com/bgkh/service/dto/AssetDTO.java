@@ -2,6 +2,7 @@ package com.bgkh.service.dto;
 
 import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
@@ -38,7 +39,7 @@ public class AssetDTO implements Serializable {
     private String manufacture;
 
     @Min(value = 0)
-    private Integer capacity;
+    private BigDecimal capacity;
 
     @Min(value = 1800)
     private Integer year;
@@ -125,11 +126,11 @@ public class AssetDTO implements Serializable {
     public void setManufacture(String manufacture) {
         this.manufacture = manufacture;
     }
-    public Integer getCapacity() {
+    public BigDecimal getCapacity() {
         return capacity;
     }
 
-    public void setCapacity(Integer capacity) {
+    public void setCapacity(BigDecimal capacity) {
         this.capacity = capacity;
     }
     public Integer getYear() {

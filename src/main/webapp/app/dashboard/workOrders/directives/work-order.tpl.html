@@ -23,9 +23,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li>
-                            <a href="#{{workOrderModal}}" ng-click="openWorkOrderAddModal()"
-                               data-target="#workOrderModal"
-                               data-toggle="modal">{{$root.getWord('Add')}}</a>
+                            <a ng-click="openWorkOrderAddModal()">{{$root.getWord('Add')}}</a>
                         </li>
                     </ul>
                 </li>
@@ -83,14 +81,14 @@
     </table>
 
     <!-- Modal -->
-    <reusable-modal ng-if="nested != 'nested'" modal-data-id="workOrderModal" modal-body="workOrderImportBody"
-                    modal-class="workOrderModalClass"
-                    modal-footer="workOrderImportFooter"
-                    modal-header="workOrderImportHeader"
-                    data-ng-click-right-button="workOrderImportModalClose()"></reusable-modal>
-    <nested-data-form ng-if="nested == 'nested'" form-data-id="workOrderModal"
-                      form-body="workOrderImportBody"
-                      form-footer="workOrderImportFooter"
-                      form-header="workOrderImportHeader"
-    ></nested-data-form>
+    <!--<reusable-modal ng-if="nested != 'nested'" modal-data-id="workOrderModal" modal-body="workOrderImportBody"-->
+                    <!--modal-class="workOrderModalClass"-->
+                    <!--modal-footer="workOrderImportFooter"-->
+                    <!--modal-header="workOrderImportHeader"-->
+                    <!--data-ng-click-right-button="workOrderImportModalClose()"></reusable-modal>-->
+    <!--<nested-data-form ng-if="nested == 'nested'" form-data-id="workOrderModal"-->
+                      <!--form-body="workOrderImportBody"-->
+                      <!--form-footer="workOrderImportFooter"-->
+                      <!--form-header="workOrderImportHeader"-->
+    <!--&gt;</nested-data-form>-->
 </div>

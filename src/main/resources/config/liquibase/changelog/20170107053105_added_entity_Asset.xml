@@ -52,7 +52,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="capacity" type="integer">
+            <column name="capacity" type="decimal(10,2)">
                 <constraints nullable="true" />
             </column>
 
