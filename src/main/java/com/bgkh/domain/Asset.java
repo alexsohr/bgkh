@@ -72,7 +72,7 @@ public class Asset implements Serializable {
     @Column(name = "capacity_unit")
     private String unit;
 
-    @OneToMany(mappedBy = "asset")
+    @OneToMany(mappedBy = "asset", fetch = FetchType.LAZY)
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<WorkOrder> workOrders = new HashSet<>();
@@ -83,14 +83,14 @@ public class Asset implements Serializable {
     @ManyToOne
     private User technician;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JoinTable(name = "asset_maps",
                joinColumns = @JoinColumn(name="assets_id", referencedColumnName="ID"),
                inverseJoinColumns = @JoinColumn(name="maps_id", referencedColumnName="ID"))
     private Set<UploadFile> maps = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JoinTable(name = "asset_other_files",
                joinColumns = @JoinColumn(name="assets_id", referencedColumnName="ID"),
