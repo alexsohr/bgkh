@@ -77,7 +77,7 @@ angular.module('app').directive('assetsTreeGridCheckbox', function () {
                     tree.push(treeObjs[rootIds[i]]);
                 }
                 ;
-
+                console.log("tree" + tree);
                 return tree;
             }
 

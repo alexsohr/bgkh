@@ -85,7 +85,7 @@ angular.module('app', [
 .constant('APP_CONFIG', window.appConfig)
 
 .run(function ($rootScope
-    , $state, $stateParams, Language, Assets, WorkOrders
+    , $state, $stateParams, Language, Assets
     ) {
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
@@ -140,10 +140,6 @@ angular.module('app', [
         $rootScope.tree_data = myTreeData;
     });
 
-    WorkOrders.then(function (response) {
-        var rawTreeData = response.data;
-        $rootScope.workOrders = rawTreeData;
-    });
 
     $rootScope.getTree = function(data, primaryIdName, parentIdName) {
         if (!data || data.length == 0 || !primaryIdName || !parentIdName)

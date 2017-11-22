@@ -11,5 +11,7 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 public interface AssetSpecificationTypeRepository extends JpaRepository<AssetSpecificationType,Long> {
-
+    @Override
+    @Query("select assetSpecificationType from AssetSpecificationType assetSpecificationType order by name asc")
+    List<AssetSpecificationType> findAll();
 }

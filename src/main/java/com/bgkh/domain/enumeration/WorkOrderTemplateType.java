@@ -1,8 +1,8 @@
 package com.bgkh.domain.enumeration;
 
 /**
- * Created by alex on 11/7/17.
+ * The WorkOrderTemplateType enumeration.
  */
 public enum WorkOrderTemplateType {
-    EM,CM,PM
+    PM,CM,EM
 }

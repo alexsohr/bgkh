@@ -374,8 +374,8 @@ angular.module('app', [
 }])
 .constant('APP_CONFIG', window.appConfig)
 
-.run(["$rootScope", "$state", "$stateParams", "Language", "Assets", "WorkOrders", function ($rootScope
-    , $state, $stateParams, Language, Assets, WorkOrders
+.run(["$rootScope", "$state", "$stateParams", "Language", "Assets", function ($rootScope
+    , $state, $stateParams, Language, Assets
     ) {
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
@@ -430,10 +430,6 @@ angular.module('app', [
         $rootScope.tree_data = myTreeData;
     });
 
-    WorkOrders.then(function (response) {
-        var rawTreeData = response.data;
-        $rootScope.workOrders = rawTreeData;
-    });
 
     $rootScope.getTree = function(data, primaryIdName, parentIdName) {
         if (!data || data.length == 0 || !primaryIdName || !parentIdName)
@@ -7160,6 +7156,393 @@ angular.module('app').controller('TodoCtrl', ["$scope", "$timeout", "Todo", func
 
 })();
 
+(function() {
+    'use strict';
+
+    angular
+        .module('app')
+        .controller('WorkOrderTemplateDeleteController',WorkOrderTemplateDeleteController);
+
+    WorkOrderTemplateDeleteController.$inject = ['$uibModalInstance', 'entity', 'WorkOrderTemplate'];
+
+    function WorkOrderTemplateDeleteController($uibModalInstance, entity, WorkOrderTemplate) {
+        var vm = this;
+
+        vm.workOrderTemplate = entity;
+        vm.clear = clear;
+        vm.confirmDelete = confirmDelete;
+
+        function clear () {
+            $uibModalInstance.dismiss('cancel');
+        }
+
+        function confirmDelete (id) {
+            WorkOrderTemplate.delete({id: id},
+                function () {
+                    $uibModalInstance.close(true);
+                });
+        }
+    }
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app')
+        .controller('WorkOrderTemplateDetailController', WorkOrderTemplateDetailController);
+
+    WorkOrderTemplateDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'WorkOrderTemplate', 'AssetSpecificationType'];
+
+    function WorkOrderTemplateDetailController($scope, $rootScope, $stateParams, previousState, entity, WorkOrderTemplate, AssetSpecificationType) {
+        var vm = this;
+
+        vm.workOrderTemplate = entity;
+        vm.previousState = previousState.name;
+
+        var unsubscribe = $rootScope.$on('appApp:workOrderTemplateUpdate', function(event, result) {
+            vm.workOrderTemplate = result;
+        });
+        $scope.$on('$destroy', unsubscribe);
+    }
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app')
+        .controller('WorkOrderTemplateDialogController', WorkOrderTemplateDialogController);
+
+    WorkOrderTemplateDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'WorkOrderTemplate', 'AssetSpecificationType'];
+
+    function WorkOrderTemplateDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, WorkOrderTemplate, AssetSpecificationType) {
+        var vm = this;
+
+        vm.workOrderTemplate = entity;
+        vm.clear = clear;
+        vm.save = save;
+        vm.assetspecificationtypes = AssetSpecificationType.query();
+
+        $timeout(function (){
+            angular.element('.form-group:eq(1)>input').focus();
+        });
+
+        function clear () {
+            $uibModalInstance.dismiss('cancel');
+        }
+
+        function save () {
+            vm.isSaving = true;
+            if (vm.workOrderTemplate.id !== null) {
+                WorkOrderTemplate.update(vm.workOrderTemplate, onSaveSuccess, onSaveError);
+            } else {
+                WorkOrderTemplate.save(vm.workOrderTemplate, onSaveSuccess, onSaveError);
+            }
+        }
+
+        function onSaveSuccess (result) {
+            $scope.$emit('appApp:workOrderTemplateUpdate', result);
+            $uibModalInstance.close(result);
+            vm.isSaving = false;
+        }
+
+        function onSaveError () {
+            vm.isSaving = false;
+        }
+
+
+    }
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app')
+        .controller('WorkOrderTemplateController', WorkOrderTemplateController);
+
+    WorkOrderTemplateController.$inject = ['$scope', '$state', 'WorkOrderTemplate', 'ParseLinks', 'AlertService', 'paginationConstants', 'pagingParams'];
+
+    function WorkOrderTemplateController ($scope, $state, WorkOrderTemplate, ParseLinks, AlertService, paginationConstants, pagingParams) {
+        var vm = this;
+
+        vm.loadPage = loadPage;
+        vm.predicate = pagingParams.predicate;
+        vm.reverse = pagingParams.ascending;
+        vm.transition = transition;
+        vm.itemsPerPage = paginationConstants.itemsPerPage;
+
+        loadAll();
+
+        function loadAll () {
+            WorkOrderTemplate.query({
+                page: pagingParams.page - 1,
+                size: vm.itemsPerPage,
+                sort: sort()
+            }, onSuccess, onError);
+            function sort() {
+                var result = [vm.predicate + ',' + (vm.reverse ? 'asc' : 'desc')];
+                if (vm.predicate !== 'id') {
+                    result.push('id');
+                }
+                return result;
+            }
+            function onSuccess(data, headers) {
+                vm.links = ParseLinks.parse(headers('link'));
+                vm.totalItems = headers('X-Total-Count');
+                vm.queryCount = vm.totalItems;
+                vm.workOrderTemplates = data;
+                vm.page = pagingParams.page;
+            }
+            function onError(error) {
+                AlertService.error(error.data.message);
+            }
+        }
+
+        function loadPage(page) {
+            vm.page = page;
+            vm.transition();
+        }
+
+        function transition() {
+            $state.transitionTo($state.$current, {
+                page: vm.page,
+                sort: vm.predicate + ',' + (vm.reverse ? 'asc' : 'desc'),
+                search: vm.currentSearch
+            });
+        }
+    }
+})();
+
+(function() {
+    'use strict';
+    angular
+        .module('app')
+        .factory('WorkOrderTemplate', WorkOrderTemplate);
+
+    WorkOrderTemplate.$inject = ['$resource'];
+
+    function WorkOrderTemplate ($resource) {
+        var resourceUrl =  'api/work-order-templates/:id';
+
+        return $resource(resourceUrl, {}, {
+            'query': { method: 'GET', isArray: true},
+            'get': {
+                method: 'GET',
+                transformResponse: function (data) {
+                    if (data) {
+                        data = angular.fromJson(data);
+                    }
+                    return data;
+                }
+            },
+            'update': { method:'PUT' }
+        });
+    }
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app')
+        .config(stateConfig);
+
+    stateConfig.$inject = ['$stateProvider'];
+
+    function stateConfig($stateProvider) {
+        $stateProvider
+        .state('work-order-template', {
+            parent: 'entity',
+            url: '/work-order-template?page&sort&search',
+            data: {
+                authorities: ['ROLE_USER'],
+                pageTitle: 'appApp.workOrderTemplate.home.title'
+            },
+            views: {
+                'content@': {
+                    templateUrl: 'app/entities/work-order-template/work-order-templates.html',
+                    controller: 'WorkOrderTemplateController',
+                    controllerAs: 'vm'
+                }
+            },
+            params: {
+                page: {
+                    value: '1',
+                    squash: true
+                },
+                sort: {
+                    value: 'id,asc',
+                    squash: true
+                },
+                search: null
+            },
+            resolve: {
+                pagingParams: ['$stateParams', 'PaginationUtil', function ($stateParams, PaginationUtil) {
+                    return {
+                        page: PaginationUtil.parsePage($stateParams.page),
+                        sort: $stateParams.sort,
+                        predicate: PaginationUtil.parsePredicate($stateParams.sort),
+                        ascending: PaginationUtil.parseAscending($stateParams.sort),
+                        search: $stateParams.search
+                    };
+                }],
+                translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                    $translatePartialLoader.addPart('workOrderTemplate');
+                    $translatePartialLoader.addPart('workOrderTemplateType');
+                    $translatePartialLoader.addPart('workOrderTemplateFunctionType');
+                    $translatePartialLoader.addPart('global');
+                    return $translate.refresh();
+                }]
+            }
+        })
+        .state('work-order-template-detail', {
+            parent: 'entity',
+            url: '/work-order-template/{id}',
+            data: {
+                authorities: ['ROLE_USER'],
+                pageTitle: 'appApp.workOrderTemplate.detail.title'
+            },
+            views: {
+                'content@': {
+                    templateUrl: 'app/entities/work-order-template/work-order-template-detail.html',
+                    controller: 'WorkOrderTemplateDetailController',
+                    controllerAs: 'vm'
+                }
+            },
+            resolve: {
+                translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                    $translatePartialLoader.addPart('workOrderTemplate');
+                    $translatePartialLoader.addPart('workOrderTemplateType');
+                    $translatePartialLoader.addPart('workOrderTemplateFunctionType');
+                    return $translate.refresh();
+                }],
+                entity: ['$stateParams', 'WorkOrderTemplate', function($stateParams, WorkOrderTemplate) {
+                    return WorkOrderTemplate.get({id : $stateParams.id}).$promise;
+                }],
+                previousState: ["$state", function ($state) {
+                    var currentStateData = {
+                        name: $state.current.name || 'work-order-template',
+                        params: $state.params,
+                        url: $state.href($state.current.name, $state.params)
+                    };
+                    return currentStateData;
+                }]
+            }
+        })
+        .state('work-order-template-detail.edit', {
+            parent: 'work-order-template-detail',
+            url: '/detail/edit',
+            data: {
+                authorities: ['ROLE_USER']
+            },
+            onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                $uibModal.open({
+                    templateUrl: 'app/entities/work-order-template/work-order-template-dialog.html',
+                    controller: 'WorkOrderTemplateDialogController',
+                    controllerAs: 'vm',
+                    backdrop: 'static',
+                    size: 'lg',
+                    resolve: {
+                        entity: ['WorkOrderTemplate', function(WorkOrderTemplate) {
+                            return WorkOrderTemplate.get({id : $stateParams.id}).$promise;
+                        }]
+                    }
+                }).result.then(function() {
+                    $state.go('^', {}, { reload: false });
+                }, function() {
+                    $state.go('^');
+                });
+            }]
+        })
+        .state('work-order-template.new', {
+            parent: 'work-order-template',
+            url: '/new',
+            data: {
+                authorities: ['ROLE_USER']
+            },
+            onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                $uibModal.open({
+                    templateUrl: 'app/entities/work-order-template/work-order-template-dialog.html',
+                    controller: 'WorkOrderTemplateDialogController',
+                    controllerAs: 'vm',
+                    backdrop: 'static',
+                    size: 'lg',
+                    resolve: {
+                        entity: function () {
+                            return {
+                                numberOfDays: null,
+                                hoursOfUsage: null,
+                                description: null,
+                                dueDays: null,
+                                workOrderType: null,
+                                functionType: null,
+                                name: null,
+                                id: null
+                            };
+                        }
+                    }
+                }).result.then(function() {
+                    $state.go('work-order-template', null, { reload: 'work-order-template' });
+                }, function() {
+                    $state.go('work-order-template');
+                });
+            }]
+        })
+        .state('work-order-template.edit', {
+            parent: 'work-order-template',
+            url: '/{id}/edit',
+            data: {
+                authorities: ['ROLE_USER']
+            },
+            onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                $uibModal.open({
+                    templateUrl: 'app/entities/work-order-template/work-order-template-dialog.html',
+                    controller: 'WorkOrderTemplateDialogController',
+                    controllerAs: 'vm',
+                    backdrop: 'static',
+                    size: 'lg',
+                    resolve: {
+                        entity: ['WorkOrderTemplate', function(WorkOrderTemplate) {
+                            return WorkOrderTemplate.get({id : $stateParams.id}).$promise;
+                        }]
+                    }
+                }).result.then(function() {
+                    $state.go('work-order-template', null, { reload: 'work-order-template' });
+                }, function() {
+                    $state.go('^');
+                });
+            }]
+        })
+        .state('work-order-template.delete', {
+            parent: 'work-order-template',
+            url: '/{id}/delete',
+            data: {
+                authorities: ['ROLE_USER']
+            },
+            onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                $uibModal.open({
+                    templateUrl: 'app/entities/work-order-template/work-order-template-delete-dialog.html',
+                    controller: 'WorkOrderTemplateDeleteController',
+                    controllerAs: 'vm',
+                    size: 'md',
+                    resolve: {
+                        entity: ['WorkOrderTemplate', function(WorkOrderTemplate) {
+                            return WorkOrderTemplate.get({id : $stateParams.id}).$promise;
+                        }]
+                    }
+                }).result.then(function() {
+                    $state.go('work-order-template', null, { reload: 'work-order-template' });
+                }, function() {
+                    $state.go('^');
+                });
+            }]
+        });
+    }
+
+})();
+
 
 "use strict";
 
@@ -8378,17 +8761,6 @@ angular
         return service;
     }]);
 
-'use strict';
-
-angular
-    .module('app')
-    .factory('Password', ["$resource", function ($resource) {
-        var service = $resource('api/account/change_password', {}, {});
-
-        return service;
-
-    }]);
-
 (function(){angular.module("app").run(["$templateCache", function($templateCache) {$templateCache.put("app/dashboard/live-feeds.tpl.html","<div jarvis-widget id=\"live-feeds-widget\" data-widget-togglebutton=\"false\" data-widget-editbutton=\"false\" data-widget-fullscreenbutton=\"false\" data-widget-colorbutton=\"false\" data-widget-deletebutton=\"false\"><!-- widget options:\r\n    usage: <div class=\"jarviswidget\" id=\"wid-id-0\" data-widget-editbutton=\"false\">\r\n\r\n    data-widget-colorbutton=\"false\"\r\n    data-widget-editbutton=\"false\"\r\n    data-widget-togglebutton=\"false\"\r\n    data-widget-deletebutton=\"false\"\r\n    data-widget-fullscreenbutton=\"false\"\r\n    data-widget-custombutton=\"false\"\r\n    data-widget-collapsed=\"true\"\r\n    data-widget-sortable=\"false\"\r\n\r\n    --><header><span class=\"widget-icon\"><i class=\"glyphicon glyphicon-stats txt-color-darken\"></i></span><h2>{{getWord(\'Statistics\')}}</h2><ul class=\"nav nav-tabs pull-right in\" id=\"myTab\"><li class=\"active\"><a data-toggle=\"tab\" href=\"#s1\"><i class=\"fa fa-clock-o\"></i> {{getWord(\'Work time/Designated time\')}}</a></li><li><a data-toggle=\"tab\" href=\"#s2\"><i class=\"fa fa-bolt\"></i> <span class=\"hidden-mobile hidden-tablet\">{{getWord(\'Electricity & Water/Time\')}}</span></a></li></ul></header><!-- widget div--><div class=\"no-padding\"><div class=\"widget-body\"><!-- content --><div id=\"myTabContent\" class=\"tab-content\"><div class=\"tab-pane fade active in padding-10 no-padding-bottom\" id=\"s1\"><div class=\"widget-body-toolbar bg-color-white\"><div class=\"col-sm-12 col-md-12 col-lg-8\"><form class=\"form-inline\" role=\"form\"><div class=\"form-group\"><label>{{getWord(\'From/To\')}}</label><div class=\"input-group\"><input type=\"text\" class=\"form-control\" style=\"direction: ltr\" data-smart-masked-input=\"1399/99/99\" data-mask-placeholder=\"-\"> <span class=\"input-group-addon\"><i class=\"fa fa-calendar\"></i></span></div><div class=\"input-group\"><input type=\"text\" class=\"form-control\" style=\"direction: ltr\" data-smart-masked-input=\"1399/99/99\" data-mask-placeholder=\"-\"> <span class=\"input-group-addon\"><i class=\"fa fa-calendar\"></i></span></div></div></form></div><div class=\"col-sm-12 col-md-12 col-lg-4\"><div class=\"smart-form\" id=\"work-toggles\"><div class=\"inline-group pull-right\"><label for=\"gra-0\" class=\"checkbox\"><input type=\"checkbox\" id=\"gra-0\" ng-model=\"workOrderShow\"> <i></i> {{getWord(\'Work orders time\')}}</label><label for=\"gra-1\" class=\"checkbox\"><input type=\"checkbox\" id=\"gra-1\" ng-model=\"designatedTimeShow\"> <i></i> {{getWord(\'Designated time\')}}</label></div></div></div></div><div class=\"padding-10\"><div id=\"statsChart\" class=\"chart-large has-legend-unique\" flot-basic flot-data=\"statsData\" flot-options=\"statsDisplayOptions\"></div></div></div><!-- end s2 tab pane --><div class=\"tab-pane fade in padding-10 no-padding-bottom\" id=\"s2\"><div class=\"widget-body-toolbar bg-color-white smart-form\" id=\"rev-toggles\"><div class=\"inline-group\"><label for=\"gra-3\" class=\"checkbox\"><input type=\"checkbox\" id=\"gra-3\" ng-model=\"electricityShow\"> <i></i> {{getWord(\'Electricity\')}}</label><label for=\"gra-4\" class=\"checkbox\"><input type=\"checkbox\" id=\"gra-4\" ng-model=\"waterShow\"> <i></i> {{getWord(\'Water\')}}</label></div></div><div class=\"padding-10\"><div id=\"flotcontainer\" class=\"chart-large has-legend-unique padding-10\" flot-basic flot-data=\"revenewData\" flot-options=\"revenewDisplayOptions\"></div></div></div><!-- end s3 tab pane --></div><!-- end content --></div></div><!-- end widget div --></div>");
 $templateCache.put("app/home/welcome.tpl.html","<!-- MAIN CONTENT --><div id=\"content\"><!-- widget grid --><section id=\"widget-grid1\" widget-grid><!-- row --><div class=\"row\"><article class=\"col-sm-6 span7 center\"><div jarvis-widget data-widget-editbutton=\"false\" data-widget-deletebutton=\"false\" data-widget-fullscreenbutton=\"false\" data-widget-togglebutton=\"false\" data-widget-color=\"blue\"><header><span class=\"widget-icon\"><i class=\"fa fa-user txt-color-white\"></i></span><h2>Login</h2></header><!-- widget div--><div><div class=\"widget-body no-padding\"><!-- content goes here --><div class=\"row\"><div class=\"col-md-4 col-md-offset-4\"><h1></h1></div><div class=\"col-md-8 col-md-offset-2\"><div class=\"alert alert-danger\" ng-show=\"vm.authenticationError\"><strong>Failed to sign in!</strong> Please check your credentials and try again.</div></div><div class=\"col-md-8 col-md-offset-2\"><form class=\"form\" role=\"form\" ng-submit=\"vm.login($event)\"><div class=\"form-group\"><label for=\"username\">Login</label><input type=\"text\" class=\"form-control\" id=\"username\" placeholder=\"Your username\" ng-model=\"vm.username\"></div><div class=\"form-group\"><label for=\"password\">Password</label><input type=\"password\" class=\"form-control\" id=\"password\" placeholder=\"Your password\" ng-model=\"vm.password\"></div><div class=\"form-group\"><label for=\"rememberMe\"><input type=\"checkbox\" id=\"rememberMe\" ng-model=\"vm.rememberMe\" checked=\"checked\"> <span>Remember me</span></label></div><button type=\"submit\" class=\"btn btn-primary\">Sign in</button></form><p></p><div>&nbsp;</div><!--<div class=\"alert alert-warning\">--><!--<a class=\"alert-link\" href=\"\" ng-click=\"vm.requestResetPassword()\">Did you--><!--forget--><!--your--><!--password?</a>--><!--</div>--><!--<div class=\"alert alert-warning\">--><!--You don\'t have an account yet? <a class=\"alert-link\" href=\"\"--><!--ng-click=\"vm.register()\">Register a--><!--new--><!--account</a>--><!--</div>--></div></div><!-- end content --></div></div><!-- end widget div --></div></article></div></section></div>");
 $templateCache.put("app/layout/layout.tpl.html","<!-- HEADER --><div data-smart-include=\"app/layout/partials/header.tpl.html\" class=\"placeholder-header\"></div><!-- END HEADER --><!-- Left panel : Navigation area --><!-- Note: This width of the aside area can be adjusted through LESS variables --><div data-smart-include=\"app/layout/partials/navigation.tpl.html\" class=\"placeholder-left-panel\"></div><!-- END NAVIGATION --><!-- MAIN PANEL --><div id=\"main\" role=\"main\"><demo-states></demo-states><!-- RIBBON --><div id=\"ribbon\"><span class=\"ribbon-button-alignment\"><span id=\"refresh\" class=\"btn btn-ribbon\" reset-widgets tooltip-placement=\"bottom\" smart-tooltip-html=\"<i class=\'text-warning fa fa-warning\'></i> Warning! This will reset all your widget settings.\"><i class=\"fa fa-refresh\"></i> </span></span><!-- breadcrumb --><state-breadcrumbs></state-breadcrumbs><!-- end breadcrumb --></div><!-- END RIBBON --><div data-smart-router-animation-wrap=\"content content@app\" data-wrap-for=\"#content\"><div data-ui-view=\"content\" data-autoscroll=\"false\"></div></div></div><!-- END MAIN PANEL --><!-- PAGE FOOTER --><div data-smart-include=\"app/layout/partials/footer.tpl.html\"></div><div data-smart-include=\"app/layout/shortcut/shortcut.tpl.html\"></div><!-- END PAGE FOOTER -->");
@@ -8425,8 +8797,8 @@ $templateCache.put("app/dashboard/chat/directives/chat-widget.tpl.html","<div id
 $templateCache.put("app/dashboard/todo/directives/todo-list.tpl.html","<div><h5 class=\"todo-group-title\"><i class=\"fa fa-{{icon}}\"></i> {{title}} ( <small class=\"num-of-tasks\">{{scopeItems.length}}</small> )</h5><ul class=\"todo\"><li ng-class=\"{complete: todo.completedAt}\" ng-repeat=\"todo in todos | orderBy: todo._id | filter: filter  track by todo._id\"><span class=\"handle\"><label class=\"checkbox\"><input type=\"checkbox\" ng-click=\"todo.toggle()\" ng-checked=\"todo.completedAt\" name=\"checkbox-inline\"> <i></i></label></span><p><strong>Ticket #{{$index + 1}}</strong> - {{todo.title}} <span class=\"text-muted\" ng-if=\"todo.description\">{{todo.description}}</span> <span class=\"date\">{{todo.createdAt | date}} &dash; <a ng-click=\"deleteTodo(todo)\" class=\"text-muted\"><i class=\"fa fa-trash\"></i></a></span></p></li></ul></div>");
 $templateCache.put("app/dashboard/workOrders/directives/nested-data-form.tpl.html","<div class=\"well well-light\"><div id=\"{{handler}}\" class=\"{{reusableFormClass}}\"><div><div><div><h4 class=\"form-title\">{{header}}</h4></div><div class=\"form-body\"></div><div class=\"form-footer\"><span ng-hide=\"angular.equals({}, footer)\" ng-bind-html=\"footer\"></span> <button type=\"button\" class=\"btn btn-default\" ng-click=\"closeForm()\">{{$root.getWord(\'Cancel\')}}</button></div></div></div></div></div>");
 $templateCache.put("app/dashboard/workOrders/directives/work-order-asset-widget.tpl.html","<div id=\"work-orders\" data-jarvis-widget data-widget-editbutton=\"false\" data-widget-deletebutton=\"false\" data-widget-color=\"teal\"><header><span class=\"widget-icon\"><i class=\"fa fa-briefcase\"></i></span><h2>{{$root.getWord(\'Work orders\')}}</h2><ul class=\"nav nav-tabs pull-right in\" id=\"workTab\"><li class=\"active\"><a data-toggle=\"tab\" href=\"#s5\"><i class=\"fa fa-briefcase\"></i> {{$root.getWord(\'Work orders\')}}</a></li><li><a data-toggle=\"tab\" href=\"#s6\"><i class=\"fa fa-cogs\"></i> <span class=\"hidden-mobile hidden-tablet\">{{$root.getWord(\'Assets\')}}</span></a></li></ul></header><!-- widget div--><div role=\"content\"><!-- widget content --><div class=\"widget-body no-padding\"><div id=\"myTabContent\" class=\"tab-content\"><div class=\"tab-pane fade active in padding-10 no-padding-bottom\" id=\"s5\"><work-orders-assets-tree-grid></work-orders-assets-tree-grid></div><div class=\"tab-pane fade in padding-10 no-padding-bottom\" id=\"s6\"><!-- widget div--><div><!-- widget content --><div class=\"widget-body\"><assets-tree-grid></assets-tree-grid></div><!-- end widget content --></div><!-- end widget div --></div></div><!-- end widget content --></div><!-- end widget div --></div></div>");
-$templateCache.put("app/dashboard/workOrders/directives/work-order-assets-tree-grid.tpl.html","<div><div class=\"navbar navbar-default no-padding\"><!-- Brand and toggle get grouped for better mobile display --><div class=\"navbar-header\"><button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\"#bs-example-navbar-collapse-1\"><span class=\"sr-only\">Toggle navigation</span> <span class=\"icon-bar\"></span> <span class=\"icon-bar\"></span> <span class=\"icon-bar\"></span></button></div><!-- Collect the nav links, forms, and other content for toggling --><div class=\"collapse navbar-collapse\" id=\"bs-example-navbar-collapse-1\"><form class=\"navbar-form navbar-left\" role=\"search\"><div class=\"form-group\"><input type=\"text\" class=\"form-control\" placeholder=\"{{$root.getWord(\'Search\')}}\"></div><button type=\"submit\" class=\"btn btn-default\">{{$root.getWord(\'Search\')}}</button></form><ul class=\"nav navbar-nav navbar-right\"><li class=\"btn-group dropdown\" data-dropdown><a href=\"javascript:void(0);\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">{{$root.getWord(\'Import data\')}} <span class=\"caret\"></span></a><ul class=\"dropdown-menu\"><li><a ng-click=\"openWorkOrderAddModal()\">{{$root.getWord(\'Add\')}}</a></li><li class=\"divider\"></li><li><a href=\"javascript:void(0);\" ng-click=\"assets_tree.expand_all()\">{{$root.getWord(\'Expand All\')}}</a></li><li><a href=\"javascript:void(0);\" ng-click=\"assets_tree.collapse_all()\">{{$root.getWord(\'Collapse All\')}}</a></li></ul></li></ul></div><!-- /.navbar-collapse --></div><div class=\"col-sm-12\"><tree-grid icon-leaf=\"fa fa-gear\" tree-control=\"work_order_assets_tree\" expand-level=\"3\" tree-data=\"tree_data\" col-defs=\"col_defs\" template-url=\"app/dashboard/assets/tree-grid.tpl.html\" expand-on=\"expanding_property\"></tree-grid></div><!-- Modal --><reusable-modal modal-data-id=\"workOrderAssetModal\" modal-body=\"workOrderAssetImportBody\" modal-footer=\"workOrderAssetImportFooter\" modal-header=\"workOrderAssetImportHeader\" data-ng-click-right-button=\"workOrderAssetImportModalClose()\"></reusable-modal></div>");
-$templateCache.put("app/dashboard/workOrders/directives/work-order-form.tpl.html","<div><form name=\"assetEditForm\" class=\"asset-edit-form form-group\" role=\"form\" novalidate show-validation><div class=\"modal-header\"><button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\" ng-click=\"workOrderAddVm.clear()\">&times;</button><h4 class=\"modal-title\" id=\"myAssetLabel\">{{$root.getWord(\'Create or edit a Work Order Template\')}}</h4></div><div class=\"modal-body\"><div class=\"step-content\"><div class=\"form-horizontal\"><fieldset><div class=\"row\"><div class=\"col-md-12\"><label class=\"control-label\">{{$root.getWord(\'Work order group\')}}</label><div class=\"col-md-12\"><select class=\"form-control\" ng-model=\"workOrder.assetId\"><optgroup label=\"{{$root.getWord(\'Group\')}}\"><option ng-repeat=\"asset in assets\" value=\"{{asset.id}}\">{{asset.name}}</option></optgroup></select></div></div></div><div class=\"row\"><div class=\"col-md-12\"><label class=\"control-label\">{{$root.getWord(\'Code\')}}</label><div class=\"col-md-12\"><input type=\"text\" class=\"form-control\" ng-model=\"workOrder.code\" ng-disabled=\"disableForm\"></div></div></div><div class=\"row\"><div class=\"col-md-12\"><label class=\"control-label\">{{$root.getWord(\'Number\')}}</label><div class=\"col-md-12\"><input type=\"text\" class=\"form-control\" ng-model=\"workOrder.number\" ng-disabled=\"disableForm\"></div></div></div></fieldset><fieldset><div class=\"row\"><div class=\"col-md-12\"><label class=\"col-md-2 control-label\">{{$root.getWord(\'Work order type\')}}</label><div class=\"col-md-10 padding-bottom-10\"><div class=\"radio\"><label><input type=\"radio\" class=\"radiobox style-0\" name=\"type\" value=\"D\" ng-checked=\"workOrder.workOrderType == \'D\'\" ng-model=\"workOrder.workOrderType\"> <span>{{$root.getWord(\'Daily based\')}}</span></label><label><input type=\"radio\" class=\"radiobox style-0\" name=\"type\" value=\"H\" ng-model=\"workOrder.workOrderType\"> <span>{{$root.getWord(\'Hourly base\')}}</span></label></div></div></div></div><div class=\"row\" ng-if=\"workOrder.workOrderType == \'D\'\"><div class=\"col-md-12\"><label class=\"control-label\">{{$root.getWord(\'Number of days\')}}</label><div class=\"col-md-12\"><input class=\"form-control\" name=\"numberOfDays\" type=\"number\" name=\"spinner\" value=\"1\" min=\"1\" ng-model=\"workOrder.numberOfDays\"></div></div></div><div class=\"row\" ng-if=\"workOrder.workOrderType == \'H\'\"><div class=\"col-md-6\"><label class=\"control-label\">{{$root.getWord(\'Asset identifier\')}}</label><div class=\"col-md-12\"><input class=\"form-control\" name=\"identifier\" type=\"text\" ng-model=\"workOrder.identifier\"></div></div><div class=\"col-md-6\"><label class=\"control-label\">{{$root.getWord(\'Number of hours\')}}</label><div class=\"col-md-12\"><input class=\"form-control\" name=\"hours\" type=\"number\" name=\"spinner\" value=\"1\" min=\"1\" ng-model=\"workOrder.hours\"></div></div></div></fieldset><fieldset><div class=\"row\"><div class=\"col-md-12\"><label class=\"control-label\">{{$root.getWord(\'Work order description\')}}</label><div class=\"col-md-12 textarea textarea-expandable\"><textarea type=\"text\" class=\"custom-scroll form-control\" rows=\"8\" ng-model=\"workOrder.desc\" ng-disabled=\"disableForm\"></textarea></div></div></div></fieldset></div></div><div class=\"modal-footer\"><button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" ng-click=\"workOrderAddVm.clear()\"><span class=\"glyphicon glyphicon-ban-circle\"></span>&nbsp;<span>Cancel</span></button> <button type=\"submit\" class=\"btn btn-primary\" ng-click=\"workOrderAddVm.clear()\"><span class=\"glyphicon glyphicon-save\"></span>&nbsp;<span>Save</span></button></div></div></form></div>");
+$templateCache.put("app/dashboard/workOrders/directives/work-order-assets-tree-grid.tpl.html","<div><div class=\"navbar navbar-default no-padding\"><!-- Brand and toggle get grouped for better mobile display --><div class=\"navbar-header\"><button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\"#bs-example-navbar-collapse-1\"><span class=\"sr-only\">Toggle navigation</span> <span class=\"icon-bar\"></span> <span class=\"icon-bar\"></span> <span class=\"icon-bar\"></span></button></div><!-- Collect the nav links, forms, and other content for toggling --><div class=\"collapse navbar-collapse\" id=\"bs-example-navbar-collapse-1\"><form class=\"navbar-form navbar-left\" role=\"search\"><div class=\"form-group\"><input type=\"text\" class=\"form-control\" placeholder=\"{{$root.getWord(\'Search\')}}\"></div><button type=\"submit\" class=\"btn btn-default\">{{$root.getWord(\'Search\')}}</button></form><ul class=\"nav navbar-nav navbar-right\"><li class=\"btn-group dropdown\" data-dropdown><a href=\"javascript:void(0);\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">{{$root.getWord(\'Import data\')}} <span class=\"caret\"></span></a><ul class=\"dropdown-menu\"><li><a ng-click=\"openWorkOrderAddModal()\">{{$root.getWord(\'Add\')}}</a></li><li class=\"divider\"></li><li><a href=\"javascript:void(0);\" ng-click=\"assets_tree.expand_all()\">{{$root.getWord(\'Expand All\')}}</a></li><li><a href=\"javascript:void(0);\" ng-click=\"assets_tree.collapse_all()\">{{$root.getWord(\'Collapse All\')}}</a></li></ul></li></ul></div><!-- /.navbar-collapse --></div><div class=\"col-sm-12\"><tree-grid icon-leaf=\"fa fa-gear\" tree-control=\"work_order_assets_tree\" tree-data=\"tree_data\" col-defs=\"col_defs\" template-url=\"app/dashboard/assets/tree-grid.tpl.html\" expand-on=\"expanding_property\"></tree-grid></div><!-- Modal --><reusable-modal modal-data-id=\"workOrderAssetModal\" modal-body=\"workOrderAssetImportBody\" modal-footer=\"workOrderAssetImportFooter\" modal-header=\"workOrderAssetImportHeader\" data-ng-click-right-button=\"workOrderAssetImportModalClose()\"></reusable-modal></div>");
+$templateCache.put("app/dashboard/workOrders/directives/work-order-form.tpl.html","<div><form name=\"workOrderTemplateEditForm\" class=\"asset-edit-form form-group\" role=\"form\" ng-submit=\"vm.save()\" novalidate show-validation><div class=\"modal-header\"><button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\" ng-click=\"vm.clear()\">&times;</button><h4 class=\"modal-title\" id=\"myAssetLabel\">{{$root.getWord(\'Create or edit a Work Order Template\')}}</h4></div><div class=\"modal-body\"><div class=\"step-content\"><div class=\"form-horizontal\"><fieldset><div class=\"row\"><div class=\"col-md-12\" ng-class=\"{ \'has-error\' : workOrderTemplateEditForm.assetSpecificationType.$invalid}\"><label class=\"control-label\">{{$root.getWord(\'Work order group\')}}</label><div class=\"col-md-12\"><select class=\"form-control\" ng-disabled=\"vm.disabled\" name=\"assetSpecificationType\" ng-model=\"vm.workOrderTemplate.assetSpecificationTypeId\" ng-options=\"assetSpecificationType.id as assetSpecificationType.name for assetSpecificationType in vm.assetspecificationtypes\" required><option value=\"\"></option></select></div></div></div><div class=\"row\"><div class=\"col-md-12\" ng-class=\"{ \'has-error\' : workOrderTemplateEditForm.name.$invalid}\"><label class=\"control-label\">{{$root.getWord(\'Name\')}}</label><div class=\"col-md-12\"><input type=\"text\" ng-disabled=\"vm.disabled\" class=\"form-control\" name=\"name\" ng-model=\"vm.workOrderTemplate.name\" ng-disabled=\"disableForm\" required></div></div></div></fieldset><fieldset><div class=\"row\"><div class=\"col-md-12\" ng-class=\"{ \'has-error\' : workOrderTemplateEditForm.workOrderType.$invalid}\"><label class=\"col-md-2 control-label\">{{$root.getWord(\'Work order type\')}}</label><div class=\"col-md-10 padding-bottom-10\"><div class=\"radio\"><label><input type=\"radio\" class=\"radiobox style-0\" name=\"workOrderType\" value=\"PM\" ng-checked=\"vm.workOrderTemplate.workOrderType == \'PM\'\" ng-model=\"vm.workOrderTemplate.workOrderType\" ng-disabled=\"vm.disabled\"> <span>{{$root.getWord(\'PM\')}}</span></label><label><input type=\"radio\" class=\"radiobox style-0\" name=\"workOrderType\" value=\"CM\" ng-checked=\"vm.workOrderTemplate.workOrderType == \'CM\'\" ng-model=\"vm.workOrderTemplate.workOrderType\" ng-disabled=\"vm.disabled\"> <span>{{$root.getWord(\'CM\')}}</span></label></div></div></div></div><div class=\"row\"><div class=\"col-md-12\" ng-class=\"{ \'has-error\' : workOrderTemplateEditForm.functionType.$invalid}\"><label class=\"col-md-2 control-label\">{{$root.getWord(\'Work order function\')}}</label><div class=\"col-md-10 padding-bottom-10\"><div class=\"radio\"><label><input type=\"radio\" class=\"radiobox style-0\" name=\"functionType\" value=\"DAILY\" ng-checked=\"vm.workOrderTemplate.functionType == \'DAILY\'\" ng-model=\"vm.workOrderTemplate.functionType\" ng-disabled=\"vm.disabled\"> <span>{{$root.getWord(\'Daily based\')}}</span></label><label><input type=\"radio\" class=\"radiobox style-0\" name=\"functionType\" value=\"USAGE_HOURS\" ng-model=\"vm.workOrderTemplate.functionType\" ng-disabled=\"vm.disabled\"> <span>{{$root.getWord(\'Hourly base\')}}</span></label></div></div></div></div><div class=\"row\" ng-if=\"vm.workOrderTemplate.functionType == \'DAILY\'\"><div class=\"col-md-12\" ng-class=\"{ \'has-error\' : workOrderTemplateEditForm.numberOfDays.$invalid}\"><label class=\"control-label\">{{$root.getWord(\'Number of days\')}}</label><div class=\"col-md-12\"><input class=\"form-control\" name=\"numberOfDays\" type=\"number\" ng-disabled=\"vm.disabled\" min=\"1\" ng-model=\"vm.workOrderTemplate.numberOfDays\" required></div></div></div><div class=\"row\" ng-if=\"vm.workOrderTemplate.functionType == \'USAGE_HOURS\'\"><div class=\"col-md-12\" ng-class=\"{ \'has-error\' : workOrderTemplateEditForm.hoursOfUsage.$invalid}\"><label class=\"control-label\">{{$root.getWord(\'Number of hours\')}}</label><div class=\"col-md-12\"><input class=\"form-control\" name=\"hoursOfUsage\" type=\"number\" ng-disabled=\"vm.disabled\" min=\"1\" ng-model=\"vm.workOrderTemplate.hoursOfUsage\" required></div></div></div></fieldset><fieldset><div class=\"row\"><div class=\"col-md-12\" ng-class=\"{ \'has-error\' : workOrderTemplateEditForm.dueDays.$invalid}\"><label class=\"control-label\">{{$root.getWord(\'Due day\')}}</label><div class=\"col-md-12\"><input class=\"form-control\" name=\"dueDays\" type=\"number\" value=\"1\" ng-disabled=\"vm.disabled\" min=\"0\" ng-model=\"vm.workOrderTemplate.dueDays\" required></div></div></div><div class=\"row\"><div class=\"col-md-12\"><label class=\"control-label\">{{$root.getWord(\'Work order description\')}}</label><div class=\"col-md-12 textarea textarea-expandable\"><textarea type=\"text\" class=\"custom-scroll form-control\" rows=\"8\" ng-model=\"vm.workOrderTemplate.description\" ng-disabled=\"vm.disabled\"></textarea></div></div></div></fieldset></div></div><div class=\"modal-footer\"><button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" ng-click=\"vm.clear()\"><span class=\"glyphicon glyphicon-ban-circle\"></span>&nbsp;<span>Cancel</span></button> <button type=\"submit\" class=\"btn btn-primary\" ng-hide=\"vm.disabled\" ng-disabled=\"workOrderTemplateEditForm.$invalid || vm.isSaving\"><span class=\"glyphicon glyphicon-save\"></span>&nbsp;<span>Save</span></button></div></div></form></div>");
 $templateCache.put("app/dashboard/workOrders/directives/work-order.tpl.html","<div><div class=\"navbar navbar-default no-padding\"><!-- Brand and toggle get grouped for better mobile display --><div class=\"navbar-header\"><button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\"#bs-example-navbar-collapse-1\"><span class=\"sr-only\">Toggle navigation</span> <span class=\"icon-bar\"></span> <span class=\"icon-bar\"></span> <span class=\"icon-bar\"></span></button></div><!-- Collect the nav links, forms, and other content for toggling --><div class=\"collapse navbar-collapse\" id=\"bs-example-navbar-collapse-1\"><ul class=\"nav navbar-nav navbar-right\"><li class=\"btn-group dropdown\" data-dropdown><a href=\"javascript:void(0);\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">{{$root.getWord(\'Import data\')}} <span class=\"caret\"></span></a><ul class=\"dropdown-menu\"><li><a ng-click=\"openWorkOrderAddModal()\">{{$root.getWord(\'Add\')}}</a></li></ul></li></ul></div><!-- /.navbar-collapse --></div><table datatable-basic data-table-options=\"workOrdersTableOptions\" class=\"display projects-table table table-striped table-bordered table-hover\" cellspacing=\"0\" width=\"100%\"><thead><tr><th></th><th data-hide=\"phone,tablet\">{{$root.getWord(\'ID\')}}</th><th>{{$root.getWord(\'Asset name\')}}</th><th>{{$root.getWord(\'Type\')}}</th><th data-hide=\"phone\">{{$root.getWord(\'Status\')}}</th><th data-hide=\"phone\"><i class=\"fa fa-fw fa-user text-muted\"></i>{{$root.getWord(\'Est\')}}</th><th data-hide=\"phone\">{{$root.getWord(\'Priority\')}}</th><th data-hide=\"phone,tablet\"><i class=\"fa fa-fw fa-calendar text-muted hidden-mobile\"></i> {{$root.getWord(\'Estimated hours\')}}</th><th>{{$root.getWord(\'Tracker\')}}</th><th data-hide=\"phone,tablet\"><i class=\"fa fa-fw fa-user text-muted hidden-md hidden-sm hidden-xs\"></i> {{$root.getWord(\'Users\')}}</th><th>{{$root.getWord(\'Action\')}}</th></tr></thead><caption class=\"smart-datatable-child-format\" data-child-control=\"td.details-control\"><table cellpadding=\"5\" cellspacing=\"0\" border=\"0\" class=\"table table-hover table-condensed\"><tr><td style=\"width:100px\">تجهیز:</td><td ng-bind-html=\"d.assets\"></td></tr><tr><td>توضیحات:</td><td ng-bind-html=\"d.description\">}</td></tr><tr><td>ملاحضات:</td><td ng-bind-html=\"d.comments\"></td></tr><tr><td>تاریخ پایان:</td><td ng-bind-html=\"d.date-completed\"></td></tr></table></caption></table><!-- Modal --><!--<reusable-modal ng-if=\"nested != \'nested\'\" modal-data-id=\"workOrderModal\" modal-body=\"workOrderImportBody\"--><!--modal-class=\"workOrderModalClass\"--><!--modal-footer=\"workOrderImportFooter\"--><!--modal-header=\"workOrderImportHeader\"--><!--data-ng-click-right-button=\"workOrderImportModalClose()\"></reusable-modal>--><!--<nested-data-form ng-if=\"nested == \'nested\'\" form-data-id=\"workOrderModal\"--><!--form-body=\"workOrderImportBody\"--><!--form-footer=\"workOrderImportFooter\"--><!--form-header=\"workOrderImportHeader\"--><!--&gt;</nested-data-form>--></div>");
 $templateCache.put("app/_common/forms/directives/bootstrap-validation/bootstrap-attribute-form.tpl.html","<form id=\"attributeForm\" class=\"form-horizontal\" data-bv-message=\"This value is not valid\" data-bv-feedbackicons-valid=\"glyphicon glyphicon-ok\" data-bv-feedbackicons-invalid=\"glyphicon glyphicon-remove\" data-bv-feedbackicons-validating=\"glyphicon glyphicon-refresh\"><fieldset><legend>Set validator options via HTML attributes</legend><div class=\"alert alert-warning\"><code>&lt; input data-bv-validatorname data-bv-validatorname-validatoroption=\"...\" / &gt;</code><br><br>More validator options can be found here: <a href=\"http://bootstrapvalidator.com/validators/\" target=\"_blank\">http://bootstrapvalidator.com/validators/</a></div><div class=\"form-group\"><label class=\"col-lg-3 control-label\">Full name</label><div class=\"col-lg-4\"><input type=\"text\" class=\"form-control\" name=\"firstName\" placeholder=\"First name\" data-bv-notempty=\"true\" data-bv-notempty-message=\"The first name is required and cannot be empty\"></div><div class=\"col-lg-4\"><input type=\"text\" class=\"form-control\" name=\"lastName\" placeholder=\"Last name\" data-bv-notempty=\"true\" data-bv-notempty-message=\"The last name is required and cannot be empty\"></div></div></fieldset><fieldset><div class=\"form-group\"><label class=\"col-lg-3 control-label\">Username</label><div class=\"col-lg-5\"><input type=\"text\" class=\"form-control\" name=\"username\" data-bv-message=\"The username is not valid\" data-bv-notempty=\"true\" data-bv-notempty-message=\"The username is required and cannot be empty\" data-bv-regexp=\"true\" data-bv-regexp-regexp=\"^[a-zA-Z0-9_\\.]+$\" data-bv-regexp-message=\"The username can only consist of alphabetical, number, dot and underscore\" data-bv-stringlength=\"true\" data-bv-stringlength-min=\"6\" data-bv-stringlength-max=\"30\" data-bv-stringlength-message=\"The username must be more than 6 and less than 30 characters long\" data-bv-different=\"true\" data-bv-different-field=\"password\" data-bv-different-message=\"The username and password cannot be the same as each other\"></div></div></fieldset><fieldset><div class=\"form-group\"><label class=\"col-lg-3 control-label\">Email address</label><div class=\"col-lg-5\"><input class=\"form-control\" name=\"email\" type=\"email\" data-bv-emailaddress=\"true\" data-bv-emailaddress-message=\"The input is not a valid email address\"></div></div></fieldset><fieldset><div class=\"form-group\"><label class=\"col-lg-3 control-label\">Password</label><div class=\"col-lg-5\"><input type=\"password\" class=\"form-control\" name=\"password\" data-bv-notempty=\"true\" data-bv-notempty-message=\"The password is required and cannot be empty\" data-bv-identical=\"true\" data-bv-identical-field=\"confirmPassword\" data-bv-identical-message=\"The password and its confirm are not the same\" data-bv-different=\"true\" data-bv-different-field=\"username\" data-bv-different-message=\"The password cannot be the same as username\"></div></div></fieldset><fieldset><div class=\"form-group\"><label class=\"col-lg-3 control-label\">Retype password</label><div class=\"col-lg-5\"><input type=\"password\" class=\"form-control\" name=\"confirmPassword\" data-bv-notempty=\"true\" data-bv-notempty-message=\"The confirm password is required and cannot be empty\" data-bv-identical=\"true\" data-bv-identical-field=\"password\" data-bv-identical-message=\"The password and its confirm are not the same\" data-bv-different=\"true\" data-bv-different-field=\"username\" data-bv-different-message=\"The password cannot be the same as username\"></div></div></fieldset><fieldset><div class=\"form-group\"><label class=\"col-lg-3 control-label\">Languages</label><div class=\"col-lg-5\"><div class=\"checkbox\"><label><input type=\"checkbox\" name=\"languages[]\" value=\"english\" data-bv-message=\"Please specify at least one language you can speak\" data-bv-notempty=\"true\"> English</label></div><div class=\"checkbox\"><label><input type=\"checkbox\" name=\"languages[]\" value=\"french\"> French</label></div><div class=\"checkbox\"><label><input type=\"checkbox\" name=\"languages[]\" value=\"german\"> German</label></div><div class=\"checkbox\"><label><input type=\"checkbox\" name=\"languages[]\" value=\"russian\"> Russian</label></div><div class=\"checkbox\"><label><input type=\"checkbox\" name=\"languages[]\" value=\"other\"> Other</label></div></div></div></fieldset><div class=\"form-actions\"><div class=\"row\"><div class=\"col-md-12\"><button class=\"btn btn-default\" type=\"submit\"><i class=\"fa fa-eye\"></i> Validate</button></div></div></div></form>");
 $templateCache.put("app/_common/forms/directives/bootstrap-validation/bootstrap-button-group-form.tpl.html","<form id=\"buttonGroupForm\" method=\"post\" class=\"form-horizontal\"><fieldset><legend>Default Form Elements</legend><div class=\"form-group\"><label class=\"col-lg-3 control-label\">Gender</label><div class=\"col-lg-9\"><div class=\"btn-group\" data-toggle=\"buttons\"><label class=\"btn btn-default\"><input type=\"radio\" name=\"gender\" value=\"male\"> Male</label><label class=\"btn btn-default\"><input type=\"radio\" name=\"gender\" value=\"female\"> Female</label><label class=\"btn btn-default\"><input type=\"radio\" name=\"gender\" value=\"other\"> Other</label></div></div></div></fieldset><fieldset><div class=\"form-group\"><label class=\"col-lg-3 control-label\">Languages</label><div class=\"col-lg-9\"><div class=\"btn-group\" data-toggle=\"buttons\"><label class=\"btn btn-default\"><input type=\"checkbox\" name=\"languages[]\" value=\"english\"> English</label><label class=\"btn btn-default\"><input type=\"checkbox\" name=\"languages[]\" value=\"german\"> German</label><label class=\"btn btn-default\"><input type=\"checkbox\" name=\"languages[]\" value=\"french\"> French</label><label class=\"btn btn-default\"><input type=\"checkbox\" name=\"languages[]\" value=\"russian\"> Russian</label><label class=\"btn btn-default\"><input type=\"checkbox\" name=\"languages[]\" value=\"italian\"> Italian</label></div></div></div></fieldset><div class=\"form-actions\"><div class=\"row\"><div class=\"col-md-12\"><button class=\"btn btn-default\" type=\"submit\"><i class=\"fa fa-eye\"></i> Validate</button></div></div></div></form>");
@@ -8492,6 +8864,10 @@ $templateCache.put("app/entities/work-order/work-order-delete-dialog.html","<for
 $templateCache.put("app/entities/work-order/work-order-detail.html","<div><h2><span>Work Order</span> {{vm.workOrder.id}}</h2><hr><jhi-alert-error></jhi-alert-error><dl class=\"dl-horizontal jh-entity-details\"><dt><span>Work Order Status</span></dt><dd><span>{{vm.workOrder.workOrderStatus}}</span></dd><dt><span>Work Order Type</span></dt><dd><span>{{vm.workOrder.workOrderType}}</span></dd><dt><span>Description</span></dt><dd><span>{{vm.workOrder.description}}</span></dd><dt><span>Date Completed</span></dt><dd><span>{{vm.workOrder.dateCompleted | date:\'mediumDate\'}}</span></dd><dt><span>Priority</span></dt><dd><span>{{vm.workOrder.priority}}</span></dd><dt><span>Est</span></dt><dd><span>{{vm.workOrder.est}}</span></dd><dt><span>Estimated Hours</span></dt><dd><span>{{vm.workOrder.estimatedHours}}</span></dd><dt><span>Comments</span></dt><dd><span>{{vm.workOrder.comments}}</span></dd><dt><span>Tracker</span></dt><dd><span>{{vm.workOrder.tracker}}</span></dd><dt><span>Asset</span></dt><dd><a ui-sref=\"asset-detail({id:vm.workOrder.assetId})\">{{vm.workOrder.assetId}}</a></dd></dl><button type=\"submit\" ui-sref=\"{{ vm.previousState }}\" class=\"btn btn-info\"><span class=\"glyphicon glyphicon-arrow-left\"></span>&nbsp;<span> Back</span></button> <button type=\"button\" ui-sref=\"work-order-detail.edit({id:vm.workOrder.id})\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-pencil\"></span> <span class=\"hidden-xs hidden-sm\">Edit</span></button></div>");
 $templateCache.put("app/entities/work-order/work-order-dialog.html","<form name=\"editForm\" role=\"form\" novalidate ng-submit=\"vm.save()\" show-validation><div class=\"modal-header\"><button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\" ng-click=\"vm.clear()\">&times;</button><h4 class=\"modal-title\" id=\"myWorkOrderLabel\">Create or edit a Work Order</h4></div><div class=\"modal-body\"><jhi-alert-error></jhi-alert-error><div class=\"form-group\" ng-show=\"vm.workOrder.id\"><label for=\"id\">ID</label><input type=\"text\" class=\"form-control\" id=\"id\" name=\"id\" ng-model=\"vm.workOrder.id\" readonly=\"readonly\"></div><div class=\"form-group\"><label class=\"control-label\" for=\"field_workOrderStatus\">Work Order Status</label><select class=\"form-control\" name=\"workOrderStatus\" ng-model=\"vm.workOrder.workOrderStatus\" id=\"field_workOrderStatus\" required><option value=\"IN_SERVICE\">IN_SERVICE</option><option value=\"OUT_OF_SERVICE\">OUT_OF_SERVICE</option></select><div ng-show=\"editForm.workOrderStatus.$invalid\"><p class=\"help-block\" ng-show=\"editForm.workOrderStatus.$error.required\">This field is required.</p></div></div><div class=\"form-group\"><label class=\"control-label\" for=\"field_workOrderType\">Work Order Type</label><select class=\"form-control\" name=\"workOrderType\" ng-model=\"vm.workOrder.workOrderType\" id=\"field_workOrderType\" required><option value=\"STRATEGIC\">STRATEGIC</option><option value=\"NON_STRATEGIC\">NON_STRATEGIC</option></select><div ng-show=\"editForm.workOrderType.$invalid\"><p class=\"help-block\" ng-show=\"editForm.workOrderType.$error.required\">This field is required.</p></div></div><div class=\"form-group\"><label class=\"control-label\" for=\"field_description\">Description</label><input type=\"text\" class=\"form-control\" name=\"description\" id=\"field_description\" ng-model=\"vm.workOrder.description\" ng-minlength=\"10\" ng-maxlength=\"500\"><div ng-show=\"editForm.description.$invalid\"><p class=\"help-block\" ng-show=\"editForm.description.$error.minlength\" translate-value-min=\"10\">This field is required to be at least 10 characters.</p><p class=\"help-block\" ng-show=\"editForm.description.$error.maxlength\" translate-value-max=\"500\">This field cannot be longer than 500 characters.</p></div></div><div class=\"form-group\"><label class=\"control-label\" for=\"field_dateCompleted\">Date Completed</label><div class=\"input-group\"><input id=\"field_dateCompleted\" type=\"text\" class=\"form-control\" name=\"dateCompleted\" uib-datepicker-popup=\"{{dateformat}}\" ng-model=\"vm.workOrder.dateCompleted\" is-open=\"vm.datePickerOpenStatus.dateCompleted\" required> <span class=\"input-group-btn\"><button type=\"button\" class=\"btn btn-default\" ng-click=\"vm.openCalendar(\'dateCompleted\')\"><i class=\"glyphicon glyphicon-calendar\"></i></button></span></div><div ng-show=\"editForm.dateCompleted.$invalid\"><p class=\"help-block\" ng-show=\"editForm.dateCompleted.$error.required\">This field is required.</p></div></div><div class=\"form-group\"><label class=\"control-label\" for=\"field_priority\">Priority</label><select class=\"form-control\" name=\"priority\" ng-model=\"vm.workOrder.priority\" id=\"field_priority\" required><option value=\"URGENT\">URGENT</option><option value=\"HIGH\">HIGH</option><option value=\"MEDIUM\">MEDIUM</option><option value=\"LOW\">LOW</option></select><div ng-show=\"editForm.priority.$invalid\"><p class=\"help-block\" ng-show=\"editForm.priority.$error.required\">This field is required.</p></div></div><div class=\"form-group\"><label class=\"control-label\" for=\"field_est\">Est</label><select class=\"form-control\" name=\"est\" ng-model=\"vm.workOrder.est\" id=\"field_est\" required><option value=\"NOT_STARTED\">NOT_STARTED</option><option value=\"IN_PROGRESS\">IN_PROGRESS</option><option value=\"FINISHED\">FINISHED</option></select><div ng-show=\"editForm.est.$invalid\"><p class=\"help-block\" ng-show=\"editForm.est.$error.required\">This field is required.</p></div></div><div class=\"form-group\"><label class=\"control-label\" for=\"field_estimatedHours\">Estimated Hours</label><input type=\"number\" class=\"form-control\" name=\"estimatedHours\" id=\"field_estimatedHours\" ng-model=\"vm.workOrder.estimatedHours\"></div><div class=\"form-group\"><label class=\"control-label\" for=\"field_comments\">Comments</label><input type=\"text\" class=\"form-control\" name=\"comments\" id=\"field_comments\" ng-model=\"vm.workOrder.comments\" ng-minlength=\"10\" ng-maxlength=\"500\"><div ng-show=\"editForm.comments.$invalid\"><p class=\"help-block\" ng-show=\"editForm.comments.$error.minlength\" translate-value-min=\"10\">This field is required to be at least 10 characters.</p><p class=\"help-block\" ng-show=\"editForm.comments.$error.maxlength\" translate-value-max=\"500\">This field cannot be longer than 500 characters.</p></div></div><div class=\"form-group\"><label class=\"control-label\" for=\"field_tracker\">Tracker</label><input type=\"checkbox\" class=\"form-control\" name=\"tracker\" id=\"field_tracker\" ng-model=\"vm.workOrder.tracker\"><div ng-show=\"editForm.tracker.$invalid\"><p class=\"help-block\" ng-show=\"editForm.tracker.$error.required\">This field is required.</p></div></div><div class=\"form-group\"><label for=\"field_asset\">Asset</label><select class=\"form-control\" id=\"field_asset\" name=\"asset\" ng-model=\"vm.workOrder.assetId\" ng-options=\"asset.id as asset.id for asset in vm.assets\"><option value=\"\"></option></select></div></div><div class=\"modal-footer\"><button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" ng-click=\"vm.clear()\"><span class=\"glyphicon glyphicon-ban-circle\"></span>&nbsp;<span>Cancel</span></button> <button type=\"submit\" ng-disabled=\"editForm.$invalid || vm.isSaving\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-save\"></span>&nbsp;<span>Save</span></button></div></form>");
 $templateCache.put("app/entities/work-order/work-orders.html","<div><h2>Work Orders</h2><jhi-alert></jhi-alert><div class=\"container-fluid\"><div class=\"row\"><div class=\"col-xs-4 no-padding-left\"><button class=\"btn btn-primary\" ui-sref=\"work-order.new\"><span class=\"glyphicon glyphicon-plus\"></span> <span>Create new Work Order</span></button></div></div></div><br><div class=\"table-responsive\"><table class=\"jh-table table table-striped\"><thead><tr jh-sort=\"vm.predicate\" ascending=\"vm.reverse\" callback=\"vm.transition()\"><th jh-sort-by=\"id\"><span>ID</span> <span class=\"glyphicon glyphicon-sort\"></span></th><th jh-sort-by=\"workOrderStatus\"><span>Work Order Status</span> <span class=\"glyphicon glyphicon-sort\"></span></th><th jh-sort-by=\"workOrderType\"><span>Work Order Type</span> <span class=\"glyphicon glyphicon-sort\"></span></th><th jh-sort-by=\"description\"><span>Description</span> <span class=\"glyphicon glyphicon-sort\"></span></th><th jh-sort-by=\"dateCompleted\"><span>Date Completed</span> <span class=\"glyphicon glyphicon-sort\"></span></th><th jh-sort-by=\"priority\"><span>Priority</span> <span class=\"glyphicon glyphicon-sort\"></span></th><th jh-sort-by=\"est\"><span>Est</span> <span class=\"glyphicon glyphicon-sort\"></span></th><th jh-sort-by=\"estimatedHours\"><span>Estimated Hours</span> <span class=\"glyphicon glyphicon-sort\"></span></th><th jh-sort-by=\"comments\"><span>Comments</span> <span class=\"glyphicon glyphicon-sort\"></span></th><th jh-sort-by=\"tracker\"><span>Tracker</span> <span class=\"glyphicon glyphicon-sort\"></span></th><th jh-sort-by=\"assetId\"><span>Asset</span> <span class=\"glyphicon glyphicon-sort\"></span></th><th></th></tr></thead><tbody><tr ng-repeat=\"workOrder in vm.workOrders track by workOrder.id\"><td><a ui-sref=\"work-order-detail({id:workOrder.id})\">{{workOrder.id}}</a></td><td>{{workOrder.workOrderStatus}}</td><td>{{workOrder.workOrderType}}</td><td>{{workOrder.description}}</td><td>{{workOrder.dateCompleted | date:\'mediumDate\'}}</td><td>{{workOrder.priority}}</td><td>{{workOrder.est}}</td><td>{{workOrder.estimatedHours}}</td><td>{{workOrder.comments}}</td><td>{{workOrder.tracker}}</td><td><a ui-sref=\"asset-detail({id:workOrder.assetId})\">{{workOrder.assetId}}</a></td><td class=\"text-right\"><div class=\"btn-group flex-btn-group-container\"><button type=\"submit\" ui-sref=\"work-order-detail({id:workOrder.id})\" class=\"btn btn-info btn-sm\"><span class=\"glyphicon glyphicon-eye-open\"></span> <span class=\"hidden-xs hidden-sm\"></span></button> <button type=\"submit\" ui-sref=\"work-order.edit({id:workOrder.id})\" class=\"btn btn-primary btn-sm\"><span class=\"glyphicon glyphicon-pencil\"></span> <span class=\"hidden-xs hidden-sm\"></span></button> <button type=\"submit\" ui-sref=\"work-order.delete({id:workOrder.id})\" class=\"btn btn-danger btn-sm\"><span class=\"glyphicon glyphicon-remove-circle\"></span> <span class=\"hidden-xs hidden-sm\"></span></button></div></td></tr></tbody></table></div><div class=\"text-center\"><jhi-item-count page=\"vm.page\" total=\"vm.queryCount\" items-per-page=\"vm.itemsPerPage\"></jhi-item-count><uib-pagination class=\"pagination-sm\" total-items=\"vm.totalItems\" items-per-page=\"vm.itemsPerPage\" ng-model=\"vm.page\" ng-change=\"vm.transition()\"></uib-pagination></div></div>");
+$templateCache.put("app/entities/work-order-template/work-order-template-delete-dialog.html","<form name=\"deleteForm\" ng-submit=\"vm.confirmDelete(vm.workOrderTemplate.id)\"><div class=\"modal-header\"><button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\" ng-click=\"vm.clear()\">&times;</button><h4 class=\"modal-title\" data-translate=\"entity.delete.title\">Confirm delete operation</h4></div><div class=\"modal-body\"><jhi-alert-error></jhi-alert-error><p data-translate=\"appApp.workOrderTemplate.delete.question\" translate-values=\"{id: \'{{vm.workOrderTemplate.id}}\'}\">Are you sure you want to delete this Work Order Template?</p></div><div class=\"modal-footer\"><button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" ng-click=\"vm.clear()\"><span class=\"glyphicon glyphicon-ban-circle\"></span>&nbsp;<span data-translate=\"entity.action.cancel\">Cancel</span></button> <button type=\"submit\" ng-disabled=\"deleteForm.$invalid\" class=\"btn btn-danger\"><span class=\"glyphicon glyphicon-remove-circle\"></span>&nbsp;<span data-translate=\"entity.action.delete\">Delete</span></button></div></form>");
+$templateCache.put("app/entities/work-order-template/work-order-template-detail.html","<div><h2><span data-translate=\"appApp.workOrderTemplate.detail.title\">Work Order Template</span> {{vm.workOrderTemplate.id}}</h2><hr><jhi-alert-error></jhi-alert-error><dl class=\"dl-horizontal jh-entity-details\"><dt><span data-translate=\"appApp.workOrderTemplate.numberOfDays\">Number Of Days</span></dt><dd><span>{{vm.workOrderTemplate.numberOfDays}}</span></dd><dt><span data-translate=\"appApp.workOrderTemplate.hoursOfUsage\">Hours Of Usage</span></dt><dd><span>{{vm.workOrderTemplate.hoursOfUsage}}</span></dd><dt><span data-translate=\"appApp.workOrderTemplate.description\">Description</span></dt><dd><span>{{vm.workOrderTemplate.description}}</span></dd><dt><span data-translate=\"appApp.workOrderTemplate.dueDays\">Due Days</span></dt><dd><span>{{vm.workOrderTemplate.dueDays}}</span></dd><dt><span data-translate=\"appApp.workOrderTemplate.workOrderType\">Work Order Type</span></dt><dd><span data-translate=\"{{\'appApp.WorkOrderTemplateType.\' + vm.workOrderTemplate.workOrderType}}\">{{vm.workOrderTemplate.workOrderType}}</span></dd><dt><span data-translate=\"appApp.workOrderTemplate.functionType\">Function Type</span></dt><dd><span data-translate=\"{{\'appApp.WorkOrderTemplateFunctionType.\' + vm.workOrderTemplate.functionType}}\">{{vm.workOrderTemplate.functionType}}</span></dd><dt><span data-translate=\"appApp.workOrderTemplate.name\">Name</span></dt><dd><span>{{vm.workOrderTemplate.name}}</span></dd><dt><span data-translate=\"appApp.workOrderTemplate.assetSpecificationType\">Asset Specification Type</span></dt><dd><a ui-sref=\"asset-specification-type-detail({id:vm.workOrderTemplate.assetSpecificationTypeId})\">{{vm.workOrderTemplate.assetSpecificationTypeId}}</a></dd></dl><button type=\"submit\" ui-sref=\"{{ vm.previousState }}\" class=\"btn btn-info\"><span class=\"glyphicon glyphicon-arrow-left\"></span>&nbsp;<span data-translate=\"entity.action.back\"> Back</span></button> <button type=\"button\" ui-sref=\"work-order-template-detail.edit({id:vm.workOrderTemplate.id})\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-pencil\"></span> <span class=\"hidden-xs hidden-sm\" data-translate=\"entity.action.edit\">Edit</span></button></div>");
+$templateCache.put("app/entities/work-order-template/work-order-template-dialog.html","<form name=\"editForm\" role=\"form\" novalidate ng-submit=\"vm.save()\" show-validation><div class=\"modal-header\"><button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\" ng-click=\"vm.clear()\">&times;</button><h4 class=\"modal-title\" id=\"myWorkOrderTemplateLabel\" data-translate=\"appApp.workOrderTemplate.home.createOrEditLabel\">Create or edit a Work Order Template</h4></div><div class=\"modal-body\"><jhi-alert-error></jhi-alert-error><div class=\"form-group\" ng-show=\"vm.workOrderTemplate.id\"><label for=\"id\" data-translate=\"global.field.id\">ID</label><input type=\"text\" class=\"form-control\" id=\"id\" name=\"id\" ng-model=\"vm.workOrderTemplate.id\" readonly=\"readonly\"></div><div class=\"form-group\"><label class=\"control-label\" data-translate=\"appApp.workOrderTemplate.numberOfDays\" for=\"field_numberOfDays\">Number Of Days</label><input type=\"number\" class=\"form-control\" name=\"numberOfDays\" id=\"field_numberOfDays\" ng-model=\"vm.workOrderTemplate.numberOfDays\"></div><div class=\"form-group\"><label class=\"control-label\" data-translate=\"appApp.workOrderTemplate.hoursOfUsage\" for=\"field_hoursOfUsage\">Hours Of Usage</label><input type=\"number\" class=\"form-control\" name=\"hoursOfUsage\" id=\"field_hoursOfUsage\" ng-model=\"vm.workOrderTemplate.hoursOfUsage\"></div><div class=\"form-group\"><label class=\"control-label\" data-translate=\"appApp.workOrderTemplate.description\" for=\"field_description\">Description</label><input type=\"text\" class=\"form-control\" name=\"description\" id=\"field_description\" ng-model=\"vm.workOrderTemplate.description\"></div><div class=\"form-group\"><label class=\"control-label\" data-translate=\"appApp.workOrderTemplate.dueDays\" for=\"field_dueDays\">Due Days</label><input type=\"number\" class=\"form-control\" name=\"dueDays\" id=\"field_dueDays\" ng-model=\"vm.workOrderTemplate.dueDays\"></div><div class=\"form-group\"><label class=\"control-label\" data-translate=\"appApp.workOrderTemplate.workOrderType\" for=\"field_workOrderType\">Work Order Type</label><select class=\"form-control\" name=\"workOrderType\" ng-model=\"vm.workOrderTemplate.workOrderType\" id=\"field_workOrderType\" required><option value=\"y\" data-translate=\"appApp.WorkOrderTemplateType.y\">y</option></select><div ng-show=\"editForm.workOrderType.$invalid\"><p class=\"help-block\" ng-show=\"editForm.workOrderType.$error.required\" data-translate=\"entity.validation.required\">This field is required.</p></div></div><div class=\"form-group\"><label class=\"control-label\" data-translate=\"appApp.workOrderTemplate.functionType\" for=\"field_functionType\">Function Type</label><select class=\"form-control\" name=\"functionType\" ng-model=\"vm.workOrderTemplate.functionType\" id=\"field_functionType\" required><option value=\"DAILY\" data-translate=\"appApp.WorkOrderTemplateFunctionType.DAILY\">DAILY</option><option value=\"USAGE_HOURS\" data-translate=\"appApp.WorkOrderTemplateFunctionType.USAGE_HOURS\">USAGE_HOURS</option></select><div ng-show=\"editForm.functionType.$invalid\"><p class=\"help-block\" ng-show=\"editForm.functionType.$error.required\" data-translate=\"entity.validation.required\">This field is required.</p></div></div><div class=\"form-group\"><label class=\"control-label\" data-translate=\"appApp.workOrderTemplate.name\" for=\"field_name\">Name</label><input type=\"text\" class=\"form-control\" name=\"name\" id=\"field_name\" ng-model=\"vm.workOrderTemplate.name\" required><div ng-show=\"editForm.name.$invalid\"><p class=\"help-block\" ng-show=\"editForm.name.$error.required\" data-translate=\"entity.validation.required\">This field is required.</p></div></div><div class=\"form-group\"><label data-translate=\"appApp.workOrderTemplate.assetSpecificationType\" for=\"field_assetSpecificationType\">Asset Specification Type</label><select class=\"form-control\" id=\"field_assetSpecificationType\" name=\"assetSpecificationType\" ng-model=\"vm.workOrderTemplate.assetSpecificationTypeId\" ng-options=\"assetSpecificationType.id as assetSpecificationType.id for assetSpecificationType in vm.assetspecificationtypes\" required><option value=\"\"></option></select></div><div ng-show=\"editForm.assetSpecificationType.$invalid\"><p class=\"help-block\" ng-show=\"editForm.assetSpecificationType.$error.required\" data-translate=\"entity.validation.required\">This field is required.</p></div></div><div class=\"modal-footer\"><button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" ng-click=\"vm.clear()\"><span class=\"glyphicon glyphicon-ban-circle\"></span>&nbsp;<span data-translate=\"entity.action.cancel\">Cancel</span></button> <button type=\"submit\" ng-disabled=\"editForm.$invalid || vm.isSaving\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-save\"></span>&nbsp;<span data-translate=\"entity.action.save\">Save</span></button></div></form>");
+$templateCache.put("app/entities/work-order-template/work-order-templates.html","<div><h2 data-translate=\"appApp.workOrderTemplate.home.title\">Work Order Templates</h2><jhi-alert></jhi-alert><div class=\"container-fluid\"><div class=\"row\"><div class=\"col-xs-4 no-padding-left\"><button class=\"btn btn-primary\" ui-sref=\"work-order-template.new\"><span class=\"glyphicon glyphicon-plus\"></span> <span data-translate=\"appApp.workOrderTemplate.home.createLabel\">Create new Work Order Template</span></button></div></div></div><br><div class=\"table-responsive\"><table class=\"jh-table table table-striped\"><thead><tr jh-sort=\"vm.predicate\" ascending=\"vm.reverse\" callback=\"vm.transition()\"><th jh-sort-by=\"id\"><span data-translate=\"global.field.id\">ID</span> <span class=\"glyphicon glyphicon-sort\"></span></th><th jh-sort-by=\"numberOfDays\"><span data-translate=\"appApp.workOrderTemplate.numberOfDays\">Number Of Days</span> <span class=\"glyphicon glyphicon-sort\"></span></th><th jh-sort-by=\"hoursOfUsage\"><span data-translate=\"appApp.workOrderTemplate.hoursOfUsage\">Hours Of Usage</span> <span class=\"glyphicon glyphicon-sort\"></span></th><th jh-sort-by=\"description\"><span data-translate=\"appApp.workOrderTemplate.description\">Description</span> <span class=\"glyphicon glyphicon-sort\"></span></th><th jh-sort-by=\"dueDays\"><span data-translate=\"appApp.workOrderTemplate.dueDays\">Due Days</span> <span class=\"glyphicon glyphicon-sort\"></span></th><th jh-sort-by=\"workOrderType\"><span data-translate=\"appApp.workOrderTemplate.workOrderType\">Work Order Type</span> <span class=\"glyphicon glyphicon-sort\"></span></th><th jh-sort-by=\"functionType\"><span data-translate=\"appApp.workOrderTemplate.functionType\">Function Type</span> <span class=\"glyphicon glyphicon-sort\"></span></th><th jh-sort-by=\"name\"><span data-translate=\"appApp.workOrderTemplate.name\">Name</span> <span class=\"glyphicon glyphicon-sort\"></span></th><th jh-sort-by=\"assetSpecificationTypeId\"><span data-translate=\"appApp.workOrderTemplate.assetSpecificationType\">Asset Specification Type</span> <span class=\"glyphicon glyphicon-sort\"></span></th><th></th></tr></thead><tbody><tr ng-repeat=\"workOrderTemplate in vm.workOrderTemplates track by workOrderTemplate.id\"><td><a ui-sref=\"work-order-template-detail({id:workOrderTemplate.id})\">{{workOrderTemplate.id}}</a></td><td>{{workOrderTemplate.numberOfDays}}</td><td>{{workOrderTemplate.hoursOfUsage}}</td><td>{{workOrderTemplate.description}}</td><td>{{workOrderTemplate.dueDays}}</td><td data-translate=\"{{\'appApp.WorkOrderTemplateType.\' + workOrderTemplate.workOrderType}}\">{{workOrderTemplate.workOrderType}}</td><td data-translate=\"{{\'appApp.WorkOrderTemplateFunctionType.\' + workOrderTemplate.functionType}}\">{{workOrderTemplate.functionType}}</td><td>{{workOrderTemplate.name}}</td><td><a ui-sref=\"asset-specification-type-detail({id:workOrderTemplate.assetSpecificationTypeId})\">{{workOrderTemplate.assetSpecificationTypeId}}</a></td><td class=\"text-right\"><div class=\"btn-group flex-btn-group-container\"><button type=\"submit\" ui-sref=\"work-order-template-detail({id:workOrderTemplate.id})\" class=\"btn btn-info btn-sm\"><span class=\"glyphicon glyphicon-eye-open\"></span> <span class=\"hidden-xs hidden-sm\" data-translate=\"entity.action.view\"></span></button> <button type=\"submit\" ui-sref=\"work-order-template.edit({id:workOrderTemplate.id})\" class=\"btn btn-primary btn-sm\"><span class=\"glyphicon glyphicon-pencil\"></span> <span class=\"hidden-xs hidden-sm\" data-translate=\"entity.action.edit\"></span></button> <button type=\"submit\" ui-sref=\"work-order-template.delete({id:workOrderTemplate.id})\" class=\"btn btn-danger btn-sm\"><span class=\"glyphicon glyphicon-remove-circle\"></span> <span class=\"hidden-xs hidden-sm\" data-translate=\"entity.action.delete\"></span></button></div></td></tr></tbody></table></div><div class=\"text-center\"><jhi-item-count page=\"vm.page\" total=\"vm.queryCount\" items-per-page=\"vm.itemsPerPage\"></jhi-item-count></div><uib-pager total-items=\"vm.totalItems\" ng-model=\"vm.page\" ng-change=\"vm.transition()\"></uib-pager></div>");
 $templateCache.put("app/forms/views/bootstrap-forms.html","<div id=\"content\"><div class=\"row\"><big-breadcrumbs items=\"[\'Forms\', \'Bootstrap Form Elements\']\" icon=\"table\" class=\"col-xs-12 col-sm-7 col-md-7 col-lg-4\"></big-breadcrumbs><div smart-include=\"app/layout/partials/sub-header.tpl.html\"></div></div><!-- widget grid --><section id=\"widget-grid\" widget-grid><div class=\"well\"><div class=\"input-group\"><input class=\"form-control\" type=\"text\" placeholder=\"Search...\"><div class=\"input-group-btn\"><button class=\"btn btn-default btn-primary\" type=\"button\"><i class=\"fa fa-search\"></i> Search</button></div></div></div><!-- row --><div class=\"row\"><!-- NEW WIDGET START --><article class=\"col-sm-12 col-md-12 col-lg-6\"><!-- Widget ID (each widget will need unique ID)--><div jarvis-widget id=\"wid-id-0\" data-widget-colorbutton=\"false\" data-widget-editbutton=\"false\"><!-- widget options:\r\nusage: <div jarvis-widget id=\"wid-id-0\" data-widget-editbutton=\"false\">\r\n\r\ndata-widget-colorbutton=\"false\"\r\ndata-widget-editbutton=\"false\"\r\ndata-widget-togglebutton=\"false\"\r\ndata-widget-deletebutton=\"false\"\r\ndata-widget-fullscreenbutton=\"false\"\r\ndata-widget-custombutton=\"false\"\r\ndata-widget-collapsed=\"true\"\r\ndata-widget-sortable=\"false\"\r\n\r\n--><header><span class=\"widget-icon\"><i class=\"fa fa-eye\"></i></span><h2>Default Elements</h2></header><!-- widget div--><div><!-- widget content --><div class=\"widget-body\"><form class=\"form-horizontal\"><fieldset><legend>Default Form Elements</legend><div class=\"form-group\"><label class=\"col-md-2 control-label\">Text field</label><div class=\"col-md-10\"><input class=\"form-control\" placeholder=\"Default Text Field\" type=\"text\"></div></div><div class=\"form-group\"><label class=\"col-md-2 control-label\">Auto Complete</label><div class=\"col-md-10\"><input class=\"form-control\" placeholder=\"Type somethine...\" type=\"text\" list=\"list\"><datalist id=\"list\"><option value=\"Alexandra\">Alexandra</option><option value=\"Alice\">Alice</option><option value=\"Anastasia\">Anastasia</option><option value=\"Avelina\">Avelina</option><option value=\"Basilia\">Basilia</option><option value=\"Beatrice\">Beatrice</option><option value=\"Cassandra\">Cassandra</option><option value=\"Cecil\">Cecil</option><option value=\"Clemencia\">Clemencia</option><option value=\"Desiderata\">Desiderata</option><option value=\"Dionisia\">Dionisia</option><option value=\"Edith\">Edith</option><option value=\"Eleanora\">Eleanora</option><option value=\"Elizabeth\">Elizabeth</option><option value=\"Emma\">Emma</option><option value=\"Felicia\">Felicia</option><option value=\"Florence\">Florence</option><option value=\"Galiana\">Galiana</option><option value=\"Grecia\">Grecia</option><option value=\"Helen\">Helen</option><option value=\"Helewisa\">Helewisa</option><option value=\"Idonea\">Idonea</option><option value=\"Isabel\">Isabel</option><option value=\"Joan\">Joan</option><option value=\"Juliana\">Juliana</option><option value=\"Karla\">Karla</option><option value=\"Karyn\">Karyn</option><option value=\"Kate\">Kate</option><option value=\"Lakisha\">Lakisha</option><option value=\"Lana\">Lana</option><option value=\"Laura\">Laura</option><option value=\"Leona\">Leona</option><option value=\"Mandy\">Mandy</option><option value=\"Margaret\">Margaret</option><option value=\"Maria\">Maria</option><option value=\"Nanacy\">Nanacy</option><option value=\"Nicole\">Nicole</option><option value=\"Olga\">Olga</option><option value=\"Pamela\">Pamela</option><option value=\"Patricia\">Patricia</option><option value=\"Qiana\">Qiana</option><option value=\"Rachel\">Rachel</option><option value=\"Ramona\">Ramona</option><option value=\"Samantha\">Samantha</option><option value=\"Sandra\">Sandra</option><option value=\"Tanya\">Tanya</option><option value=\"Teresa\">Teresa</option><option value=\"Ursula\">Ursula</option><option value=\"Valerie\">Valerie</option><option value=\"Veronica\">Veronica</option><option value=\"Wilma\">Wilma</option><option value=\"Yasmin\">Yasmin</option><option value=\"Zelma\">Zelma</option></datalist><p class=\"note\"><strong>Note:</strong> works in Chrome, Firefox, Opera and IE10.</p></div></div><div class=\"form-group\"><label class=\"col-md-2 control-label\">Password field</label><div class=\"col-md-10\"><input class=\"form-control\" placeholder=\"Password field\" type=\"password\" value=\"mypassword\"></div></div><div class=\"form-group\"><label class=\"col-md-2 control-label\">Textarea</label><div class=\"col-md-10\"><textarea class=\"form-control\" placeholder=\"Textarea\" rows=\"4\"></textarea></div></div></fieldset><fieldset><legend>Unstyled Checkbox</legend><div class=\"form-group\"><label class=\"col-md-2 control-label\">Checkbox default</label><div class=\"col-md-10\"><div class=\"checkbox\"><label><input type=\"checkbox\"> Checkbox 1</label></div><div class=\"checkbox\"><label><input type=\"checkbox\"> Checkbox 2</label></div><div class=\"checkbox\"><label><input type=\"checkbox\"> Checkbox 3</label></div></div></div><div class=\"form-group\"><label class=\"col-md-2 control-label\">Inline</label><div class=\"col-md-10\"><label class=\"checkbox-inline\"><input type=\"checkbox\"> Checkbox 2</label><label class=\"checkbox-inline\"><input type=\"checkbox\"> Checkbox 2</label><label class=\"checkbox-inline\"><input type=\"checkbox\"> Checkbox 3</label></div></div></fieldset><fieldset><legend>Unstyled Radiobox</legend><div class=\"form-group\"><label class=\"col-md-2 control-label\">Radios default</label><div class=\"col-md-10\"><div class=\"radio\"><label><input type=\"radio\"> Radiobox 1</label></div><div class=\"radio\"><label><input type=\"radio\"> Radiobox 2</label></div><div class=\"radio\"><label><input type=\"radio\"> Radiobox 3</label></div></div></div><div class=\"form-group\"><label class=\"col-md-2 control-label\">Inline</label><div class=\"col-md-10\"><label class=\"radio radio-inline\"><input type=\"radio\"> Radiobox 1</label><label class=\"radio radio-inline\"><input type=\"radio\"> Radiobox 2</label><label class=\"radio radio-inline\"><input type=\"radio\"> Radiobox 3</label></div></div></fieldset><fieldset><legend>File inputs</legend><div class=\"form-group\"><label class=\"col-md-2 control-label\">File input</label><div class=\"col-md-10\"><input type=\"file\" class=\"btn btn-default\" id=\"exampleInputFile1\"><p class=\"help-block\">some help text here.</p></div></div></fieldset><fieldset class=\"demo-switcher-1\"><legend>Styled Checkbox and Radiobox</legend><span class=\"toggle-demo\"><span>Styles: </span><span class=\"btn-group btn-group-justified\" data-toggle=\"buttons\"><label class=\"btn btn-default btn-xs active\"><input type=\"radio\" name=\"demo-switcher-1\" value=\"style-0\" ng-model=\"activeStyle\"> 1</label><label class=\"btn btn-default btn-xs\"><input type=\"radio\" name=\"demo-switcher-1\" value=\"style-1\" ng-model=\"activeStyle\"> 2</label><label class=\"btn btn-default btn-xs\"><input type=\"radio\" name=\"demo-switcher-1\" value=\"style-2\" ng-model=\"activeStyle\"> 3</label><label class=\"btn btn-default btn-xs\"><input type=\"radio\" name=\"demo-switcher-1\" value=\"style-3\"> 4</label></span></span><div class=\"form-group\"><label class=\"col-md-2 control-label\">Checkbox Styles</label><div class=\"col-md-10\"><div class=\"checkbox\"><label><input type=\"checkbox\" class=\"checkbox style-0\" checked=\"checked\"> <span>Checkbox 1</span></label></div><div class=\"checkbox\"><label><input type=\"checkbox\" class=\"checkbox style-0\"> <span>Checkbox 2</span></label></div><div class=\"checkbox\"><label><input type=\"checkbox\" class=\"checkbox style-0\"> <span>Checkbox 3</span></label></div></div></div><div class=\"form-group\"><label class=\"col-md-2 control-label\">Inline</label><div class=\"col-md-10\"><label class=\"checkbox-inline\"><input type=\"checkbox\" class=\"checkbox style-0\"> <span>Checkbox 1</span></label><label class=\"checkbox-inline\"><input type=\"checkbox\" class=\"checkbox style-0\"> <span>Checkbox 2</span></label><label class=\"checkbox-inline\"><input type=\"checkbox\" class=\"checkbox style-0\"> <span>Checkbox 3</span></label></div></div></fieldset><fieldset class=\"demo-switcher-1\"><legend></legend><div class=\"form-group\"><label class=\"col-md-2 control-label\">Radios Styles</label><div class=\"col-md-10\"><div class=\"radio\"><label><input type=\"radio\" class=\"radiobox style-0\" checked=\"checked\" name=\"style-0\"> <span>Radiobox 1</span></label></div><div class=\"radio\"><label><input type=\"radio\" class=\"radiobox style-0\" name=\"style-0\"> <span>Radiobox 2</span></label></div><div class=\"radio\"><label><input type=\"radio\" class=\"radiobox style-0\" name=\"style-0\"> <span>Radiobox 3</span></label></div></div></div><div class=\"form-group\"><label class=\"col-md-2 control-label\">Inline</label><div class=\"col-md-10\"><label class=\"radio radio-inline\"><input type=\"radio\" class=\"radiobox\" name=\"style-0a\"> <span>Radiobox 1</span></label><label class=\"radio radio-inline\"><input type=\"radio\" class=\"radiobox\" name=\"style-0a\"> <span>Radiobox 2</span></label><label class=\"radio radio-inline\"><input type=\"radio\" class=\"radiobox\" name=\"style-0a\"> <span>Radiobox 3</span></label></div></div></fieldset><fieldset><legend>Unstyled Select</legend><div class=\"form-group\"><label class=\"col-md-2 control-label\" for=\"select-1\">Select</label><div class=\"col-md-10\"><select class=\"form-control\" id=\"select-1\"><option>Amsterdam</option><option>Atlanta</option><option>Baltimore</option><option>Boston</option><option>Buenos Aires</option><option>Calgary</option><option>Chicago</option><option>Denver</option><option>Dubai</option><option>Frankfurt</option><option>Hong Kong</option><option>Honolulu</option><option>Houston</option><option>Kuala Lumpur</option><option>London</option><option>Los Angeles</option><option>Melbourne</option><option>Mexico City</option><option>Miami</option><option>Minneapolis</option></select></div></div><div class=\"form-group\"><label class=\"col-md-2 control-label\" for=\"multiselect1\">Multiple select</label><div class=\"col-md-10\"><select multiple=\"multiple\" id=\"multiselect1\" class=\"form-control custom-scroll\" title=\"Click to Select a City\"><option>Amsterdam</option><option selected=\"selected\">Atlanta</option><option>Baltimore</option><option>Boston</option><option>Buenos Aires</option><option>Calgary</option><option selected=\"selected\">Chicago</option><option>Denver</option><option>Dubai</option><option>Frankfurt</option><option>Hong Kong</option><option>Honolulu</option><option>Houston</option><option>Kuala Lumpur</option><option>London</option><option>Los Angeles</option><option>Melbourne</option><option>Mexico City</option><option>Miami</option><option>Minneapolis</option></select></div></div></fieldset><fieldset><legend>Input States</legend><div class=\"form-group has-warning\"><label class=\"col-md-2 control-label\">Input warning</label><div class=\"col-md-10\"><div class=\"input-group\"><input class=\"form-control\" type=\"text\"> <span class=\"input-group-addon\"><i class=\"fa fa-warning\"></i></span></div><span class=\"help-block\">Something may have gone wrong</span></div></div><div class=\"form-group has-error\"><label class=\"col-md-2 control-label\">Input error</label><div class=\"col-md-10\"><div class=\"input-group\"><input class=\"form-control\" type=\"text\"> <span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-remove-circle\"></i></span></div><span class=\"help-block\"><i class=\"fa fa-warning\"></i> Please correct the error</span></div></div><div class=\"form-group has-success\"><label class=\"col-md-2 control-label\">Input success</label><div class=\"col-md-10\"><div class=\"input-group\"><span class=\"input-group-addon\"><i class=\"fa fa-dollar\"></i></span> <input class=\"form-control\" type=\"text\"> <span class=\"input-group-addon\"><i class=\"fa fa-check\"></i></span></div><span class=\"help-block\">Something may have gone wrong</span></div></div></fieldset><fieldset><legend>Input sizes</legend><div class=\"form-group\"><label class=\"control-label col-md-2\">Extra Small Input</label><div class=\"col-md-10\"><input class=\"form-control input-xs\" placeholder=\".input-xs\" type=\"text\"></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\">Small Input</label><div class=\"col-md-10\"><input class=\"form-control input-sm\" placeholder=\".input-sm\" type=\"text\"></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\">Default Input</label><div class=\"col-md-10\"><input class=\"form-control\" placeholder=\"Default input\" type=\"text\"></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\">Large Input</label><div class=\"col-md-10\"><input class=\"form-control input-lg\" placeholder=\".input-lg\" type=\"text\"></div></div></fieldset><fieldset><legend>Select Sizes</legend><div class=\"form-group\"><label class=\"control-label col-md-2\">Small Select</label><div class=\"col-md-10\"><select class=\"form-control input-sm\"><option>Amsterdam</option><option>Atlanta</option><option>Baltimore</option><option>Boston</option><option>Buenos Aires</option><option>Calgary</option><option>Chicago</option><option>Denver</option><option>Dubai</option><option>Frankfurt</option><option>Hong Kong</option><option>Honolulu</option><option>Houston</option><option>Kuala Lumpur</option><option>London</option><option>Los Angeles</option><option>Melbourne</option><option>Mexico City</option><option>Miami</option><option>Minneapolis</option></select></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\">Default Select</label><div class=\"col-md-10\"><select class=\"form-control\"><option>Amsterdam</option><option>Atlanta</option><option>Baltimore</option><option>Boston</option><option>Buenos Aires</option><option>Calgary</option><option>Chicago</option><option>Denver</option><option>Dubai</option><option>Frankfurt</option><option>Hong Kong</option><option>Honolulu</option><option>Houston</option><option>Kuala Lumpur</option><option>London</option><option>Los Angeles</option><option>Melbourne</option><option>Mexico City</option><option>Miami</option><option>Minneapolis</option></select></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\">Large Select</label><div class=\"col-md-10\"><select class=\"form-control input-lg\"><option>Amsterdam</option><option>Atlanta</option><option>Baltimore</option><option>Boston</option><option>Buenos Aires</option><option>Calgary</option><option>Chicago</option><option>Denver</option><option>Dubai</option><option>Frankfurt</option><option>Hong Kong</option><option>Honolulu</option><option>Houston</option><option>Kuala Lumpur</option><option>London</option><option>Los Angeles</option><option>Melbourne</option><option>Mexico City</option><option>Miami</option><option>Minneapolis</option></select></div></div></fieldset><fieldset><legend>Prepend &amp; Append</legend><div class=\"form-group\"><label class=\"control-label col-md-2\" for=\"prepend\">Prepended Input</label><div class=\"col-md-10\"><div class=\"row\"><div class=\"col-sm-12\"><div class=\"input-group\"><span class=\"input-group-addon\">@</span> <input class=\"form-control\" id=\"prepend\" placeholder=\"Username\" type=\"text\"></div></div></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\" for=\"prepend\">W/ input &amp; radios</label><div class=\"col-md-10\"><div class=\"row\"><div class=\"col-sm-12\"><div class=\"input-group\"><span class=\"input-group-addon\"><span class=\"checkbox\"><label><input type=\"checkbox\" class=\"checkbox style-0\" checked=\"checked\"> <span></span></label></span></span><input class=\"form-control\" placeholder=\"\" type=\"text\"></div></div></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\"></label><div class=\"col-md-10\"><div class=\"row\"><div class=\"col-sm-12\"><div class=\"input-group\"><input class=\"form-control\" placeholder=\"With switch\" type=\"text\"> <span class=\"input-group-addon\"><span class=\"onoffswitch\"><input type=\"checkbox\" name=\"start_interval\" class=\"onoffswitch-checkbox\" id=\"st3\"><label class=\"onoffswitch-label\" for=\"st3\"><span class=\"onoffswitch-inner\" data-swchon-text=\"YES\" data-swchoff-text=\"NO\"></span> <span class=\"onoffswitch-switch\"></span></label></span></span></div></div></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\"></label><div class=\"col-md-10\"><div class=\"row\"><div class=\"col-sm-12\"><div class=\"input-group\"><span class=\"input-group-addon\"><span class=\"radio\"><label><input type=\"radio\" class=\"radiobox style-0\" name=\"style-0a2\"> <span>Left</span></label></span></span><input class=\"form-control\" placeholder=\"\" type=\"text\"> <span class=\"input-group-addon\"><span class=\"radio\"><label><input type=\"radio\" class=\"radiobox style-0\" name=\"style-0a2\"> <span>Right</span></label></span></span></div></div></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\" for=\"append\">Appended Input</label><div class=\"col-md-10\"><div class=\"row\"><div class=\"col-sm-12\"><div class=\"input-group\"><input class=\"form-control\" id=\"append\" type=\"text\"> <span class=\"input-group-addon\">.00</span></div></div></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\" for=\"appendprepend\">Combined</label><div class=\"col-md-10\"><div class=\"row\"><div class=\"col-sm-12\"><div class=\"input-group\"><span class=\"input-group-addon\">$</span> <input class=\"form-control\" id=\"appendprepend\" type=\"text\"> <span class=\"input-group-addon\">.00</span></div></div></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\" for=\"appendbutton\">With buttons</label><div class=\"col-md-10\"><div class=\"row\"><div class=\"col-sm-12\"><div class=\"input-group\"><input class=\"form-control\" id=\"appendbutton\" type=\"text\"><div class=\"input-group-btn\"><button class=\"btn btn-default\" type=\"button\">Search</button> <button class=\"btn btn-default\" type=\"button\">Options</button></div></div></div></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\">With dropdowns</label><div class=\"col-md-10\"><div class=\"row\"><div class=\"col-sm-12\"><div class=\"input-group\"><input type=\"text\" class=\"form-control\"><div class=\"input-group-btn\"><button type=\"button\" class=\"btn btn-default\" tabindex=\"-1\">Action</button> <button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\" tabindex=\"-1\"><span class=\"caret\"></span></button><ul class=\"dropdown-menu pull-right\" role=\"menu\"><li><a href-void>Action</a></li><li><a href-void>Another action</a></li><li><a href-void>Something else here</a></li><li class=\"divider\"></li><li><a href-void>Cancel</a></li></ul></div></div></div></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\"></label><div class=\"col-md-10\"><div class=\"row\"><div class=\"col-sm-12\"><div class=\"input-group\"><div class=\"input-group-btn\"><button type=\"button\" class=\"btn btn-default\" tabindex=\"-1\">Action</button> <button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\" tabindex=\"-1\"><span class=\"caret\"></span></button><ul class=\"dropdown-menu\" role=\"menu\"><li><a href-void>Action</a></li><li><a href-void>Another action</a></li><li><a href-void>Something else here</a></li><li class=\"divider\"></li><li><a href-void>Cancel</a></li></ul></div><input type=\"text\" class=\"form-control\"></div></div></div></div></div></fieldset><fieldset><legend>Flexible Input fields with icons</legend><div class=\"form-group\"><label class=\"control-label col-md-2\" for=\"prepend\">Addon Large</label><div class=\"col-md-10\"><div class=\"icon-addon addon-lg\"><input type=\"text\" placeholder=\"Email\" class=\"form-control\"><label for=\"email\" class=\"glyphicon glyphicon-search\" rel=\"tooltip\" title=\"email\"></label></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\" for=\"prepend\">Addon Medium</label><div class=\"col-md-10\"><div class=\"icon-addon addon-md\"><input type=\"text\" placeholder=\"Email\" class=\"form-control\"><label for=\"email\" class=\"glyphicon glyphicon-search\" rel=\"tooltip\" title=\"email\"></label></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\" for=\"prepend\">Addon Small</label><div class=\"col-md-10\"><div class=\"icon-addon addon-sm\"><input type=\"text\" placeholder=\"Email\" class=\"form-control\"><label for=\"email\" class=\"glyphicon glyphicon-search\" rel=\"tooltip\" title=\"email\"></label></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\" for=\"prepend\">Select Large</label><div class=\"col-md-10\"><div class=\"icon-addon addon-lg\"><select class=\"form-control\"><option>Select Option</option><option>Sample</option><option>Sample</option></select><label for=\"email\" class=\"glyphicon glyphicon-search\" rel=\"tooltip\" title=\"email\"></label></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\" for=\"prepend\">Select Medium</label><div class=\"col-md-10\"><div class=\"icon-addon addon-md\"><select class=\"form-control\"><option>Select Option</option><option>Sample</option><option>Sample</option></select><label for=\"email\" class=\"glyphicon glyphicon-search\" rel=\"tooltip\" title=\"email\"></label></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\" for=\"prepend\">Select Small</label><div class=\"col-md-10\"><div class=\"icon-addon addon-sm\"><select class=\"form-control\"><option>Select Option</option><option>Sample</option><option>Sample</option></select><label for=\"email\" class=\"glyphicon glyphicon-search\" rel=\"tooltip\" title=\"email\"></label></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\" for=\"prepend\">Prepended Large</label><div class=\"col-md-10\"><div class=\"input-group input-group-lg\"><span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-filter\"></i></span><div class=\"icon-addon addon-lg\"><input type=\"text\" placeholder=\"Email\" class=\"form-control\"><label for=\"email\" class=\"glyphicon glyphicon-search\" rel=\"tooltip\" title=\"email\"></label></div><span class=\"input-group-btn\"><button class=\"btn btn-default\" type=\"button\">Go!</button></span></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\" for=\"prepend\">Prepended Medium</label><div class=\"col-md-10\"><div class=\"input-group input-group-md\"><span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-filter\"></i></span><div class=\"icon-addon addon-md\"><input type=\"text\" placeholder=\"Email\" class=\"form-control\"><label for=\"email\" class=\"glyphicon glyphicon-search\" rel=\"tooltip\" title=\"email\"></label></div><span class=\"input-group-btn\"><button class=\"btn btn-default\" type=\"button\">Go!</button></span></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\" for=\"prepend\">Prepended Small</label><div class=\"col-md-10\"><div class=\"input-group input-group-sm\"><span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-filter\"></i></span><div class=\"icon-addon addon-sm\"><input type=\"text\" placeholder=\"Email\" class=\"form-control\"><label for=\"email\" class=\"glyphicon glyphicon-search\" rel=\"tooltip\" title=\"email\"></label></div><span class=\"input-group-btn\"><button class=\"btn btn-default\" type=\"button\">Go!</button></span></div></div></div></fieldset><fieldset><legend>Simple input with icons</legend><div class=\"form-group\"><label class=\"control-label col-md-2\">Input with icon</label><div class=\"col-md-10\"><div class=\"row\"><div class=\"col-sm-12\"><div class=\"input-icon-left\"><i class=\"fa fa-microphone\"></i> <input class=\"form-control\" placeholder=\"Left Icon\" type=\"text\"></div></div></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\">With right icon</label><div class=\"col-md-10\"><div class=\"row\"><div class=\"col-sm-12\"><div class=\"input-icon-right\"><i class=\"fa fa-microphone\"></i> <input class=\"form-control\" placeholder=\"\" type=\"text\"></div></div></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\">Input with spinner</label><div class=\"col-md-10\"><div class=\"row\"><div class=\"col-sm-12\"><input class=\"form-control ui-autocomplete-loading\" placeholder=\"\" type=\"text\"></div></div></div></div></fieldset><div class=\"form-actions\"><div class=\"row\"><div class=\"col-md-12\"><button class=\"btn btn-default\" type=\"submit\">Cancel</button> <button class=\"btn btn-primary\" type=\"submit\"><i class=\"fa fa-save\"></i> Submit</button></div></div></div></form></div><!-- end widget content --></div><!-- end widget div --></div><!-- end widget --><!-- Widget ID (each widget will need unique ID)--><div jarvis-widget id=\"wid-id-2\" data-widget-colorbutton=\"false\" data-widget-editbutton=\"false\"><!-- widget options:\r\n    usage: <div jarvis-widget id=\"wid-id-0\" data-widget-editbutton=\"false\">\r\n\r\n    data-widget-colorbutton=\"false\"\r\n    data-widget-editbutton=\"false\"\r\n    data-widget-togglebutton=\"false\"\r\n    data-widget-deletebutton=\"false\"\r\n    data-widget-fullscreenbutton=\"false\"\r\n    data-widget-custombutton=\"false\"\r\n    data-widget-collapsed=\"true\"\r\n    data-widget-sortable=\"false\"\r\n\r\n    --><header><span class=\"widget-icon\"><i class=\"fa fa-eye\"></i></span><h2>Horizontal Form</h2></header><!-- widget div--><div><!-- widget content --><div class=\"widget-body\"><form><fieldset><input name=\"authenticity_token\" type=\"hidden\"><div class=\"form-group\"><label>Text field</label><input class=\"form-control\" placeholder=\"Text field\" type=\"text\"></div><div class=\"form-group\"><label>Password field</label><input class=\"form-control\" placeholder=\"Password\" type=\"password\" value=\"mypassword\"></div><div class=\"form-group\"><label>Textarea</label><textarea class=\"form-control\" placeholder=\"Textarea\" rows=\"3\"></textarea></div><div class=\"form-group\"><label>Readonly</label><span class=\"form-control\">Read only text</span></div></fieldset><div class=\"form-actions\"><div class=\"btn btn-primary btn-lg\"><i class=\"fa fa-save\"></i> Submit</div></div></form></div><!-- end widget content --></div><!-- end widget div --></div><!-- end widget --><!-- Widget ID (each widget will need unique ID)--><div jarvis-widget id=\"wid-id-4\" data-widget-colorbutton=\"false\" data-widget-editbutton=\"false\"><!-- widget options:\r\n    usage: <div jarvis-widget id=\"wid-id-0\" data-widget-editbutton=\"false\">\r\n\r\n    data-widget-colorbutton=\"false\"\r\n    data-widget-editbutton=\"false\"\r\n    data-widget-togglebutton=\"false\"\r\n    data-widget-deletebutton=\"false\"\r\n    data-widget-fullscreenbutton=\"false\"\r\n    data-widget-custombutton=\"false\"\r\n    data-widget-collapsed=\"true\"\r\n    data-widget-sortable=\"false\"\r\n\r\n    --><header><span class=\"widget-icon\"><i class=\"fa fa-eye\"></i></span><h2>Inline Form</h2></header><!-- widget div--><div><!-- widget content --><div class=\"widget-body\"><div class=\"alert adjusted alert-info fade in\" dara-dismisser><i class=\"fa-fw fa-lg fa fa-exclamation\"></i> <strong>Hey hey!</strong> This is an inline form!</div><form class=\"form-inline\" role=\"form\"><fieldset><div class=\"form-group\"><label class=\"sr-only\" for=\"exampleInputEmail2\">Email address</label><input type=\"email\" class=\"form-control\" id=\"exampleInputEmail2\" placeholder=\"Enter email\"></div><div class=\"form-group\"><label class=\"sr-only\" for=\"exampleInputPassword2\">Password</label><input type=\"password\" class=\"form-control\" id=\"exampleInputPassword2\" placeholder=\"Password\"></div><div class=\"checkbox\"><label><input type=\"checkbox\" class=\"checkbox\"> <span>Remember me</span></label></div><button type=\"submit\" class=\"btn btn-primary\">Sign in</button></fieldset></form></div><!-- end widget content --></div><!-- end widget div --></div><!-- end widget --></article><!-- WIDGET END --><!-- NEW WIDGET START --><article class=\"col-sm-12 col-md-12 col-lg-6\"><!-- Widget ID (each widget will need unique ID)--><div jarvis-widget id=\"wid-id-1\" data-widget-colorbutton=\"false\" data-widget-editbutton=\"false\"><!-- widget options:\r\nusage: <div jarvis-widget id=\"wid-id-0\" data-widget-editbutton=\"false\">\r\n\r\ndata-widget-colorbutton=\"false\"\r\ndata-widget-editbutton=\"false\"\r\ndata-widget-togglebutton=\"false\"\r\ndata-widget-deletebutton=\"false\"\r\ndata-widget-fullscreenbutton=\"false\"\r\ndata-widget-custombutton=\"false\"\r\ndata-widget-collapsed=\"true\"\r\ndata-widget-sortable=\"false\"\r\n\r\n--><header><span class=\"widget-icon\"><i class=\"fa fa-eye-slash\"></i></span><h2>Disabled Elements</h2></header><!-- widget div--><div><!-- widget content --><div class=\"widget-body\"><form class=\"form-horizontal\"><fieldset><legend>Disabled Form Elements</legend><div class=\"form-group\"><label class=\"col-md-2 control-label\">Text field</label><div class=\"col-md-10\"><input class=\"form-control\" disabled=\"disabled\" placeholder=\"Default Text Field\" type=\"text\"></div></div><div class=\"form-group\"><label class=\"col-md-2 control-label\">Auto Complete</label><div class=\"col-md-10\"><input class=\"form-control\" disabled=\"disabled\" placeholder=\"Type somethine...\" type=\"text\" list=\"list\"><p class=\"note\"><strong>Note:</strong> works in Chrome, Firefox, Opera and IE10.</p></div></div><div class=\"form-group\"><label class=\"col-md-2 control-label\">Password field</label><div class=\"col-md-10\"><input class=\"form-control\" disabled=\"disabled\" placeholder=\"Password field\" type=\"password\" value=\"mypassword\"></div></div><div class=\"form-group\"><label class=\"col-md-2 control-label\">Textarea</label><div class=\"col-md-10\"><textarea class=\"form-control\" disabled=\"disabled\" placeholder=\"Textarea\" rows=\"4\"></textarea></div></div></fieldset><fieldset><legend>Unstyled Checkbox <small>(disabled)</small></legend><div class=\"form-group\"><label class=\"col-md-2 control-label\">Checkbox</label><div class=\"col-md-10\"><div class=\"checkbox\"><label><input type=\"checkbox\" disabled=\"disabled\" name=\"checkbox-3\" value=\"\"> Checkbox 1</label></div><div class=\"checkbox\"><label><input type=\"checkbox\" disabled=\"disabled\" name=\"checkbox-3\" value=\"\"> Checkbox 2</label></div><div class=\"checkbox\"><label><input type=\"checkbox\" disabled=\"disabled\" name=\"checkbox-3\" value=\"\"> Checkbox 3</label></div></div></div><div class=\"form-group\"><label class=\"col-md-2 control-label\">Inline Checkbox</label><div class=\"col-md-10\"><label class=\"checkbox-inline\"><input type=\"checkbox\" disabled=\"disabled\" name=\"checkbox-4\" value=\"\"> Checkbox 1</label><label class=\"checkbox-inline\"><input type=\"checkbox\" disabled=\"disabled\" name=\"checkbox-4\" value=\"\"> Checkbox 2</label><label class=\"checkbox-inline\"><input type=\"checkbox\" disabled=\"disabled\" name=\"checkbox-4\" value=\"\"> Checkbox 3</label></div></div></fieldset><fieldset><legend>Unstyled Radiobox <small>(disabled)</small></legend><div class=\"form-group\"><label class=\"col-md-2 control-label\">Radios</label><div class=\"col-md-10\"><div class=\"radio\"><label><input type=\"radio\" disabled=\"disabled\" name=\"radio-3\" value=\"\"> Radiobox 1</label></div><div class=\"radio\"><label><input type=\"radio\" disabled=\"disabled\" name=\"radio-3\" value=\"\"> Radiobox 2</label></div><div class=\"radio\"><label><input type=\"radio\" disabled=\"disabled\" name=\"radio-3\" value=\"\"> Radiobox 3</label></div></div></div><div class=\"form-group\"><label class=\"col-md-2 control-label\">Inline Radiobox</label><div class=\"col-md-10\"><label class=\"radio radio-inline\"><input type=\"radio\" disabled=\"disabled\" name=\"radio-4\" value=\"\"> Radiobox 1</label><label class=\"radio radio-inline\"><input type=\"radio\" disabled=\"disabled\" name=\"radio-4\" value=\"\"> Radiobox 2</label><label class=\"radio radio-inline\"><input type=\"radio\" disabled=\"disabled\" name=\"radio-4\" value=\"\"> Radiobox 3</label></div></div></fieldset><fieldset><legend>File inputs <small>(disabled)</small></legend><div class=\"form-group\"><label class=\"col-md-2 control-label\">File input</label><div class=\"col-md-10\"><input type=\"file\" class=\"btn btn-default\" disabled=\"disabled\" id=\"exampleInputFile2\"><p class=\"help-block\">some help text here.</p></div></div></fieldset><fieldset class=\"demo-switcher-1\"><legend>Styled Checkbox and Radiobox <small>(disabled)</small></legend><div class=\"form-group\"><label class=\"col-md-2 control-label\">Checkbox Styles</label><div class=\"col-md-10\"><div class=\"checkbox\"><label><input type=\"checkbox\" class=\"checkbox style-0\" checked=\"checked\" disabled=\"disabled\"> <span>Checkbox 1</span></label></div><div class=\"checkbox\"><label><input type=\"checkbox\" class=\"checkbox style-0\" disabled=\"disabled\"> <span>Checkbox 2</span></label></div><div class=\"checkbox\"><label><input type=\"checkbox\" class=\"checkbox style-0\" disabled=\"disabled\"> <span>Checkbox 3</span></label></div></div></div><div class=\"form-group\"><label class=\"col-md-2 control-label\">Inline</label><div class=\"col-md-10\"><label class=\"checkbox-inline\"><input type=\"checkbox\" class=\"checkbox style-0\" disabled=\"disabled\"> <span>Checkbox 1</span></label><label class=\"checkbox-inline\"><input type=\"checkbox\" class=\"checkbox style-0\" disabled=\"disabled\"> <span>Checkbox 2</span></label><label class=\"checkbox-inline\"><input type=\"checkbox\" class=\"checkbox style-0\" disabled=\"disabled\"> <span>Checkbox 3</span></label></div></div></fieldset><fieldset class=\"demo-switcher-1\"><legend></legend><div class=\"form-group\"><label class=\"col-md-2 control-label\">Radios Styles</label><div class=\"col-md-10\"><div class=\"radio\"><label><input type=\"radio\" class=\"radiobox style-0\" checked=\"checked\" disabled=\"disabled\" name=\"style-0\"> <span>Radiobox 1</span></label></div><div class=\"radio\"><label><input type=\"radio\" class=\"radiobox style-0\" disabled=\"disabled\" name=\"style-0\"> <span>Radiobox 2</span></label></div><div class=\"radio\"><label><input type=\"radio\" class=\"radiobox style-0\" disabled=\"disabled\" name=\"style-0\"> <span>Radiobox 3</span></label></div></div></div><div class=\"form-group\"><label class=\"col-md-2 control-label\">Inline</label><div class=\"col-md-10\"><label class=\"radio radio-inline\"><input type=\"radio\" class=\"radiobox style-0\" disabled=\"disabled\" name=\"style-0a\"> <span>Radiobox 1</span></label><label class=\"radio radio-inline\"><input type=\"radio\" class=\"radiobox style-0\" disabled=\"disabled\" name=\"style-0a\"> <span>Radiobox 2</span></label><label class=\"radio radio-inline\"><input type=\"radio\" class=\"radiobox style-0\" disabled=\"disabled\" name=\"style-0a\"> <span>Radiobox 3</span></label></div></div></fieldset><fieldset><legend>Unstyled Select</legend><div class=\"form-group\"><label class=\"col-md-2 control-label\">Select</label><div class=\"col-md-10\"><select class=\"form-control\" disabled=\"disabled\"><option>Amsterdam</option><option>Atlanta</option><option>Baltimore</option><option>Boston</option><option>Buenos Aires</option><option>Calgary</option><option>Chicago</option><option>Denver</option><option>Dubai</option><option>Frankfurt</option><option>Hong Kong</option><option>Honolulu</option><option>Houston</option><option>Kuala Lumpur</option><option>London</option><option>Los Angeles</option><option>Melbourne</option><option>Mexico City</option><option>Miami</option><option>Minneapolis</option></select></div></div><div class=\"form-group\"><label class=\"col-md-2 control-label\">Multiple select</label><div class=\"col-md-10\"><select multiple=\"multiple\" disabled=\"disabled\" class=\"form-control custom-scroll\" title=\"Click to Select a City\"><option>Amsterdam</option><option selected=\"selected\">Atlanta</option><option>Baltimore</option><option>Boston</option><option>Buenos Aires</option><option>Calgary</option><option selected=\"selected\">Chicago</option><option>Denver</option><option>Dubai</option><option>Frankfurt</option><option>Hong Kong</option><option>Honolulu</option><option>Houston</option><option>Kuala Lumpur</option><option>London</option><option>Los Angeles</option><option>Melbourne</option><option>Mexico City</option><option>Miami</option><option>Minneapolis</option></select></div></div></fieldset><fieldset><legend>Input States <small>(disabled)</small></legend><div class=\"form-group has-warning\"><label class=\"col-md-2 control-label\">Input warning</label><div class=\"col-md-10\"><div class=\"input-group\"><input class=\"form-control\" disabled=\"disabled\" type=\"text\"> <span class=\"input-group-addon\"><i class=\"fa fa-warning\"></i></span></div><span class=\"help-block\">Something may have gone wrong</span></div></div><div class=\"form-group has-error\"><label class=\"col-md-2 control-label\">Input error</label><div class=\"col-md-10\"><div class=\"input-group\"><input class=\"form-control\" disabled=\"disabled\" type=\"text\"> <span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-remove-circle\"></i></span></div><span class=\"help-block\"><i class=\"fa fa-warning\"></i> Please correct the error</span></div></div><div class=\"form-group has-success\"><label class=\"col-md-2 control-label\">Input success</label><div class=\"col-md-10\"><div class=\"input-group\"><span class=\"input-group-addon\"><i class=\"fa fa-dollar\"></i></span> <input class=\"form-control\" disabled=\"disabled\" type=\"text\"> <span class=\"input-group-addon\"><i class=\"fa fa-check\"></i></span></div><span class=\"help-block\">Something may have gone wrong</span></div></div></fieldset><fieldset><legend>Input sizes <small>(disabled)</small></legend><div class=\"form-group\"><label class=\"control-label col-md-2\">Extra Small Input</label><div class=\"col-md-10\"><input class=\"form-control input-xs\" disabled=\"disabled\" placeholder=\".input-xs\" type=\"text\"></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\">Small Input</label><div class=\"col-md-10\"><input class=\"form-control input-sm\" disabled=\"disabled\" placeholder=\".input-sm\" type=\"text\"></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\">Default Input</label><div class=\"col-md-10\"><input class=\"form-control\" disabled=\"disabled\" placeholder=\"Default input\" type=\"text\"></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\">Large Input</label><div class=\"col-md-10\"><input class=\"form-control input-lg\" disabled=\"disabled\" placeholder=\".input-lg\" type=\"text\"></div></div></fieldset><fieldset><legend>Select Sizes <small>(disabled)</small></legend><div class=\"form-group\"><label class=\"control-label col-md-2\">Small Select</label><div class=\"col-md-10\"><select class=\"form-control input-sm\" disabled=\"disabled\"><option>Amsterdam</option><option>Atlanta</option><option>Baltimore</option><option>Boston</option><option>Buenos Aires</option><option>Calgary</option><option>Chicago</option><option>Denver</option><option>Dubai</option><option>Frankfurt</option><option>Hong Kong</option><option>Honolulu</option><option>Houston</option><option>Kuala Lumpur</option><option>London</option><option>Los Angeles</option><option>Melbourne</option><option>Mexico City</option><option>Miami</option><option>Minneapolis</option></select></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\">Default Select</label><div class=\"col-md-10\"><select class=\"form-control\" disabled=\"disabled\"><option>Amsterdam</option><option>Atlanta</option><option>Baltimore</option><option>Boston</option><option>Buenos Aires</option><option>Calgary</option><option>Chicago</option><option>Denver</option><option>Dubai</option><option>Frankfurt</option><option>Hong Kong</option><option>Honolulu</option><option>Houston</option><option>Kuala Lumpur</option><option>London</option><option>Los Angeles</option><option>Melbourne</option><option>Mexico City</option><option>Miami</option><option>Minneapolis</option></select></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\">Large Select</label><div class=\"col-md-10\"><select class=\"form-control input-lg\" disabled=\"disabled\"><option>Amsterdam</option><option>Atlanta</option><option>Baltimore</option><option>Boston</option><option>Buenos Aires</option><option>Calgary</option><option>Chicago</option><option>Denver</option><option>Dubai</option><option>Frankfurt</option><option>Hong Kong</option><option>Honolulu</option><option>Houston</option><option>Kuala Lumpur</option><option>London</option><option>Los Angeles</option><option>Melbourne</option><option>Mexico City</option><option>Miami</option><option>Minneapolis</option></select></div></div></fieldset><fieldset><legend>Prepend &amp; Append <small>(disabled)</small></legend><div class=\"form-group\"><label class=\"control-label col-md-2\">Prepended Input</label><div class=\"col-md-10\"><div class=\"row\"><div class=\"col-sm-12\"><div class=\"input-group\"><span class=\"input-group-addon\">@</span> <input class=\"form-control\" disabled=\"disabled\" placeholder=\"Username\" type=\"text\"></div></div></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\" for=\"append\">Appended Input</label><div class=\"col-md-10\"><div class=\"row\"><div class=\"col-sm-12\"><div class=\"input-group\"><input class=\"form-control\" disabled=\"disabled\" type=\"text\"> <span class=\"input-group-addon\">.00</span></div></div></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\" for=\"prepend\">W/ input &amp; radios</label><div class=\"col-md-10\"><div class=\"row\"><div class=\"col-sm-12\"><div class=\"input-group\"><span class=\"input-group-addon\"><span class=\"checkbox\"><label><input type=\"checkbox\" disabled=\"disabled\" class=\"checkbox style-0\" checked=\"checked\"> <span></span></label></span></span><input class=\"form-control\" disabled=\"disabled\" placeholder=\"\" type=\"text\"></div></div></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\"></label><div class=\"col-md-10\"><div class=\"row\"><div class=\"col-sm-12\"><div class=\"input-group\"><input class=\"form-control\" disabled=\"disabled\" placeholder=\"With switch\" type=\"text\"> <span class=\"input-group-addon\"><span class=\"onoffswitch\"><input type=\"checkbox\" name=\"start_interval\" disabled=\"disabled\" class=\"onoffswitch-checkbox\" id=\"st3a\"><label class=\"onoffswitch-label\" for=\"st3a\"><span class=\"onoffswitch-inner\" data-swchon-text=\"YES\" data-swchoff-text=\"NO\"></span> <span class=\"onoffswitch-switch\"></span></label></span></span></div></div></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\"></label><div class=\"col-md-10\"><div class=\"row\"><div class=\"col-sm-12\"><div class=\"input-group\"><span class=\"input-group-addon\"><span class=\"radio\"><label><input type=\"radio\" disabled=\"disabled\" class=\"radiobox style-0\" name=\"style-0t2a\"> <span>Left</span></label></span></span><input class=\"form-control\" disabled=\"disabled\" placeholder=\"\" type=\"text\"> <span class=\"input-group-addon\"><span class=\"radio\"><label><input type=\"radio\" disabled=\"disabled\" class=\"radiobox style-0\" name=\"style-0t2a\"> <span>Right</span></label></span></span></div></div></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\">Combined</label><div class=\"col-md-10\"><div class=\"row\"><div class=\"col-sm-12\"><div class=\"input-group\"><span class=\"input-group-addon\">$</span> <input class=\"form-control\" disabled=\"disabled\" type=\"text\"> <span class=\"input-group-addon\">.00</span></div></div></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\" for=\"appendbutton\">With buttons</label><div class=\"col-md-10\"><div class=\"row\"><div class=\"col-sm-12\"><div class=\"input-group\"><input class=\"form-control\" disabled=\"disabled\" type=\"text\"><div class=\"input-group-btn\"><button class=\"btn btn-default\" disabled=\"disabled\" type=\"button\">Search</button> <button class=\"btn btn-default\" disabled=\"disabled\" type=\"button\">Options</button></div></div></div></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\">With dropdowns</label><div class=\"col-md-10\"><div class=\"row\"><div class=\"col-sm-12\"><div class=\"input-group\"><input type=\"text\" class=\"form-control\" disabled=\"disabled\"><div class=\"input-group-btn\"><button type=\"button\" class=\"btn btn-default\" tabindex=\"-1\" disabled=\"disabled\">Action</button> <button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\" tabindex=\"-1\" disabled=\"disabled\"><span class=\"caret\"></span></button><ul class=\"dropdown-menu pull-right\" role=\"menu\"><li><a href-void>Action</a></li><li><a href-void>Another action</a></li><li><a href-void>Something else here</a></li><li class=\"divider\"></li><li><a href-void>Cancel</a></li></ul></div></div></div></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\"></label><div class=\"col-md-10\"><div class=\"row\"><div class=\"col-sm-12\"><div class=\"input-group\"><div class=\"input-group-btn\"><button type=\"button\" class=\"btn btn-default\" disabled=\"disabled\" tabindex=\"-1\">Action</button> <button type=\"button\" class=\"btn btn-default dropdown-toggle\" disabled=\"disabled\" data-toggle=\"dropdown\" tabindex=\"-1\"><span class=\"caret\"></span></button><ul class=\"dropdown-menu\" role=\"menu\"><li><a href-void>Action</a></li><li><a href-void>Another action</a></li><li><a href-void>Something else here</a></li><li class=\"divider\"></li><li><a href-void>Cancel</a></li></ul></div><input type=\"text\" class=\"form-control\" disabled=\"disabled\"></div></div></div></div></div></fieldset><fieldset><legend>Flexible Input fields with icons</legend><div class=\"form-group\"><label class=\"control-label col-md-2\" for=\"prepend\">Addon Large</label><div class=\"col-md-10\"><div class=\"icon-addon addon-lg\"><input type=\"text\" placeholder=\"Email\" class=\"form-control\" disabled=\"disabled\"><label for=\"email\" class=\"glyphicon glyphicon-search\" rel=\"tooltip\" title=\"email\"></label></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\" for=\"prepend\">Addon Medium</label><div class=\"col-md-10\"><div class=\"icon-addon addon-md\"><input type=\"text\" placeholder=\"Email\" class=\"form-control\" disabled=\"disabled\"><label for=\"email\" class=\"glyphicon glyphicon-search\" rel=\"tooltip\" title=\"email\"></label></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\" for=\"prepend\">Addon Small</label><div class=\"col-md-10\"><div class=\"icon-addon addon-sm\"><input type=\"text\" placeholder=\"Email\" class=\"form-control\" disabled=\"disabled\"><label for=\"email\" class=\"glyphicon glyphicon-search\" rel=\"tooltip\" title=\"email\"></label></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\" for=\"prepend\">Select Large</label><div class=\"col-md-10\"><div class=\"icon-addon addon-lg\"><select class=\"form-control\" disabled=\"disabled\"><option>Select Option</option><option>Sample</option><option>Sample</option></select><label for=\"email\" class=\"glyphicon glyphicon-search\" rel=\"tooltip\" title=\"email\"></label></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\" for=\"prepend\">Select Medium</label><div class=\"col-md-10\"><div class=\"icon-addon addon-md\"><select class=\"form-control\" disabled=\"disabled\"><option>Select Option</option><option>Sample</option><option>Sample</option></select><label for=\"email\" class=\"glyphicon glyphicon-search\" rel=\"tooltip\" title=\"email\"></label></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\" for=\"prepend\">Select Small</label><div class=\"col-md-10\"><div class=\"icon-addon addon-sm\"><select class=\"form-control\" disabled=\"disabled\"><option>Select Option</option><option>Sample</option><option>Sample</option></select><label for=\"email\" class=\"glyphicon glyphicon-search\" rel=\"tooltip\" title=\"email\"></label></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\" for=\"prepend\">Prepended Large</label><div class=\"col-md-10\"><div class=\"input-group input-group-lg\"><span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-filter\"></i></span><div class=\"icon-addon addon-lg\"><input type=\"text\" placeholder=\"Email\" class=\"form-control\" disabled=\"disabled\"><label for=\"email\" class=\"glyphicon glyphicon-search\" rel=\"tooltip\" title=\"email\"></label></div><span class=\"input-group-btn\"><button class=\"btn btn-default\" type=\"button\" disabled=\"disabled\">Go!</button></span></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\" for=\"prepend\">Prepended Medium</label><div class=\"col-md-10\"><div class=\"input-group input-group-md\"><span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-filter\"></i></span><div class=\"icon-addon addon-md\"><input type=\"text\" placeholder=\"Email\" class=\"form-control\" disabled=\"disabled\"><label for=\"email\" class=\"glyphicon glyphicon-search\" rel=\"tooltip\" title=\"email\"></label></div><span class=\"input-group-btn\"><button class=\"btn btn-default\" type=\"button\" disabled=\"disabled\">Go!</button></span></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\" for=\"prepend\">Prepended Small</label><div class=\"col-md-10\"><div class=\"input-group input-group-sm\"><span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-filter\"></i></span><div class=\"icon-addon addon-sm\"><input type=\"text\" placeholder=\"Email\" class=\"form-control\" disabled=\"disabled\"><label for=\"email\" class=\"glyphicon glyphicon-search\" rel=\"tooltip\" title=\"email\"></label></div><span class=\"input-group-btn\"><button class=\"btn btn-default\" type=\"button\" disabled=\"disabled\">Go!</button></span></div></div></div></fieldset><fieldset><legend>Simple input with icons (disabled)</legend><div class=\"form-group\"><label class=\"control-label col-md-2\">Input with icon</label><div class=\"col-md-10\"><div class=\"row\"><div class=\"col-sm-12\"><div class=\"input-icon-left\"><i class=\"fa fa-microphone\"></i> <input class=\"form-control\" disabled=\"disabled\" placeholder=\"Left Icon\" type=\"text\"></div></div></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\">With right icon</label><div class=\"col-md-10\"><div class=\"row\"><div class=\"col-sm-12\"><div class=\"input-icon-right\"><i class=\"fa fa-microphone\"></i> <input class=\"form-control\" disabled=\"disabled\" placeholder=\"\" type=\"text\"></div></div></div></div></div><div class=\"form-group\"><label class=\"control-label col-md-2\">Input with spinner</label><div class=\"col-md-10\"><div class=\"row\"><div class=\"col-sm-12\"><input class=\"form-control ui-autocomplete-loading\" disabled=\"disabled\" placeholder=\"\" type=\"text\"></div></div></div></div></fieldset><div class=\"form-actions\"><div class=\"row\"><div class=\"col-md-12\"><button class=\"btn btn-primary\" disabled=\"disabled\" type=\"submit\"><i class=\"fa fa-save\"></i> Submit</button> <button class=\"btn btn-default\" disabled=\"disabled\" type=\"submit\">Cancel</button></div></div></div></form></div><!-- end widget content --></div><!-- end widget div --></div><!-- end widget --><!-- Widget ID (each widget will need unique ID)--><div jarvis-widget id=\"wid-id-3\" data-widget-colorbutton=\"false\" data-widget-editbutton=\"false\"><!-- widget options:\r\n    usage: <div jarvis-widget id=\"wid-id-0\" data-widget-editbutton=\"false\">\r\n\r\n    data-widget-colorbutton=\"false\"\r\n    data-widget-editbutton=\"false\"\r\n    data-widget-togglebutton=\"false\"\r\n    data-widget-deletebutton=\"false\"\r\n    data-widget-fullscreenbutton=\"false\"\r\n    data-widget-custombutton=\"false\"\r\n    data-widget-collapsed=\"true\"\r\n    data-widget-sortable=\"false\"\r\n\r\n    --><header><span class=\"widget-icon\"><i class=\"fa fa-eye-slash\"></i></span><h2>Disabled Horizontal Form</h2></header><!-- widget div--><div><!-- widget content --><div class=\"widget-body\"><form><fieldset><input name=\"authenticity_token\" type=\"hidden\"><div class=\"form-group\"><label>Text field</label><input class=\"form-control\" disabled=\"disabled\" placeholder=\"Text field\" type=\"text\"></div><div class=\"form-group\"><label>Password field</label><input class=\"form-control\" disabled=\"disabled\" placeholder=\"Password\" type=\"password\" value=\"mypassword\"></div><div class=\"form-group\"><label>Textarea</label><textarea class=\"form-control\" disabled=\"disabled\" placeholder=\"Textarea\" rows=\"3\"></textarea></div><div class=\"form-group\"><label>Readonly</label><span class=\"form-control\">Read only text</span></div></fieldset><div class=\"form-actions\"><button class=\"btn btn-primary btn-lg\" disabled=\"disabled\"><i class=\"fa fa-save\"></i> Submit</button></div></form></div><!-- end widget content --></div><!-- end widget div --></div><!-- end widget --><!-- Widget ID (each widget will need unique ID)--><div jarvis-widget id=\"wid-id-5\" data-widget-colorbutton=\"false\" data-widget-editbutton=\"false\"><!-- widget options:\r\n    usage: <div jarvis-widget id=\"wid-id-0\" data-widget-editbutton=\"false\">\r\n\r\n    data-widget-colorbutton=\"false\"\r\n    data-widget-editbutton=\"false\"\r\n    data-widget-togglebutton=\"false\"\r\n    data-widget-deletebutton=\"false\"\r\n    data-widget-fullscreenbutton=\"false\"\r\n    data-widget-custombutton=\"false\"\r\n    data-widget-collapsed=\"true\"\r\n    data-widget-sortable=\"false\"\r\n\r\n    --><header><span class=\"widget-icon\"><i class=\"fa fa-eye-slash\"></i></span><h2>Inline Form Disabled</h2></header><!-- widget div--><div><!-- widget content --><div class=\"widget-body\"><div class=\"alert adjusted alert-warning fade in\" dara-dismisser><i class=\"fa fa-fw fa-lg fa-exclamation\"></i> <strong>Hey hey!</strong> I am disabled!</div><form class=\"form-inline\" role=\"form\"><fieldset><div class=\"form-group\"><label class=\"sr-only\">Email address</label><input type=\"email\" class=\"form-control\" disabled=\"disabled\" placeholder=\"Enter email\"></div><div class=\"form-group\"><label class=\"sr-only\">Password</label><input type=\"password\" class=\"form-control\" disabled=\"disabled\" placeholder=\"Password\"></div><div class=\"checkbox\"><label><input type=\"checkbox\" class=\"checkbox\" disabled=\"disabled\"> <span>Remember me</span></label></div><button type=\"submit\" disabled=\"disabled\" class=\"btn btn-primary\">Sign in</button></fieldset></form></div><!-- end widget content --></div><!-- end widget div --></div><!-- end widget --></article><!-- WIDGET END --></div><!-- end row --><!-- row --><div class=\"row\"><!-- NEW WIDGET START --><article class=\"col-sm-12\"><!-- Widget ID (each widget will need unique ID)--><div jarvis-widget id=\"wid-id-8\" data-widget-colorbutton=\"false\" data-widget-editbutton=\"false\"><!-- widget options:\r\n            usage: <div jarvis-widget id=\"wid-id-0\" data-widget-editbutton=\"false\">\r\n\r\n            data-widget-colorbutton=\"false\"\r\n            data-widget-editbutton=\"false\"\r\n            data-widget-togglebutton=\"false\"\r\n            data-widget-deletebutton=\"false\"\r\n            data-widget-fullscreenbutton=\"false\"\r\n            data-widget-custombutton=\"false\"\r\n            data-widget-collapsed=\"true\"\r\n            data-widget-sortable=\"false\"\r\n\r\n            --><header><span class=\"widget-icon\"><i class=\"fa fa-columns\"></i></span><h2>Column sizing</h2></header><!-- widget div--><div><!-- widget content --><div class=\"widget-body\"><div class=\"row\"><div class=\"col-sm-12\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-12\"></div></div><hr><div class=\"row\"><div class=\"col-sm-6\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-6\"></div><div class=\"col-sm-6\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-6\"></div></div><hr><div class=\"row\"><div class=\"col-sm-6\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-6\"></div><div class=\"col-sm-3\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-3\"></div><div class=\"col-sm-3\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-3\"></div></div><hr><div class=\"row\"><div class=\"col-sm-3\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-3\"></div><div class=\"col-sm-3\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-3\"></div><div class=\"col-sm-6\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-6\"></div></div><hr><div class=\"row\"><div class=\"col-sm-4\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-4\"></div><div class=\"col-sm-4\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-4\"></div><div class=\"col-sm-4\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-4\"></div></div><hr><div class=\"row\"><div class=\"col-sm-2\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-2\"></div><div class=\"col-sm-2\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-2\"></div><div class=\"col-sm-2\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-2\"></div><div class=\"col-sm-2\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-2\"></div><div class=\"col-sm-2\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-2\"></div><div class=\"col-sm-2\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-2\"></div></div></div><!-- end widget content --></div><!-- end widget div --></div><!-- end widget --></article><!-- WIDGET END --></div><!-- end row --><!-- row --><div class=\"row\"><!-- NEW WIDGET START --><article class=\"col-sm-12 col-md-12 col-lg-6\"><!-- Widget ID (each widget will need unique ID)--><div jarvis-widget id=\"wid-id-9\" data-widget-colorbutton=\"false\" data-widget-editbutton=\"false\"><!-- widget options:\r\n        usage: <div jarvis-widget id=\"wid-id-0\" data-widget-editbutton=\"false\">\r\n\r\n        data-widget-colorbutton=\"false\"\r\n        data-widget-editbutton=\"false\"\r\n        data-widget-togglebutton=\"false\"\r\n        data-widget-deletebutton=\"false\"\r\n        data-widget-fullscreenbutton=\"false\"\r\n        data-widget-custombutton=\"false\"\r\n        data-widget-collapsed=\"true\"\r\n        data-widget-sortable=\"false\"\r\n\r\n        --><header><span class=\"widget-icon\"><i class=\"fa fa-columns\"></i></span><h2>Right Aligned</h2></header><!-- widget div--><div><!-- widget content --><div class=\"widget-body\"><div class=\"row\"><div class=\"col-sm-2 pull-right\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-2\"></div></div><hr><div class=\"row\"><div class=\"col-sm-3 pull-right\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-3\"></div></div><hr><div class=\"row\"><div class=\"col-sm-4 pull-right\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-4\"></div></div><hr><div class=\"row\"><div class=\"col-sm-5 pull-right\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-5\"></div></div><hr><div class=\"row\"><div class=\"col-sm-6 pull-right\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-6\"></div></div><hr><div class=\"row\"><div class=\"col-sm-7 pull-right\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-7\"></div></div><hr><div class=\"row\"><div class=\"col-sm-8 pull-right\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-8\"></div></div><hr><div class=\"row\"><div class=\"col-sm-9 pull-right\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-9\"></div></div><hr><div class=\"row\"><div class=\"col-sm-10 pull-right\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-10\"></div></div><hr><div class=\"row\"><div class=\"col-sm-11 pull-right\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-11\"></div></div><hr><div class=\"row\"><div class=\"col-sm-12 pull-right\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-12\"></div></div></div><!-- end widget content --></div><!-- end widget div --></div><!-- end widget --></article><!-- WIDGET END --><!-- NEW WIDGET START --><article class=\"col-sm-12 col-md-12 col-lg-6\"><!-- Widget ID (each widget will need unique ID)--><div jarvis-widget id=\"wid-id-10\" data-widget-colorbutton=\"false\" data-widget-editbutton=\"false\"><!-- widget options:\r\n        usage: <div jarvis-widget id=\"wid-id-0\" data-widget-editbutton=\"false\">\r\n\r\n        data-widget-colorbutton=\"false\"\r\n        data-widget-editbutton=\"false\"\r\n        data-widget-togglebutton=\"false\"\r\n        data-widget-deletebutton=\"false\"\r\n        data-widget-fullscreenbutton=\"false\"\r\n        data-widget-custombutton=\"false\"\r\n        data-widget-collapsed=\"true\"\r\n        data-widget-sortable=\"false\"\r\n\r\n        --><header><span class=\"widget-icon\"><i class=\"fa fa-columns\"></i></span><h2>Left Align</h2></header><!-- widget div--><div><!-- widget content --><div class=\"widget-body\"><div class=\"row\"><div class=\"col-sm-2 pull-left\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-2\"></div></div><hr><div class=\"row\"><div class=\"col-sm-3 pull-left\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-3\"></div></div><hr><div class=\"row\"><div class=\"col-sm-4 pull-left\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-4\"></div></div><hr><div class=\"row\"><div class=\"col-sm-5 pull-left\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-5\"></div></div><hr><div class=\"row\"><div class=\"col-sm-6 pull-left\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-6\"></div></div><hr><div class=\"row\"><div class=\"col-sm-7 pull-left\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-7\"></div></div><hr><div class=\"row\"><div class=\"col-sm-8 pull-left\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-8\"></div></div><hr><div class=\"row\"><div class=\"col-sm-9 pull-left\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-9\"></div></div><hr><div class=\"row\"><div class=\"col-sm-10 pull-left\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-10\"></div></div><hr><div class=\"row\"><div class=\"col-sm-11 pull-left\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-11\"></div></div><hr><div class=\"row\"><div class=\"col-sm-12 pull-left\"><input type=\"text\" class=\"form-control\" placeholder=\".col-sm-12\"></div></div></div><!-- end widget content --></div><!-- end widget div --></div><!-- end widget --></article><!-- WIDGET END --></div><!-- end row --></section><!-- end widget grid --></div><script type=\"text/javascript\">$(function(){\r\n        $(\'input[name=\"demo-switcher-1\"]\').change( function() {\r\n\r\n            $(this).parent().addClass(\'active\').siblings().removeClass(\'active\');\r\n\r\n            var styleClass = $(this).val();\r\n\r\n            $(\'.demo-switcher-1 input[type=\"checkbox\"]\').removeClass().addClass(\"checkbox \" + styleClass);\r\n\r\n            $(\'.demo-switcher-1 input[type=\"radio\"]\').removeClass().addClass(\"radiobox \" + styleClass);\r\n\r\n        })\r\n\r\n    })</script>");
 $templateCache.put("app/forms/views/bootstrap-validation.html","<div id=\"content\"><div class=\"row\"><big-breadcrumbs items=\"[\'Forms\', \'Bootstrap Form Validation\']\" icon=\"table\" class=\"col-xs-12 col-sm-7 col-md-7 col-lg-4\"></big-breadcrumbs><div smart-include=\"app/layout/partials/sub-header.tpl.html\"></div></div><!--\n    The ID \"widget-grid\" will start to initialize all widgets below\n    You do not need to use widgets if you dont want to. Simply remove\n    the <section></section> and you can use wells or panels instead\n    --><!-- widget grid --><section id=\"widget-grid\" widget-grid><!-- row --><div class=\"row\"><!-- NEW WIDGET ROW START --><div class=\"col-sm-6\"><!-- Widget ID (each widget will need unique ID)--><div jarvis-widget id=\"wid-id-0\" data-widget-colorbutton=\"false\" data-widget-editbutton=\"false\" data-widget-deletebutton=\"false\" data-widget-sortable=\"false\"><!-- widget options:\n    usage: <div jarvis-widget id=\"wid-id-0\" data-widget-editbutton=\"false\">\n\n    data-widget-colorbutton=\"false\"\n    data-widget-editbutton=\"false\"\n    data-widget-togglebutton=\"false\"\n    data-widget-deletebutton=\"false\"\n    data-widget-fullscreenbutton=\"false\"\n    data-widget-custombutton=\"false\"\n    data-widget-collapsed=\"true\"\n    data-widget-sortable=\"false\"\n\n    --><header><h2>#movieForm</h2></header><!-- widget div--><div><!-- widget content --><div class=\"widget-body\"><bootstrap-movie-form></bootstrap-movie-form></div><!-- end widget content --></div><!-- end widget div --></div><!-- end widget --><!-- Widget ID (each widget will need unique ID)--><div jarvis-widget id=\"wid-id-2\" data-widget-colorbutton=\"false\" data-widget-editbutton=\"false\" data-widget-deletebutton=\"false\" data-widget-sortable=\"false\"><!-- widget options:\n    usage: <div jarvis-widget id=\"wid-id-0\" data-widget-editbutton=\"false\">\n\n    data-widget-colorbutton=\"false\"\n    data-widget-editbutton=\"false\"\n    data-widget-togglebutton=\"false\"\n    data-widget-deletebutton=\"false\"\n    data-widget-fullscreenbutton=\"false\"\n    data-widget-custombutton=\"false\"\n    data-widget-collapsed=\"true\"\n    data-widget-sortable=\"false\"\n\n    --><header><h2>#togglingForm</h2></header><!-- widget div--><div><!-- widget content --><div class=\"widget-body\"><bootstrap-toggling-form></bootstrap-toggling-form></div><!-- end widget content --></div><!-- end widget div --></div><!-- end widget --><!-- Widget ID (each widget will need unique ID)--><div jarvis-widget id=\"wid-id-4\" data-widget-colorbutton=\"false\" data-widget-editbutton=\"false\" data-widget-deletebutton=\"false\" data-widget-sortable=\"false\"><!-- widget options:\n    usage: <div jarvis-widget id=\"wid-id-0\" data-widget-editbutton=\"false\">\n\n    data-widget-colorbutton=\"false\"\n    data-widget-editbutton=\"false\"\n    data-widget-togglebutton=\"false\"\n    data-widget-deletebutton=\"false\"\n    data-widget-fullscreenbutton=\"false\"\n    data-widget-custombutton=\"false\"\n    data-widget-collapsed=\"true\"\n    data-widget-sortable=\"false\"\n\n    --><header><h2>#attributeForm</h2></header><!-- widget div--><div><!-- widget content --><div class=\"widget-body\"><bootstrap-attribute-form></bootstrap-attribute-form></div><!-- end widget content --></div><!-- end widget div --></div><!-- end widget --></div><!-- WIDGET ROW END --><!-- NEW WIDGET ROW START --><div class=\"col-sm-6\"><!-- Widget ID (each widget will need unique ID)--><div jarvis-widget id=\"wid-id-1\" data-widget-colorbutton=\"false\" data-widget-editbutton=\"false\" data-widget-deletebutton=\"false\" data-widget-sortable=\"false\"><!-- widget options:\n    usage: <div jarvis-widget id=\"wid-id-0\" data-widget-editbutton=\"false\">\n\n    data-widget-colorbutton=\"false\"\n    data-widget-editbutton=\"false\"\n    data-widget-togglebutton=\"false\"\n    data-widget-deletebutton=\"false\"\n    data-widget-fullscreenbutton=\"false\"\n    data-widget-custombutton=\"false\"\n    data-widget-collapsed=\"true\"\n    data-widget-sortable=\"false\"\n\n    --><header><h2>#buttonGroupForm</h2></header><!-- widget div--><div><!-- widget content --><div class=\"widget-body\"><bootstrap-button-group-form></bootstrap-button-group-form></div><!-- end widget content --></div><!-- end widget div --></div><!-- end widget --><!-- Widget ID (each widget will need unique ID)--><div jarvis-widget id=\"wid-id-3\" data-widget-colorbutton=\"false\" data-widget-editbutton=\"false\" data-widget-deletebutton=\"false\" data-widget-sortable=\"false\"><!-- widget options:\n    usage: <div jarvis-widget id=\"wid-id-0\" data-widget-editbutton=\"false\">\n\n    data-widget-colorbutton=\"false\"\n    data-widget-editbutton=\"false\"\n    data-widget-togglebutton=\"false\"\n    data-widget-deletebutton=\"false\"\n    data-widget-fullscreenbutton=\"false\"\n    data-widget-custombutton=\"false\"\n    data-widget-collapsed=\"true\"\n    data-widget-sortable=\"false\"\n\n    --><header><h2>#productForm</h2></header><!-- widget div--><div><!-- widget content --><div class=\"widget-body\"><bootstrap-product-form></bootstrap-product-form></div><!-- end widget content --></div><!-- end widget div --></div><!-- end widget --><!-- Widget ID (each widget will need unique ID)--><div jarvis-widget id=\"wid-id-5\" data-widget-colorbutton=\"false\" data-widget-editbutton=\"false\" data-widget-deletebutton=\"false\" data-widget-sortable=\"false\"><!-- widget options:\n    usage: <div jarvis-widget id=\"wid-id-0\" data-widget-editbutton=\"false\">\n\n    data-widget-colorbutton=\"false\"\n    data-widget-editbutton=\"false\"\n    data-widget-togglebutton=\"false\"\n    data-widget-deletebutton=\"false\"\n    data-widget-fullscreenbutton=\"false\"\n    data-widget-custombutton=\"false\"\n    data-widget-collapsed=\"true\"\n    data-widget-sortable=\"false\"\n\n    --><header><h2>#profileForm</h2></header><!-- widget div--><div><!-- widget content --><div class=\"widget-body\"><bootstrap-profile-form></bootstrap-profile-form></div><!-- end widget content --></div><!-- end widget div --></div><!-- end widget --><!-- Widget ID (each widget will need unique ID)--><div jarvis-widget id=\"wid-id-7\" data-widget-colorbutton=\"false\" data-widget-editbutton=\"false\" data-widget-deletebutton=\"false\" data-widget-sortable=\"false\"><!-- widget options:\n    usage: <div jarvis-widget id=\"wid-id-0\" data-widget-editbutton=\"false\">\n\n    data-widget-colorbutton=\"false\"\n    data-widget-editbutton=\"false\"\n    data-widget-togglebutton=\"false\"\n    data-widget-deletebutton=\"false\"\n    data-widget-fullscreenbutton=\"false\"\n    data-widget-custombutton=\"false\"\n    data-widget-collapsed=\"true\"\n    data-widget-sortable=\"false\"\n\n    --><header><h2>#contactForm</h2></header><!-- widget div--><div><!-- widget content --><div class=\"widget-body\"><bootstrap-contact-form></bootstrap-contact-form></div><!-- end widget content --></div><!-- end widget div --></div><!-- end widget --></div><!-- WIDGET ROW END --></div><!-- end row --></section><!-- end widget grid --></div><!-- END MAIN CONTENT -->");
 $templateCache.put("app/forms/views/dropzone.html","<div id=\"content\"><div class=\"row\"><big-breadcrumbs items=\"[\'Forms\', \'Dropzone\']\" icon=\"table\" class=\"col-xs-12 col-sm-7 col-md-7 col-lg-4\"></big-breadcrumbs><div smart-include=\"app/layout/partials/sub-header.tpl.html\"></div></div><!-- widget grid --><section id=\"widget-grid\" widget-grid><!-- row --><div class=\"row\"><!-- NEW WIDGET START --><article class=\"col-sm-12\"><p class=\"alert alert-warning\"><i class=\"fa fa-warning fa-fw fa-lg\"></i><strong>Opps!</strong> You may get an error during the upload for this demo. The error will subside once the backend portion is properly configured.</p><p><span class=\"label label-warning\">NOTE</span> &nbsp; This plugins works only on Latest Chrome, Firefox, Safari, Opera &amp; Internet Explorer 10.</p><!-- Widget ID (each widget will need unique ID)--><div jarvis-widget data-widget-color=\"blueLight\" id=\"wid-id-0\" data-widget-editbutton=\"false\"><header><span class=\"widget-icon\"><i class=\"fa fa-cloud\"></i></span><h2>My Dropzone!</h2></header><!-- widget div--><div><!-- widget content --><div class=\"widget-body\"><form class=\"dropzone\" data-smart-dropzone=\"dropzoneConfig\"><div class=\"dz-default dz-message\"><span><span class=\"text-center\"><span class=\"font-lg visible-xs-block visible-sm-block visible-lg-block\"><span class=\"font-lg\"><i class=\"fa fa-caret-right text-danger\"></i> Drop files <span class=\"font-xs\">to upload</span></span><span>&nbsp;&nbsp;<h4 class=\"display-inline\">(Or Click)</h4></span></span></span></span></div></form></div><!-- end widget content --></div><!-- end widget div --></div><!-- end widget --></article><!-- WIDGET END --></div><!-- end row --><!-- row --><div class=\"row\"><div class=\"col-sm-12 col-md-12\"><div class=\"well\"><h1>Dropzone Faqs</h1><hr class=\"simple\"><h3>I get the error \"Dropzone already attached.\" when creating the Dropzone.</h3><p>This is most likely due to the autoDiscover feature of Dropzone.</p><p>When Dropzone starts, it scans the whole document, and looks for elements with the <code>dropzone</code> class. It then creates an instance of Dropzone for every element found. If you, later on, create a Dropzone instance yourself, you\'ll create a second Dropzone which causes this error.</p><p>So you can either:</p><ol><li>Turn off autoDiscover globally like this: <code>Dropzone.autoDiscover = false;</code> , or</li><li>Turn off autoDiscover of specific elements like this: <code>Dropzone.options.myAwesomeDropzone = false;</code></li></ol><blockquote><p>You don\'t have to create an instance of Dropzone programmatically in most situations! It\'s recommended to leave <strong>autoDiscover</strong> enabled, and configure your Dropzone in the <code>init</code> option of your configuration.</p></blockquote><br><h3>Why are large files not uploading?</h3><p>There is a <code>maxFileSize</code> option in Dropzone which defaults to <code>256</code> (MB). Increase this to upload files bigger than that. If your files upload fine but aren\'t stored on the server, then it\'s due to your server configuration. Most servers limit the file upload size as well. Please check with the appropriate documentation.</p><br><h3>How to get notified when all files finished uploading?</h3><p>At the moment there isn\'t a single event to do that, but you can listen to the <code>complete</code> event, which fires every time a file completed uploading, and see if there are still files in the queue or being processed.</p><br><h3>Why are some image thumbnails not generated?</h3><p>There is a <code>maxThumbnailFilesize</code> option in Dropzone which defaults to <code>10</code> (MB) to prevent the browser from downsizing images that are too big. Increase this to create thumbnails of bigger files.</p><br><h3>How to get notified when all files finished uploading?</h3><p>At the moment there isn\'t a single event to do that, but you can listen to the <code>complete</code> event, which fires every time a file completed uploading, and see if there are still files in the queue or being processed.</p><pre><span class=\"nx\">Dropzone</span><span class=\"p\">.</span><span class=\"nx\">options</span><span class=\"p\">.</span><span class=\"nx\">myDrop</span> <span class=\"o\">=</span> <span class=\"p\">{</span>\r\n  <span class=\"nx\">init</span><span class=\"o\">:</span> <span class=\"kd\">function</span><span class=\"p\">()</span> <span class=\"p\">{</span>\r\n    <span class=\"k\">this</span><span class=\"p\">.</span><span class=\"nx\">on</span><span class=\"p\">(</span><span class=\"s2\">\"complete\"</span><span class=\"p\">,</span> <span class=\"kd\">function</span><span class=\"p\">()</span> <span class=\"p\">{</span>\r\n      <span class=\"k\">if</span> <span class=\"p\">(</span><span class=\"k\">this</span><span class=\"p\">.</span><span class=\"nx\">filesQueue</span><span class=\"p\">.</span><span class=\"nx\">length</span> <span class=\"o\">==</span> <span class=\"mi\">0</span> <span class=\"o\">&amp;&amp;</span> <span class=\"k\">this</span><span class=\"p\">.</span><span class=\"nx\">filesProcessing</span><span class=\"p\">.</span><span class=\"nx\">length</span> <span class=\"o\">==</span> <span class=\"mi\">0</span><span class=\"p\">)</span> <span class=\"p\">{</span>\r\n        <span class=\"c1\">// File finished uploading, and there aren\'t any left in the queue.</span>\r\n      <span class=\"p\">}</span>\r\n    <span class=\"p\">});</span>\r\n  <span class=\"p\">}</span>\r\n<span class=\"p\">};</span>\r\n</pre><br><h3>How to show an error returned by the server?</h3><p>Very often you have to do some verification on the server to check if the file is actually valid. If you want Dropzone to display any error encountered on the server, all you have to do, is send back a proper <a href=\"http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4\" target=\"_blank\">HTTP status code</a> in the range of 400 - 500.</p><p>Dropzone will then know that the file upload was invalid, and will display the returned text as error message.</p><p>In most frameworks those error codes are generated automatically when you send back an error to the client. In PHP (for example) you can set it with the <code>header</code> command.</p><br><h3>How to add a button to remove each file preview?</h3><p>Starting with Dropzone version 3.5.0, there is an option that will handle all this for you: <code>addRemoveLinks</code> . This will add an <code>&lt;a class=\"dz-remove\"&gt;Remove file&lt;/a&gt;</code> element to the file preview that will remove the file, and it will change to <em>Cancel upload</em> if the file is currently being uploaded (this will trigger a confirmation dialog).</p><p>You can change those sentences with the <code>dictRemoveFile</code> , <code>dictCancelUpload</code> and <code>dictCancelUploadConfirmation</code> options.</p><p>If you still want to create the button yourself, you can do so like this:</p><pre><span class=\"nt\">&lt;form</span> <span class=\"na\">action=</span><span class=\"s\">\"/target-url\"</span> <span class=\"na\">id=</span><span class=\"s\">\"my-dropzone\"</span> <span class=\"na\">class=</span><span class=\"s\">\"dropzone\"</span><span class=\"nt\">&gt;&lt;/form&gt;</span>\r\n\r\n<span class=\"nt\">&lt;script&gt;</span>\r\n  <span class=\"c1\">// myDropzone is the configuration for the element that has an id attribute</span>\r\n  <span class=\"c1\">// with the value my-dropzone (or myDropzone)</span>\r\n  <span class=\"nx\">Dropzone</span><span class=\"p\">.</span><span class=\"nx\">options</span><span class=\"p\">.</span><span class=\"nx\">myDropzone</span> <span class=\"o\">=</span> <span class=\"p\">{</span>\r\n    <span class=\"nx\">init</span><span class=\"o\">:</span> <span class=\"kd\">function</span><span class=\"p\">()</span> <span class=\"p\">{</span>\r\n      <span class=\"k\">this</span><span class=\"p\">.</span><span class=\"nx\">on</span><span class=\"p\">(</span><span class=\"s2\">\"addedfile\"</span><span class=\"p\">,</span> <span class=\"kd\">function</span><span class=\"p\">(</span><span class=\"nx\">file</span><span class=\"p\">)</span> <span class=\"p\">{</span>\r\n\r\n        <span class=\"c1\">// Create the remove button</span>\r\n        <span class=\"kd\">var</span> <span class=\"nx\">removeButton</span> <span class=\"o\">=</span> <span class=\"nx\">Dropzone</span><span class=\"p\">.</span><span class=\"nx\">createElement</span><span class=\"p\">(</span><span class=\"s2\">\"&lt;button&gt;Remove file&lt;/button&gt;\"</span><span class=\"p\">);</span>\r\n        \r\n\r\n        <span class=\"c1\">// Capture the Dropzone instance as closure.</span>\r\n        <span class=\"kd\">var</span> <span class=\"nx\">_this</span> <span class=\"o\">=</span> <span class=\"k\">this</span><span class=\"p\">;</span>\r\n\r\n        <span class=\"c1\">// Listen to the click event</span>\r\n        <span class=\"nx\">removeButton</span><span class=\"p\">.</span><span class=\"nx\">addEventListener</span><span class=\"p\">(</span><span class=\"s2\">\"click\"</span><span class=\"p\">,</span> <span class=\"kd\">function</span><span class=\"p\">(</span><span class=\"nx\">e</span><span class=\"p\">)</span> <span class=\"p\">{</span>\r\n          <span class=\"c1\">// Make sure the button click doesn\'t submit the form:</span>\r\n          <span class=\"nx\">e</span><span class=\"p\">.</span><span class=\"nx\">preventDefault</span><span class=\"p\">();</span>\r\n          <span class=\"nx\">e</span><span class=\"p\">.</span><span class=\"nx\">stopPropagation</span><span class=\"p\">();</span>\r\n\r\n          <span class=\"c1\">// Remove the file preview.</span>\r\n          <span class=\"nx\">_this</span><span class=\"p\">.</span><span class=\"nx\">removeFile</span><span class=\"p\">(</span><span class=\"nx\">file</span><span class=\"p\">);</span>\r\n          <span class=\"c1\">// If you want to the delete the file on the server as well,</span>\r\n          <span class=\"c1\">// you can do the AJAX request here.</span>\r\n        <span class=\"p\">});</span>\r\n\r\n        <span class=\"c1\">// Add the button to the file preview element.</span>\r\n        <span class=\"nx\">file</span><span class=\"p\">.</span><span class=\"nx\">previewElement</span><span class=\"p\">.</span><span class=\"nx\">appendChild</span><span class=\"p\">(</span><span class=\"nx\">removeButton</span><span class=\"p\">);</span>\r\n      <span class=\"p\">});</span>\r\n    <span class=\"p\">}</span>\r\n  <span class=\"p\">};</span>\r\n<span class=\"nt\">&lt;/script&gt;</span>\r\n</pre><br><h3>How to submit additional data along the file upload?</h3><p>If your Dropzone element is a <code>&lt;form&gt;</code> element, all hidden input fields will automatically be submitted as POST data along with the file upload.</p><p>Example:</p><pre><span class=\"nt\">&lt;form</span> <span class=\"na\">action=</span><span class=\"s\">\"/\"</span> <span class=\"na\">class=</span><span class=\"s\">\"dropzone\"</span><span class=\"nt\">&gt;</span>\r\n  <span class=\"nt\">&lt;input</span> <span class=\"na\">type=</span><span class=\"s\">\"hidden\"</span> <span class=\"na\">name=</span><span class=\"s\">\"additionaldata\"</span> <span class=\"na\">value=</span><span class=\"s\">\"1\"</span> <span class=\"nt\">/&gt;</span>\r\n\r\n  <span class=\"c\">&lt;!-- If you want control over the fallback form, just add it here: --&gt;</span>\r\n  <span class=\"nt\">&lt;div</span> <span class=\"na\">class=</span><span class=\"s\">\"fallback\"</span><span class=\"nt\">&gt;</span> <span class=\"c\">&lt;!-- This div will be removed if the fallback is not necessary --&gt;</span>\r\n    <span class=\"nt\">&lt;input</span> <span class=\"na\">type=</span><span class=\"s\">\"file\"</span> <span class=\"na\">name=</span><span class=\"s\">\"youfilename\"</span> <span class=\"nt\">/&gt;</span>\r\n    etc...\r\n  <span class=\"nt\">&lt;/div&gt;</span>\r\n<span class=\"nt\">&lt;/form&gt;</span>\r\n</pre><br><h3>I want to display additional information after a file uploaded.</h3><p>To use the information sent back from the server, use the <code>success</code> event, like this:</p><pre><span class=\"nx\">Dropzone</span><span class=\"p\">.</span><span class=\"nx\">options</span><span class=\"p\">.</span><span class=\"nx\">myDropzone</span> <span class=\"o\">=</span> <span class=\"p\">{</span>\r\n  <span class=\"nx\">init</span><span class=\"o\">:</span> <span class=\"kd\">function</span><span class=\"p\">()</span> <span class=\"p\">{</span>\r\n    <span class=\"k\">this</span><span class=\"p\">.</span><span class=\"nx\">on</span><span class=\"p\">(</span><span class=\"s2\">\"success\"</span><span class=\"p\">,</span> <span class=\"kd\">function</span><span class=\"p\">(</span><span class=\"nx\">file</span><span class=\"p\">,</span> <span class=\"nx\">responseText</span><span class=\"p\">)</span> <span class=\"p\">{</span>\r\n      <span class=\"c1\">// Handle the responseText here. For example, add the text to the preview element:</span>\r\n      <span class=\"nx\">file</span><span class=\"p\">.</span><span class=\"nx\">previewTemplate</span><span class=\"p\">.</span><span class=\"nx\">appendChild</span><span class=\"p\">(</span><span class=\"nb\">document</span><span class=\"p\">.</span><span class=\"nx\">createTextNode</span><span class=\"p\">(</span><span class=\"nx\">responseText</span><span class=\"p\">));</span>\r\n    <span class=\"p\">});</span>\r\n  <span class=\"p\">}</span>\r\n<span class=\"p\">};</span>\r\n</pre><br><h3>How to show files already stored on server</h3><p>Although there\'s no builtin functionality to do that, you can use Dropzone\'s default event handlers to your advantage.</p><p>The concept is, to create a <em>mock</em> file, and call the event handlers <code>addedfile</code> and <code>thumbnail</code> to draw the preview.</p><pre><span class=\"c1\">// Create the mock file:</span>\r\n<span class=\"kd\">var</span> <span class=\"nx\">mockFile</span> <span class=\"o\">=</span> <span class=\"p\">{</span> <span class=\"nx\">name</span><span class=\"o\">:</span> <span class=\"s2\">\"Filename\"</span><span class=\"p\">,</span> <span class=\"nx\">size</span><span class=\"o\">:</span> <span class=\"mi\">12345</span> <span class=\"p\">};</span>\r\n\r\n<span class=\"c1\">// Call the default addedfile event handler</span>\r\n<span class=\"nx\">myDropzone</span><span class=\"p\">.</span><span class=\"nx\">emit</span><span class=\"p\">(</span><span class=\"s2\">\"addedfile\"</span><span class=\"p\">,</span> <span class=\"nx\">mockFile</span><span class=\"p\">);</span>\r\n\r\n<span class=\"c1\">// And optionally show the thumbnail of the file:</span>\r\n<span class=\"nx\">myDropzone</span><span class=\"p\">.</span><span class=\"nx\">emit</span><span class=\"p\">(</span><span class=\"s2\">\"thumbnail\"</span><span class=\"p\">,</span> <span class=\"nx\">mockFile</span><span class=\"p\">,</span> <span class=\"s2\">\"/image/url\"</span><span class=\"p\">);</span>\r\n\r\n<span class=\"c1\">// If you use the maxFiles option, make sure you adjust it to the</span>\r\n<span class=\"c1\">// correct amount:</span>\r\n<span class=\"kd\">var</span> <span class=\"nx\">existingFileCount</span> <span class=\"o\">=</span> <span class=\"mi\">1</span><span class=\"p\">;</span> <span class=\"c1\">// The number of files already uploaded</span>\r\n<span class=\"nx\">myDropzone</span><span class=\"p\">.</span><span class=\"nx\">options</span><span class=\"p\">.</span><span class=\"nx\">maxFiles</span> <span class=\"o\">=</span> <span class=\"nx\">myDropzone</span><span class=\"p\">.</span><span class=\"nx\">options</span><span class=\"p\">.</span><span class=\"nx\">maxFiles</span> <span class=\"o\">-</span> <span class=\"nx\">existingFileCount</span><span class=\"p\">;</span>\r\n</pre><br><h3>Use own <code>confirm</code> implementation</h3><p>If you are unhappy with the way Dropzone asks a user if she wants to cancel or remove a file, and want to use some other way (e.g.: bootstrap\'s modal), you can simply overwrite the <code>Dropzone.confirm</code> function.</p><pre><span class=\"c1\">// accepted and rejected are functions to be called whenever the user response</span>\r\n<span class=\"c1\">// has been received.</span>\r\n<span class=\"c1\">// rejected is not mandatory! So make sure to check if it exists before</span>\r\n<span class=\"c1\">// calling it. Do nothing if it doesn\'t.</span>\r\n<span class=\"nx\">Dropzone</span><span class=\"p\">.</span><span class=\"nx\">confirm</span> <span class=\"o\">=</span> <span class=\"kd\">function</span><span class=\"p\">(</span><span class=\"nx\">question</span><span class=\"p\">,</span> <span class=\"nx\">accepted</span><span class=\"p\">,</span> <span class=\"nx\">rejected</span><span class=\"p\">)</span> <span class=\"p\">{</span>\r\n  <span class=\"c1\">// Do your thing, ask the user for confirmation or rejection, and call</span>\r\n  <span class=\"c1\">// accepted() if the user accepts, or rejected() otherwise. Make</span>\r\n  <span class=\"c1\">// sure that rejected is actually defined!</span>\r\n<span class=\"p\">};</span>\r\n</pre><br><h3>How can I limit the number of files</h3><p>You\'re in luck! Starting with <code>3.7.0</code> Dropzone supports the <code>maxFiles</code> option. Simply set it to the desired quantity and you\'re good to go. If you don\'t want the rejected files to be viewed, simply register for the <code>maxfilesexceeded</code> event, and remove the file immediately:</p><pre><span class=\"nx\">myDropzone</span><span class=\"p\">.</span><span class=\"nx\">on</span><span class=\"p\">(</span><span class=\"s2\">\"maxfilesexceeded\"</span><span class=\"p\">,</span> <span class=\"kd\">function</span><span class=\"p\">(</span><span class=\"nx\">file</span><span class=\"p\">)</span> <span class=\"p\">{</span> <span class=\"k\">this</span><span class=\"p\">.</span><span class=\"nx\">removeFile</span><span class=\"p\">(</span><span class=\"nx\">file</span><span class=\"p\">);</span> <span class=\"p\">});</span>\r\n</pre></div></div></div><!-- end row --></section><!-- end widget grid --></div>");
@@ -8539,6 +8915,17 @@ $templateCache.put("app/forms/views/form-layouts/form-layouts-demo.html","<!-- M
 $templateCache.put("app/forms/views/form-layouts/order-form.html","<form id=\"order-form\" class=\"smart-form\" novalidate=\"novalidate\"><header>Order services</header><fieldset><div class=\"row\"><section class=\"col col-6\"><label class=\"input\"><i class=\"icon-append fa fa-user\"></i> <input type=\"text\" name=\"name\" placeholder=\"Name\"></label></section><section class=\"col col-6\"><label class=\"input\"><i class=\"icon-append fa fa-briefcase\"></i> <input type=\"text\" name=\"company\" placeholder=\"Company\"></label></section></div><div class=\"row\"><section class=\"col col-6\"><label class=\"input\"><i class=\"icon-append fa fa-envelope-o\"></i> <input type=\"email\" name=\"email\" placeholder=\"E-mail\"></label></section><section class=\"col col-6\"><label class=\"input\"><i class=\"icon-append fa fa-phone\"></i> <input type=\"tel\" name=\"phone\" placeholder=\"Phone\" data-smart-masked-input=\"(999) 999-9999\"></label></section></div></fieldset><fieldset><div class=\"row\"><section class=\"col col-6\"><label class=\"select\"><select name=\"interested\"><option value=\"0\" selected=\"\" disabled=\"\">Interested in</option><option value=\"1\">design</option><option value=\"1\">development</option><option value=\"2\">illustration</option><option value=\"2\">branding</option><option value=\"3\">video</option></select><i></i></label></section><section class=\"col col-6\"><label class=\"select\"><select name=\"budget\"><option value=\"0\" selected=\"\" disabled=\"\">Budget</option><option value=\"1\">less than 5000$</option><option value=\"2\">5000$ - 10000$</option><option value=\"3\">10000$ - 20000$</option><option value=\"4\">more than 20000$</option></select><i></i></label></section></div><div class=\"row\"><section class=\"col col-6\"><label class=\"input\"><i class=\"icon-append fa fa-calendar\"></i> <input type=\"text\" name=\"startdate\" id=\"startdate\" data-smart-datepicker data-min-restrict=\"#finishdate\" placeholder=\"Expected start date\"></label></section><section class=\"col col-6\"><label class=\"input\"><i class=\"icon-append fa fa-calendar\"></i> <input type=\"text\" name=\"finishdate\" id=\"finishdate\" data-smart-datepicker data-max-restrict=\"#startdate\" placeholder=\"Expected finish date\"></label></section></div><section><div class=\"input input-file\"><span class=\"button\"><input id=\"file2\" type=\"file\" name=\"file2\" onchange=\"this.parentNode.nextSibling.value = this.value\">Browse</span><input type=\"text\" placeholder=\"Include some files\" readonly=\"\"></div></section><section><label class=\"textarea\"><i class=\"icon-append fa fa-comment\"></i><textarea rows=\"5\" name=\"comment\" placeholder=\"Tell us about your project\"></textarea></label></section></fieldset><footer><button type=\"submit\" class=\"btn btn-primary\">Validate Form</button></footer></form>");
 $templateCache.put("app/forms/views/form-layouts/registration-form.html","<form id=\"smart-form-register\" class=\"smart-form\" data-smart-registration-form><header>Registration form</header><fieldset><section><label class=\"input\"><i class=\"icon-append fa fa-user\"></i> <input type=\"text\" name=\"username\" placeholder=\"Username\"> <b class=\"tooltip tooltip-bottom-right\">Needed to enter the website</b></label></section><section><label class=\"input\"><i class=\"icon-append fa fa-envelope-o\"></i> <input type=\"email\" name=\"email\" placeholder=\"Email address\"> <b class=\"tooltip tooltip-bottom-right\">Needed to verify your account</b></label></section><section><label class=\"input\"><i class=\"icon-append fa fa-lock\"></i> <input type=\"password\" name=\"password\" placeholder=\"Password\" id=\"password\"> <b class=\"tooltip tooltip-bottom-right\">Don\'t forget your password</b></label></section><section><label class=\"input\"><i class=\"icon-append fa fa-lock\"></i> <input type=\"password\" name=\"passwordConfirm\" placeholder=\"Confirm password\"> <b class=\"tooltip tooltip-bottom-right\">Don\'t forget your password</b></label></section></fieldset><fieldset><div class=\"row\"><section class=\"col col-6\"><label class=\"input\"><input type=\"text\" name=\"firstname\" placeholder=\"First name\" ng-model=\"registration.firstname\"></label></section><section class=\"col col-6\"><label class=\"input\"><input type=\"text\" name=\"lastname\" placeholder=\"Last name\" ng-model=\"registration.lastname\"></label></section></div><div class=\"row\"><section class=\"col col-6\"><label class=\"select\"><select name=\"gender\"><option value=\"0\" selected=\"\" disabled=\"\">Gender</option><option value=\"1\">Male</option><option value=\"2\">Female</option><option value=\"3\">Prefer not to answer</option></select><i></i></label></section><section class=\"col col-6\"><label class=\"input\"><i class=\"icon-append fa fa-calendar\"></i> <input type=\"text\" name=\"request\" placeholder=\"Request activation on\" data-smart-datepicker data-dateformat=\"dd/mm/yy\" ng-model=\"registration.date\"></label></section></div><section><label class=\"checkbox\"><input type=\"checkbox\" name=\"subscription\" id=\"subscription\"> <i></i>I want to receive news and special offers</label><label class=\"checkbox\"><input type=\"checkbox\" name=\"terms\" id=\"terms\"> <i></i>I agree with the Terms and Conditions</label></section></fieldset><footer><button type=\"submit\" class=\"btn btn-primary\">Validate Form</button></footer></form>");
 $templateCache.put("app/forms/views/form-layouts/review-form.html","<form id=\"review-form\" class=\"smart-form\"><header>Review form</header><fieldset><section><label class=\"input\"><i class=\"icon-append fa fa-user\"></i> <input type=\"text\" name=\"name\" id=\"name\" placeholder=\"Your name\"></label></section><section><label class=\"input\"><i class=\"icon-append fa fa-envelope-o\"></i> <input type=\"email\" name=\"email\" id=\"email\" placeholder=\"Your e-mail\"></label></section><section><label class=\"label\"></label><label class=\"textarea\"><i class=\"icon-append fa fa-comment\"></i><textarea rows=\"3\" name=\"review\" id=\"review\" placeholder=\"Text of the review\"></textarea></label></section><section><div class=\"rating\"><input type=\"radio\" name=\"quality\" id=\"quality-5\"><label for=\"quality-5\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"quality\" id=\"quality-4\"><label for=\"quality-4\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"quality\" id=\"quality-3\"><label for=\"quality-3\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"quality\" id=\"quality-2\"><label for=\"quality-2\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"quality\" id=\"quality-1\"><label for=\"quality-1\"><i class=\"fa fa-star\"></i></label>Quality of the product</div><div class=\"rating\"><input type=\"radio\" name=\"reliability\" id=\"reliability-5\"><label for=\"reliability-5\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"reliability\" id=\"reliability-4\"><label for=\"reliability-4\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"reliability\" id=\"reliability-3\"><label for=\"reliability-3\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"reliability\" id=\"reliability-2\"><label for=\"reliability-2\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"reliability\" id=\"reliability-1\"><label for=\"reliability-1\"><i class=\"fa fa-star\"></i></label>Reliability of the product</div><div class=\"rating\"><input type=\"radio\" name=\"overall\" id=\"overall-5\"><label for=\"overall-5\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"overall\" id=\"overall-4\"><label for=\"overall-4\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"overall\" id=\"overall-3\"><label for=\"overall-3\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"overall\" id=\"overall-2\"><label for=\"overall-2\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"overall\" id=\"overall-1\"><label for=\"overall-1\"><i class=\"fa fa-star\"></i></label>Overall rating</div></section></fieldset><footer><button type=\"submit\" class=\"btn btn-primary\">Validate Form</button></footer></form>");}]);})();
+'use strict';
+
+angular
+    .module('app')
+    .factory('Password', ["$resource", function ($resource) {
+        var service = $resource('api/account/change_password', {}, {});
+
+        return service;
+
+    }]);
+
 'use strict';
 
 angular
@@ -11457,6 +11844,12 @@ angular
     }
 })();
 
+"use strict";
+
+angular.module('app').factory('Assets', ["$http", "APP_CONFIG", function ($http, APP_CONFIG) {
+    return $http.get(APP_CONFIG.apiRootUrl + '/assets.json');
+}]);
+
 angular
     .module('app').service('AssetImportModalService', ["$uibModal", "Asset", function ($uibModal, Asset) {
     var open = false,
@@ -12520,7 +12913,7 @@ angular.module('app').directive('assetsTreeGridCheckbox', function () {
                     tree.push(treeObjs[rootIds[i]]);
                 }
                 ;
-
+                console.log("tree" + tree);
                 return tree;
             }
 
@@ -12547,12 +12940,6 @@ angular.module('app').directive('assetsTreeGridCheckbox', function () {
         }
     }
 });
-
-"use strict";
-
-angular.module('app').factory('Assets', ["$http", "APP_CONFIG", function ($http, APP_CONFIG) {
-    return $http.get(APP_CONFIG.apiRootUrl + '/assets.json');
-}]);
 
 'use strict';
 
@@ -13305,18 +13692,54 @@ angular.module('app').factory('Todo', ["Restangular", "APP_CONFIG", "$httpBacken
 
 angular
     .module('app')
-    .controller('WorkOrderFormController', ["$scope", "$uibModalInstance", function ($scope, $uibModalInstance) {
+    .controller('WorkOrderFormController', ["$scope", "$uibModalInstance", "entity", "disabled", "$timeout", "AssetSpecificationType", "WorkOrderTemplate", function ($scope, $uibModalInstance, entity, disabled, $timeout, AssetSpecificationType, WorkOrderTemplate) {
         var vm = this;
+
+        vm.workOrderTemplate = entity;
         vm.clear = clear;
-        $scope.workOrder = {};
-        $scope.workOrder.workOrderType = "D";
+        vm.save = save;
+        vm.disabled = false;
+        console.dir(disabled);
+        if (!angular.isUndefinedOrNull(disabled)) {
+            vm.disabled = disabled;
+        }
+        vm.assetspecificationtypes = AssetSpecificationType.query();
+
+        if (angular.isUndefinedOrNull(vm.workOrderTemplate.id)) {
+            vm.workOrderTemplate.workOrderType = "PM";
+            vm.workOrderTemplate.functionType = "DAILY";
+        }
+
+        $timeout(function (){
+            angular.element('.form-group:eq(1)>input').focus();
+        });
+
         function clear () {
             $uibModalInstance.dismiss('cancel');
+        }
+
+        function save () {
+            vm.isSaving = true;
+            if (vm.workOrderTemplate.id !== null) {
+                WorkOrderTemplate.update(vm.workOrderTemplate, onSaveSuccess, onSaveError);
+            } else {
+                WorkOrderTemplate.save(vm.workOrderTemplate, onSaveSuccess, onSaveError);
+            }
+        }
+
+        function onSaveSuccess (result) {
+            $scope.$emit('appApp:workOrderTemplateUpdate', result);
+            $uibModalInstance.close(result);
+            vm.isSaving = false;
+        }
+
+        function onSaveError () {
+            vm.isSaving = false;
         }
     }]);
 
 angular
-    .module('app').service('WorkOrderAddModalService', ["$uibModal", "WorkOrders", function ($uibModal, WorkOrders) {
+    .module('app').service('WorkOrderAddModalService', ["$uibModal", function ($uibModal) {
     var open = false,
         modalInstance;
 
@@ -13333,17 +13756,83 @@ angular
     };
 
 
+    this.openEdit = function (id) {
+        var modal = $uibModal.open({
+            templateUrl: 'app/dashboard/workOrders/directives/work-order-form.tpl.html',
+            controller: 'WorkOrderFormController',
+            controllerAs: 'vm',
+            backdrop: 'static',
+            size: 'lg',
+            resolve: {
+                entity: ['WorkOrderTemplate', function(WorkOrderTemplate) {
+                    return WorkOrderTemplate.get({id : id}).$promise;
+                }],
+                disabled: false
+            }
+        }).closed.then(function () {
+            open = false;
+        });
+
+        //Set open
+        open = true;
+
+        //Set modalInstance
+        modalInstance = modal;
+
+        //Modal is closed/resolved/dismissed
+
+        return modal;
+    }
+
+    this.openDetails = function (id) {
+        var modal = $uibModal.open({
+            templateUrl: 'app/dashboard/workOrders/directives/work-order-form.tpl.html',
+            controller: 'WorkOrderFormController',
+            controllerAs: 'vm',
+            backdrop: 'static',
+            size: 'lg',
+            resolve: {
+                entity: ['WorkOrderTemplate', function(WorkOrderTemplate) {
+                    return WorkOrderTemplate.get({id : id}).$promise;
+                }],
+                disabled: true
+            }
+        }).closed.then(function () {
+            open = false;
+        });
+
+        //Set open
+        open = true;
+
+        //Set modalInstance
+        modalInstance = modal;
+
+        //Modal is closed/resolved/dismissed
+
+        return modal;
+    }
+
     this.openAdd = function (id) {
         var modal = $uibModal.open({
             templateUrl: 'app/dashboard/workOrders/directives/work-order-form.tpl.html',
             controller: 'WorkOrderFormController',
-            controllerAs: 'workOrderAddVm',
+            controllerAs: 'vm',
             backdrop: 'static',
             size: 'lg',
             resolve: {
                 entity: function () {
-                    return {};
-                }
+                    return {
+                        numberOfDays: null,
+                        hoursOfUsage: null,
+                        description: null,
+                        dueDays: null,
+                        workOrderType: null,
+                        functionType: null,
+                        name: null,
+                        id: null
+                    };
+                },
+                disabled: false
             }
         }).closed.then(function () {
             open = false;
@@ -13410,7 +13899,7 @@ angular.module('app').directive('workOrder', function () {
             nested: '@nested'
         },
         templateUrl: 'app/dashboard/workOrders/directives/work-order.tpl.html',
-        controller: ["$scope", "$rootScope", "$compile", "$sce", "$element", "$ctrl", "WorkOrderAddModalService", function ($scope, $rootScope, $compile, $sce, $element, $ctrl, WorkOrderAddModalService) {
+        controller: ["$scope", "$rootScope", "$compile", "$sce", "$element", "$ctrl", function ($scope, $rootScope, $compile, $sce, $element, $ctrl) {
             $ctrl.
             $scope.workOrderModalClass = "work-order-modal";
             var workOrderData = $scope.workOrders.data;
@@ -13551,65 +14040,8 @@ angular.module('app').directive('workOrderAssetWidget', function () {
         templateUrl: 'app/dashboard/workOrders/directives/work-order-asset-widget.tpl.html',
         scope: {
         },
-        controller: ["$scope", "$rootScope", "$element", "Assets", "WorkOrders", function ($scope, $rootScope, $element, Assets, WorkOrders) {
-
-        }],
-        link: function (scope, rootScope, element, attrs) {
-
-        }
-    }
-});
-
-"use strict";
-
-angular.module('app').directive('workOrderForm', function () {
-    return {
-        restrict: 'E',
-        replace: true,
-        templateUrl: 'app/dashboard/workOrders/directives/work-order-form.tpl.html',
-        scope: {
-            workOrder: '=workOrder',
-            displayDetails: '=displayDetails'
-        },
         controller: ["$scope", "$rootScope", "$element", "Assets", function ($scope, $rootScope, $element, Assets) {
 
-            $scope.workOrderWeek = "EW";
-            $scope.workOrderMonth = "EVM";
-            $scope.workOrderDay = "EVD";
-            $scope.workOrderState = "N";
-            $scope.assets = [];
-            $scope.selectedAsset = {};
-
-            Assets.then(function (response) {
-                var rawTreeData = response.data;
-                var j = 0;
-                for(var i = 0; i < rawTreeData.length; i++) {
-                    if (rawTreeData[i].formType != "0") {
-                        $scope.assets[j] = {id: rawTreeData[i].demographicId, name: rawTreeData[i].name};
-                        if (!angular.isUndefinedOrNull($scope.workOrder) && rawTreeData[i].demographicId == $scope.workOrder.assetId) {
-                            $scope.selectedAsset = $scope.assets[j];
-                        }
-                        j++;
-                    }
-                }
-            });
-
-            $scope.state = "A";
-            $scope.disableForm = false;
-
-            if (!angular.isUndefinedOrNull($scope.displayDetails)) {
-                $scope.disableForm = true;
-            }
-
-            $scope.$watch("workOrder", function (value) {
-
-            });
-
-
-            if (!angular.isUndefinedOrNull($scope.workOrder)) {
-                $scope.state = "E";
-
-            }
         }],
         link: function (scope, rootScope, element, attrs) {
 
@@ -13627,54 +14059,121 @@ angular.module('app').directive('workOrdersAssetsTreeGrid', function () {
         templateUrl: 'app/dashboard/workOrders/directives/work-order-assets-tree-grid.tpl.html',
         scope: true,
         controllerAs: 'workOrdersAssetsTreeGrid',
-        controller: ["$scope", "$rootScope", "$compile", "$element", "$sce", "$templateCache", "Asset", "WorkOrderAddModalService", function ($scope, $rootScope, $compile, $element, $sce, $templateCache, Asset, WorkOrderAddModalService) {
+        controller: ["$scope", "$rootScope", "$compile", "$element", "$sce", "$templateCache", "AssetSpecificationType", "WorkOrderTemplate", "Asset", "WorkOrderAddModalService", function ($scope, $rootScope, $compile, $element, $sce, $templateCache, AssetSpecificationType, WorkOrderTemplate, Asset, WorkOrderAddModalService) {
+            var vm = this;
+            $scope.assetSpecificationTypes = [];
+            $scope.workOrderTemplates = [];
             var tree;
             $scope.work_order_assets_tree = tree = {};
+            $scope.tree_data = {};
 
-            $scope.loadAssets = loadAssets;
-            $scope.loadAssets();
+            $scope.loadWorkOrders = loadWorkOrders;
+            $scope.loadWorkOrders();
 
-            function loadAssets() {
-                Asset.query(function (result) {
-                    $scope.workOrders = getTree(result, 'id', 'parentId');
-                    $scope.searchQuery = null;
+            function loadWorkOrders() {
+                AssetSpecificationType.query(function (assetSpecificationTypes) {
+                    WorkOrderTemplate.query(function (workOrderTemplates) {
+                        $scope.workOrders = getTree(assetSpecificationTypes, workOrderTemplates);
+                        $scope.tree_data = angular.copy($scope.workOrders);
+                        $scope.searchQuery = null;
+                        tree.expand_all();
+                    });
                 });
             }
-            $scope.workOrders = $rootScope.workOrders;
 
-            $scope.tree_data = {};
-            $scope.col_defs = [];
+            $rootScope.$on('appApp:workOrderTemplateUpdate', function(event, result) {
+                $scope.loadWorkOrders();
+            });
+
             $scope.expanding_property = {
                 field: "name",
-                displayName: $rootScope.getWord('Asset Name'),
+                displayName: $rootScope.getWord('Name'),
                 sortable: true,
-                filterable: true
+                filterable: true,
+               // cellTemplate: " {{row.branch['name']}} <span class=\"badge\">{{row.branch['count']}}</span>"
             };
             $scope.col_defs = [
-                {field: "code", displayName: $rootScope.getWord('Asset Code'), sortable: true, filterable: true},
-                {field: "type", displayName: $rootScope.getWord('Asset Type')},
-                {field: "supervisor", displayName: $rootScope.getWord('Asset Supervisor')},
-                {field: "capacity", displayName: $rootScope.getWord('Asset Capacity')},
-                {field: "user", displayName: $rootScope.getWord('Asset User')},
+                {field: "numberOfDays", displayName: $rootScope.getWord('Number of days')},
+                {field: "hoursOfUsage", displayName: $rootScope.getWord('Number of hours')},
+                {field: "dueDays", displayName: $rootScope.getWord('Due day')},
+                {field: "workOrderType", displayName: $rootScope.getWord('Work order type')},
+                {field: "functionType", displayName: $rootScope.getWord('Work order function')},
                 {
                     field: "demographicId",
                     displayName: $rootScope.getWord('Action'),
-                    cellTemplate: "<button ng-click=\"cellTemplateScope.openWorkOrderViewModal(row.branch)\" ng-show=\"{{ row.branch['formType'] == 2 || row.branch['formType'] == 1 }}\"  type=\"button\" class=\"btn btn-labeled btn-info\" ng-src='{{ row.branch[col.field] }}' data-target=\"#workOrderAssetModal\" data-toggle=\"modal\">" +
-                    "<span class=\"btn-label\">" +
-                    "<i class=\"fa fa-gear\"></i>" +
-                    "</span>"+$rootScope.getWord('Work order')+"</button>",
+                    cellTemplate: "<div ng-hide=\"{{ row.branch['demographicId'].indexOf('parent_') == 0 }}\" class=\"btn-group dropdown\" data-dropdown>" +
+                    // cellTemplate: "<div class=\"btn-group dropdown\" data-dropdown>" +
+                    "<button class=\"btn btn-primary btn-xs dropdown-toggle\" data-toggle=\"dropdown\">" +
+                    $rootScope.getWord('Action') + " <span class=\"caret\"></span>" +
+                    "</button>" +
+                    "<ul class=\"dropdown-menu\">" +
+                    "<li>" +
+                    "<a ng-click='cellTemplateScope.openAssetEditModal(row.branch.id)' >" + $rootScope.getWord('Edit') + "</a>" +
+                    "</li>" +
+                    "<li>" +
+                    "<a ng-click='cellTemplateScope.openAssetViewModal(row.branch.id)' >" + $rootScope.getWord('Details') + "</a>" +
+                    "</li>" +
+                    "<li>" +
+                    "<a ng-click='cellTemplateScope.deleteConfirm(row.branch.id)' >" + $rootScope.getWord('Delete') + "</a>" +
+                    "</li>" +
+                    "</ul>" +
+                    "</div>",
                     cellTemplateScope: {
-                        openWorkOrderViewModal: function (branch) {
-                            console.log("openWorkOrderViewModal");
-                            $scope.workOrderAssetImportHeader = $rootScope.getWord('Edit work orders');
-                            $scope.workOrderAssetImportBody = $compile('<work-order work-orders="workOrders" nested="nested"></work-order>')($scope);
-                            $scope.workOrderAssetImportFooter = "";
+                        deleteConfirm: function (id) {
+                            if (!$scope.deleteCalled) {
+                                $.SmartMessageBox({
+                                    title: $rootScope.getWord("Alert!"),
+                                    content: $rootScope.getWord("Are you sure to delete this Work order template?"),
+                                    buttons: '[No][Yes]'
+                                }, function (ButtonPressed) {
+                                    if (ButtonPressed === "Yes") {
+                                        WorkOrderTemplate.delete({id: id}).$promise.then(function (result) {
+                                            $.smallBox({
+                                                title: $rootScope.getWord("Notification"),
+                                                content: "<i class='fa fa-clock-o'></i> <i>" + $rootScope.getWord('Work order template deleted!') + "</i>",
+                                                color: "#659265",
+                                                iconSmall: "fa fa-check fa-2x fadeInRight animated",
+                                                timeout: 4000
+                                            });
+                                            $scope.$emit('appApp:workOrderTemplateUpdate', result);
+                                        }, function (msg) {
+                                            console.error(msg);
+                                            $.smallBox({
+                                                title: $rootScope.getWord("Notification"),
+                                                content: "<i class='fa fa-clock-o'></i> <i>" + msg + "</i>",
+                                                color: "#C46A69",
+                                                iconSmall: "fa fa-check fa-2x fadeInRight animated",
+                                                timeout: 4000
+                                            });
+                                        });
+                                    }
+                                    $scope.deleteCalled = false;
+                                });
+                                $scope.deleteCalled = true;
+                            }
+                        },
+                        openAssetEditModal: function (branchId) {
+                            if (!WorkOrderAddModalService.isOpen()) {
+                                WorkOrderAddModalService.openEdit(branchId);
+                            }
+                        },
+                        openAssetViewModal: function (branchId) {
+                            if (!WorkOrderAddModalService.isOpen()) {
+                                WorkOrderAddModalService.openDetails(branchId);
+                            }
+                        },
+                        submitDataWithSuccessAlert: function () {
+                            $.smallBox({
+                                title: $rootScope.getWord("Data submitted successfully") + "!",
+                                content: "<i class='fa fa-clock-o'></i> <i>" + $rootScope.getWord('1 second ago') + "...</i>",
+                                color: "#5F895F",
+                                iconSmall: "fa fa-check bounce animated",
+                                timeout: 4000
+                            });
                         }
                     }
                 }
             ];
-            $scope.tree_data = angular.copy($rootScope.tree_data);
-
 
             $scope.init = function () {
                 $scope.workOrderAssetImportHeader = "";
@@ -13687,56 +14186,34 @@ angular.module('app').directive('workOrdersAssetsTreeGrid', function () {
                 if (!WorkOrderAddModalService.isOpen()) {
                     WorkOrderAddModalService.openAdd();
                 }
-                // var header = $rootScope.getWord('Add Work order');
-                // var body = $compile('<work-order-form></work-order-form>')($scope);
-                // var footer = $sce.trustAsHtml("<button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\" ng-click='submitDataWithSuccessAlert()'>" + $rootScope.getWord('Save') + "</button>");
-                // setFormData(header, body, footer);
             }
 
-            function getTree(data, primaryIdName, parentIdName) {
-                if (!data || data.length == 0 || !primaryIdName || !parentIdName)
-                    return [];
-
-                var tree = [],
-                    rootIds = [],
-                    item = data[0],
-                    primaryKey = item[primaryIdName],
-                    treeObjs = {},
-                    parentId,
-                    parent,
-                    len = data.length,
-                    i = 0,
-                    primeryIds = [];
-
-                while (i < len) {
-                    item = data[i++];
-                    primaryKey = item[primaryIdName];
-                    if (!primeryIds[primaryKey]) {
-                        treeObjs[primaryKey] = item;
-                        parentId = item[parentIdName];
-
-                        if (parentId) {
-                            parent = treeObjs[parentId];
-
-                            if (parent.children) {
-                                parent.children.push(item);
-                            }
-                            else {
-                                parent.children = [item];
-                            }
+            function getTree(assetSpecificationTypes, workOrderTemplates) {
+                var tree = [], i = 0;
+                if (assetSpecificationTypes.length > 0) {
+                    assetSpecificationTypes.forEach(function (assetSpecificationType) {
+                        tree[i] = {};
+                        tree[i].id = assetSpecificationType.id;
+                        tree[i].demographicId = "parent_" + assetSpecificationType.id;
+                        tree[i].children = [];
+                        var j = 0
+                        if (workOrderTemplates.length > 0) {
+                            workOrderTemplates.forEach(function (workOrderTemplate) {
+                                var data = workOrderTemplate;
+                                if (workOrderTemplate.assetSpecificationTypeId == assetSpecificationType.id) {
+                                    var child = data;
+                                    child.demographicId = child.id;
+                                    tree[i].children.push(child);
+                                    j++;
+                                }
+                            });
                         }
-                        else {
-                            rootIds.push(primaryKey);
-                        }
-                    }
-                    primeryIds.push(primaryKey)
+                        tree[i].count = j;
+                        tree[i].name = assetSpecificationType.name;
+                        i++;
+                    });
                 }
-
-                for (var i = 0; i < rootIds.length; i++) {
-                    tree.push(treeObjs[rootIds[i]]);
-                }
-                ;
-
+                console.dir(tree);
                 return tree;
             }
 
@@ -13747,11 +14224,6 @@ angular.module('app').directive('workOrdersAssetsTreeGrid', function () {
     }
 });
 
-"use strict";
-
-angular.module('app').factory('WorkOrders', ["$http", "APP_CONFIG", function ($http, APP_CONFIG) {
-    return $http.get(APP_CONFIG.apiRootUrl + '/work-orders.json');
-}]);
 'use strict';
 
 angular.module('app.graphs').directive('chartjsBarChart', function () {

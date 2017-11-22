@@ -1,0 +1,9 @@
+{
+    "appApp": {
+        "WorkOrderTemplateFunctionType" : {
+            "null": "",
+            "DAILY": "DAILY",
+            "USAGE_HOURS": "USAGE_HOURS"
+        }
+    }
+}

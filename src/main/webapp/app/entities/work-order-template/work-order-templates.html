@@ -1,0 +1,76 @@
+<div>
+    <h2 data-translate="appApp.workOrderTemplate.home.title">Work Order Templates</h2>
+    <jhi-alert></jhi-alert>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-4 no-padding-left">
+                <button class="btn btn-primary" ui-sref="work-order-template.new" >
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <span  data-translate="appApp.workOrderTemplate.home.createLabel">
+                        Create new Work Order Template
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive">
+        <table class="jh-table table table-striped">
+            <thead>
+                <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
+                    <th jh-sort-by="id"><span data-translate="global.field.id">ID</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="numberOfDays"><span data-translate="appApp.workOrderTemplate.numberOfDays">Number Of Days</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="hoursOfUsage"><span data-translate="appApp.workOrderTemplate.hoursOfUsage">Hours Of Usage</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="description"><span data-translate="appApp.workOrderTemplate.description">Description</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="dueDays"><span data-translate="appApp.workOrderTemplate.dueDays">Due Days</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="workOrderType"><span data-translate="appApp.workOrderTemplate.workOrderType">Work Order Type</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="functionType"><span data-translate="appApp.workOrderTemplate.functionType">Function Type</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="name"><span data-translate="appApp.workOrderTemplate.name">Name</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="assetSpecificationTypeId"><span data-translate="appApp.workOrderTemplate.assetSpecificationType">Asset Specification Type</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="workOrderTemplate in vm.workOrderTemplates track by workOrderTemplate.id">
+                    <td><a ui-sref="work-order-template-detail({id:workOrderTemplate.id})">{{workOrderTemplate.id}}</a></td>
+                    <td>{{workOrderTemplate.numberOfDays}}</td>
+                    <td>{{workOrderTemplate.hoursOfUsage}}</td>
+                    <td>{{workOrderTemplate.description}}</td>
+                    <td>{{workOrderTemplate.dueDays}}</td>
+                    <td data-translate="{{'appApp.WorkOrderTemplateType.' + workOrderTemplate.workOrderType}}">{{workOrderTemplate.workOrderType}}</td>
+                    <td data-translate="{{'appApp.WorkOrderTemplateFunctionType.' + workOrderTemplate.functionType}}">{{workOrderTemplate.functionType}}</td>
+                    <td>{{workOrderTemplate.name}}</td>
+                    <td>
+                        <a ui-sref="asset-specification-type-detail({id:workOrderTemplate.assetSpecificationTypeId})">{{workOrderTemplate.assetSpecificationTypeId}}</a>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group flex-btn-group-container">
+                            <button type="submit"
+                                    ui-sref="work-order-template-detail({id:workOrderTemplate.id})"
+                                    class="btn btn-info btn-sm">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                                <span class="hidden-xs hidden-sm" data-translate="entity.action.view"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="work-order-template.edit({id:workOrderTemplate.id})"
+                                    class="btn btn-primary btn-sm">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="hidden-xs hidden-sm" data-translate="entity.action.edit"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="work-order-template.delete({id:workOrderTemplate.id})"
+                                    class="btn btn-danger btn-sm">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                                <span class="hidden-xs hidden-sm" data-translate="entity.action.delete"></span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="text-center">
+        <jhi-item-count page="vm.page" total="vm.queryCount" items-per-page="vm.itemsPerPage"></jhi-item-count>
+    </div>
+    <uib-pager total-items="vm.totalItems" ng-model="vm.page" ng-change="vm.transition()"></uib-pager>
+</div>

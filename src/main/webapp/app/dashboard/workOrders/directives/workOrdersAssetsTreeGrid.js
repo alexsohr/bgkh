@@ -8,54 +8,121 @@ angular.module('app').directive('workOrdersAssetsTreeGrid', function () {
         templateUrl: 'app/dashboard/workOrders/directives/work-order-assets-tree-grid.tpl.html',
         scope: true,
         controllerAs: 'workOrdersAssetsTreeGrid',
-        controller: function ($scope, $rootScope, $compile, $element, $sce, $templateCache, Asset, WorkOrderAddModalService) {
+        controller: function ($scope, $rootScope, $compile, $element, $sce, $templateCache, AssetSpecificationType, WorkOrderTemplate, Asset, WorkOrderAddModalService) {
+            var vm = this;
+            $scope.assetSpecificationTypes = [];
+            $scope.workOrderTemplates = [];
             var tree;
             $scope.work_order_assets_tree = tree = {};
+            $scope.tree_data = {};
 
-            $scope.loadAssets = loadAssets;
-            $scope.loadAssets();
+            $scope.loadWorkOrders = loadWorkOrders;
+            $scope.loadWorkOrders();
 
-            function loadAssets() {
-                Asset.query(function (result) {
-                    $scope.workOrders = getTree(result, 'id', 'parentId');
-                    $scope.searchQuery = null;
+            function loadWorkOrders() {
+                AssetSpecificationType.query(function (assetSpecificationTypes) {
+                    WorkOrderTemplate.query(function (workOrderTemplates) {
+                        $scope.workOrders = getTree(assetSpecificationTypes, workOrderTemplates);
+                        $scope.tree_data = angular.copy($scope.workOrders);
+                        $scope.searchQuery = null;
+                        tree.expand_all();
+                    });
                 });
             }
-            $scope.workOrders = $rootScope.workOrders;
 
-            $scope.tree_data = {};
-            $scope.col_defs = [];
+            $rootScope.$on('appApp:workOrderTemplateUpdate', function(event, result) {
+                $scope.loadWorkOrders();
+            });
+
             $scope.expanding_property = {
                 field: "name",
-                displayName: $rootScope.getWord('Asset Name'),
+                displayName: $rootScope.getWord('Name'),
                 sortable: true,
-                filterable: true
+                filterable: true,
+               // cellTemplate: " {{row.branch['name']}} <span class=\"badge\">{{row.branch['count']}}</span>"
             };
             $scope.col_defs = [
-                {field: "code", displayName: $rootScope.getWord('Asset Code'), sortable: true, filterable: true},
-                {field: "type", displayName: $rootScope.getWord('Asset Type')},
-                {field: "supervisor", displayName: $rootScope.getWord('Asset Supervisor')},
-                {field: "capacity", displayName: $rootScope.getWord('Asset Capacity')},
-                {field: "user", displayName: $rootScope.getWord('Asset User')},
+                {field: "numberOfDays", displayName: $rootScope.getWord('Number of days')},
+                {field: "hoursOfUsage", displayName: $rootScope.getWord('Number of hours')},
+                {field: "dueDays", displayName: $rootScope.getWord('Due day')},
+                {field: "workOrderType", displayName: $rootScope.getWord('Work order type')},
+                {field: "functionType", displayName: $rootScope.getWord('Work order function')},
                 {
                     field: "demographicId",
                     displayName: $rootScope.getWord('Action'),
-                    cellTemplate: "<button ng-click=\"cellTemplateScope.openWorkOrderViewModal(row.branch)\" ng-show=\"{{ row.branch['formType'] == 2 || row.branch['formType'] == 1 }}\"  type=\"button\" class=\"btn btn-labeled btn-info\" ng-src='{{ row.branch[col.field] }}' data-target=\"#workOrderAssetModal\" data-toggle=\"modal\">" +
-                    "<span class=\"btn-label\">" +
-                    "<i class=\"fa fa-gear\"></i>" +
-                    "</span>"+$rootScope.getWord('Work order')+"</button>",
+                    cellTemplate: "<div ng-hide=\"{{ row.branch['demographicId'].indexOf('parent_') == 0 }}\" class=\"btn-group dropdown\" data-dropdown>" +
+                    // cellTemplate: "<div class=\"btn-group dropdown\" data-dropdown>" +
+                    "<button class=\"btn btn-primary btn-xs dropdown-toggle\" data-toggle=\"dropdown\">" +
+                    $rootScope.getWord('Action') + " <span class=\"caret\"></span>" +
+                    "</button>" +
+                    "<ul class=\"dropdown-menu\">" +
+                    "<li>" +
+                    "<a ng-click='cellTemplateScope.openAssetEditModal(row.branch.id)' >" + $rootScope.getWord('Edit') + "</a>" +
+                    "</li>" +
+                    "<li>" +
+                    "<a ng-click='cellTemplateScope.openAssetViewModal(row.branch.id)' >" + $rootScope.getWord('Details') + "</a>" +
+                    "</li>" +
+                    "<li>" +
+                    "<a ng-click='cellTemplateScope.deleteConfirm(row.branch.id)' >" + $rootScope.getWord('Delete') + "</a>" +
+                    "</li>" +
+                    "</ul>" +
+                    "</div>",
                     cellTemplateScope: {
-                        openWorkOrderViewModal: function (branch) {
-                            console.log("openWorkOrderViewModal");
-                            $scope.workOrderAssetImportHeader = $rootScope.getWord('Edit work orders');
-                            $scope.workOrderAssetImportBody = $compile('<work-order work-orders="workOrders" nested="nested"></work-order>')($scope);
-                            $scope.workOrderAssetImportFooter = "";
+                        deleteConfirm: function (id) {
+                            if (!$scope.deleteCalled) {
+                                $.SmartMessageBox({
+                                    title: $rootScope.getWord("Alert!"),
+                                    content: $rootScope.getWord("Are you sure to delete this Work order template?"),
+                                    buttons: '[No][Yes]'
+                                }, function (ButtonPressed) {
+                                    if (ButtonPressed === "Yes") {
+                                        WorkOrderTemplate.delete({id: id}).$promise.then(function (result) {
+                                            $.smallBox({
+                                                title: $rootScope.getWord("Notification"),
+                                                content: "<i class='fa fa-clock-o'></i> <i>" + $rootScope.getWord('Work order template deleted!') + "</i>",
+                                                color: "#659265",
+                                                iconSmall: "fa fa-check fa-2x fadeInRight animated",
+                                                timeout: 4000
+                                            });
+                                            $scope.$emit('appApp:workOrderTemplateUpdate', result);
+                                        }, function (msg) {
+                                            console.error(msg);
+                                            $.smallBox({
+                                                title: $rootScope.getWord("Notification"),
+                                                content: "<i class='fa fa-clock-o'></i> <i>" + msg + "</i>",
+                                                color: "#C46A69",
+                                                iconSmall: "fa fa-check fa-2x fadeInRight animated",
+                                                timeout: 4000
+                                            });
+                                        });
+                                    }
+                                    $scope.deleteCalled = false;
+                                });
+                                $scope.deleteCalled = true;
+                            }
+                        },
+                        openAssetEditModal: function (branchId) {
+                            if (!WorkOrderAddModalService.isOpen()) {
+                                WorkOrderAddModalService.openEdit(branchId);
+                            }
+                        },
+                        openAssetViewModal: function (branchId) {
+                            if (!WorkOrderAddModalService.isOpen()) {
+                                WorkOrderAddModalService.openDetails(branchId);
+                            }
+                        },
+                        submitDataWithSuccessAlert: function () {
+                            $.smallBox({
+                                title: $rootScope.getWord("Data submitted successfully") + "!",
+                                content: "<i class='fa fa-clock-o'></i> <i>" + $rootScope.getWord('1 second ago') + "...</i>",
+                                color: "#5F895F",
+                                iconSmall: "fa fa-check bounce animated",
+                                timeout: 4000
+                            });
                         }
                     }
                 }
             ];
-            $scope.tree_data = angular.copy($rootScope.tree_data);
-
 
             $scope.init = function () {
                 $scope.workOrderAssetImportHeader = "";
@@ -68,56 +135,34 @@ angular.module('app').directive('workOrdersAssetsTreeGrid', function () {
                 if (!WorkOrderAddModalService.isOpen()) {
                     WorkOrderAddModalService.openAdd();
                 }
-                // var header = $rootScope.getWord('Add Work order');
-                // var body = $compile('<work-order-form></work-order-form>')($scope);
-                // var footer = $sce.trustAsHtml("<button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\" ng-click='submitDataWithSuccessAlert()'>" + $rootScope.getWord('Save') + "</button>");
-                // setFormData(header, body, footer);
             }
 
-            function getTree(data, primaryIdName, parentIdName) {
-                if (!data || data.length == 0 || !primaryIdName || !parentIdName)
-                    return [];
-
-                var tree = [],
-                    rootIds = [],
-                    item = data[0],
-                    primaryKey = item[primaryIdName],
-                    treeObjs = {},
-                    parentId,
-                    parent,
-                    len = data.length,
-                    i = 0,
-                    primeryIds = [];
-
-                while (i < len) {
-                    item = data[i++];
-                    primaryKey = item[primaryIdName];
-                    if (!primeryIds[primaryKey]) {
-                        treeObjs[primaryKey] = item;
-                        parentId = item[parentIdName];
-
-                        if (parentId) {
-                            parent = treeObjs[parentId];
-
-                            if (parent.children) {
-                                parent.children.push(item);
-                            }
-                            else {
-                                parent.children = [item];
-                            }
+            function getTree(assetSpecificationTypes, workOrderTemplates) {
+                var tree = [], i = 0;
+                if (assetSpecificationTypes.length > 0) {
+                    assetSpecificationTypes.forEach(function (assetSpecificationType) {
+                        tree[i] = {};
+                        tree[i].id = assetSpecificationType.id;
+                        tree[i].demographicId = "parent_" + assetSpecificationType.id;
+                        tree[i].children = [];
+                        var j = 0
+                        if (workOrderTemplates.length > 0) {
+                            workOrderTemplates.forEach(function (workOrderTemplate) {
+                                var data = workOrderTemplate;
+                                if (workOrderTemplate.assetSpecificationTypeId == assetSpecificationType.id) {
+                                    var child = data;
+                                    child.demographicId = child.id;
+                                    tree[i].children.push(child);
+                                    j++;
+                                }
+                            });
                         }
-                        else {
-                            rootIds.push(primaryKey);
-                        }
-                    }
-                    primeryIds.push(primaryKey)
+                        tree[i].count = j;
+                        tree[i].name = assetSpecificationType.name;
+                        i++;
+                    });
                 }
-
-                for (var i = 0; i < rootIds.length; i++) {
-                    tree.push(treeObjs[rootIds[i]]);
-                }
-                ;
-
+                console.dir(tree);
                 return tree;
             }
 

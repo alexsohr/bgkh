@@ -1,8 +1,8 @@
 <div>
-    <form name="assetEditForm" class="asset-edit-form form-group" role="form" novalidate show-validation>
+    <form name="workOrderTemplateEditForm" class="asset-edit-form form-group" role="form" ng-submit="vm.save()" novalidate show-validation>
 
         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="workOrderAddVm.clear()">&times;</button>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="vm.clear()">&times;</button>
             <h4 class="modal-title" id="myAssetLabel">{{$root.getWord('Create or edit a Work Order Template')}}</h4>
         </div>
         <div class="modal-body">
@@ -10,84 +10,98 @@
                 <div class="form-horizontal">
                         <fieldset>
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-12" ng-class="{ 'has-error' : workOrderTemplateEditForm.assetSpecificationType.$invalid}">
                                     <label class="control-label">{{$root.getWord('Work order group')}}</label>
                                     <div class="col-md-12">
-                                        <select class="form-control"
-                                                ng-model="workOrder.assetId">
-                                            <optgroup label="{{$root.getWord('Group')}}">
-                                                <option ng-repeat="asset in assets" value="{{asset.id}}">{{asset.name}}</option>
-                                            </optgroup>
+                                        <select class="form-control" ng-disabled="vm.disabled"
+                                                name="assetSpecificationType"
+                                                ng-model="vm.workOrderTemplate.assetSpecificationTypeId"
+                                                ng-options="assetSpecificationType.id as assetSpecificationType.name for assetSpecificationType in vm.assetspecificationtypes"
+                                                required>
+                                            <option value=""></option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-12">
-                                    <label class="control-label">{{$root.getWord('Code')}}</label>
+                                <div class="col-md-12" ng-class="{ 'has-error' : workOrderTemplateEditForm.name.$invalid}">
+                                    <label class="control-label">{{$root.getWord('Name')}}</label>
                                     <div class="col-md-12">
-                                        <input type="text" class="form-control" ng-model="workOrder.code" ng-disabled="disableForm">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <label class="control-label">{{$root.getWord('Number')}}</label>
-                                    <div class="col-md-12">
-                                        <input type="text" class="form-control" ng-model="workOrder.number" ng-disabled="disableForm">
+                                        <input type="text" ng-disabled="vm.disabled" class="form-control" name="name" ng-model="vm.workOrderTemplate.name" ng-disabled="disableForm"
+                                        required>
                                     </div>
                                 </div>
                             </div>
                         </fieldset>
                         <fieldset>
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-12" ng-class="{ 'has-error' : workOrderTemplateEditForm.workOrderType.$invalid}">
                                     <label class="col-md-2 control-label">{{$root.getWord('Work order type')}}</label>
                                     <div class="col-md-10 padding-bottom-10">
                                         <div class="radio">
                                             <label>
-                                                <input type="radio" class="radiobox style-0" name="type" value="D" ng-checked="workOrder.workOrderType == 'D'" ng-model="workOrder.workOrderType">
+                                                <input type="radio" class="radiobox style-0" name="workOrderType" value="PM" ng-checked="vm.workOrderTemplate.workOrderType == 'PM'" ng-model="vm.workOrderTemplate.workOrderType" ng-disabled="vm.disabled">
+                                                <span>{{$root.getWord('PM')}}</span>
+                                            </label>
+                                            <label>
+                                                <input type="radio" class="radiobox style-0" name="workOrderType" value="CM" ng-checked="vm.workOrderTemplate.workOrderType == 'CM'" ng-model="vm.workOrderTemplate.workOrderType" ng-disabled="vm.disabled">
+                                                <span>{{$root.getWord('CM')}}</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12" ng-class="{ 'has-error' : workOrderTemplateEditForm.functionType.$invalid}">
+                                    <label class="col-md-2 control-label">{{$root.getWord('Work order function')}}</label>
+                                    <div class="col-md-10 padding-bottom-10">
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" class="radiobox style-0" name="functionType" value="DAILY" ng-checked="vm.workOrderTemplate.functionType == 'DAILY'" ng-model="vm.workOrderTemplate.functionType" ng-disabled="vm.disabled">
                                                 <span>{{$root.getWord('Daily based')}}</span>
                                             </label>
                                             <label>
-                                                <input type="radio" class="radiobox style-0" name="type" value="H" ng-model="workOrder.workOrderType">
+                                                <input type="radio" class="radiobox style-0" name="functionType" value="USAGE_HOURS" ng-model="vm.workOrderTemplate.functionType" ng-disabled="vm.disabled">
                                                 <span>{{$root.getWord('Hourly base')}}</span>
                                             </label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row" ng-if="workOrder.workOrderType == 'D'">
-                                <div class="col-md-12">
+                            <div class="row" ng-if="vm.workOrderTemplate.functionType == 'DAILY'">
+                                <div class="col-md-12" ng-class="{ 'has-error' : workOrderTemplateEditForm.numberOfDays.$invalid}">
                                     <label class="control-label">{{$root.getWord('Number of days')}}</label>
                                     <div class="col-md-12">
-                                        <input class="form-control" name="numberOfDays" type="number" name="spinner" value="1"
-                                               min="1" ng-model="workOrder.numberOfDays">
+                                        <input class="form-control" name="numberOfDays" type="number" ng-disabled="vm.disabled"
+                                               min="1" ng-model="vm.workOrderTemplate.numberOfDays" required>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row" ng-if="workOrder.workOrderType == 'H'">
-                                <div class="col-md-6">
-                                    <label class="control-label">{{$root.getWord('Asset identifier')}}</label>
-                                    <div class="col-md-12">
-                                        <input class="form-control" name="identifier" type="text" ng-model="workOrder.identifier">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
+                            <div class="row" ng-if="vm.workOrderTemplate.functionType == 'USAGE_HOURS'">
+                                <div class="col-md-12" ng-class="{ 'has-error' : workOrderTemplateEditForm.hoursOfUsage.$invalid}">
                                     <label class="control-label">{{$root.getWord('Number of hours')}}</label>
                                     <div class="col-md-12">
-                                        <input class="form-control" name="hours" type="number" name="spinner" value="1"
-                                               min="1" ng-model="workOrder.hours">
+                                        <input class="form-control" name="hoursOfUsage" type="number" ng-disabled="vm.disabled"
+                                               min="1" ng-model="vm.workOrderTemplate.hoursOfUsage" required>
                                     </div>
                                 </div>
                             </div>
                         </fieldset>
                         <fieldset>
                             <div class="row">
+                                <div class="col-md-12" ng-class="{ 'has-error' : workOrderTemplateEditForm.dueDays.$invalid}">
+                                    <label class="control-label">{{$root.getWord('Due day')}}</label>
+                                    <div class="col-md-12">
+                                        <input class="form-control" name="dueDays" type="number" value="1" ng-disabled="vm.disabled"
+                                               min="0" ng-model="vm.workOrderTemplate.dueDays" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-md-12">
                                     <label class="control-label">{{$root.getWord('Work order description')}}</label>
                                     <div class="col-md-12 textarea textarea-expandable">
-                                        <textarea type="text" class="custom-scroll form-control" rows="8" ng-model="workOrder.desc" ng-disabled="disableForm"></textarea>
+                                        <textarea type="text" class="custom-scroll form-control" rows="8" ng-model="vm.workOrderTemplate.description" ng-disabled="vm.disabled"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -95,10 +109,10 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="workOrderAddVm.clear()">
+                <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">
                     <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
                 </button>
-                <button type="submit" class="btn btn-primary" ng-click="workOrderAddVm.clear()">
+                <button type="submit" class="btn btn-primary" ng-hide="vm.disabled" ng-disabled="workOrderTemplateEditForm.$invalid || vm.isSaving" >
                     <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span>
                 </button>
             </div>

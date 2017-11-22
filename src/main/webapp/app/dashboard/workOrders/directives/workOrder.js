@@ -11,7 +11,7 @@ angular.module('app').directive('workOrder', function () {
             nested: '@nested'
         },
         templateUrl: 'app/dashboard/workOrders/directives/work-order.tpl.html',
-        controller: function ($scope, $rootScope, $compile, $sce, $element, $ctrl, WorkOrderAddModalService) {
+        controller: function ($scope, $rootScope, $compile, $sce, $element, $ctrl) {
             $ctrl.
             $scope.workOrderModalClass = "work-order-modal";
             var workOrderData = $scope.workOrders.data;

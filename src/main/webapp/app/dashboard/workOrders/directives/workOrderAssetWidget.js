@@ -7,7 +7,7 @@ angular.module('app').directive('workOrderAssetWidget', function () {
         templateUrl: 'app/dashboard/workOrders/directives/work-order-asset-widget.tpl.html',
         scope: {
         },
-        controller: function ($scope, $rootScope, $element, Assets, WorkOrders) {
+        controller: function ($scope, $rootScope, $element, Assets) {
 
         },
         link: function (scope, rootScope, element, attrs) {

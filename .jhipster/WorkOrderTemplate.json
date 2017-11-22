@@ -1,0 +1,60 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "assetSpecificationType",
+            "otherEntityName": "assetSpecificationType",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "numberOfDays",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "hoursOfUsage",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "description",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "dueDays",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "workOrderType",
+            "fieldType": "WorkOrderTemplateType",
+            "fieldValues": "y",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "functionType",
+            "fieldType": "WorkOrderTemplateFunctionType",
+            "fieldValues": "DAILY,USAGE_HOURS",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20171108022130",
+    "dto": "mapstruct",
+    "service": "serviceClass",
+    "entityTableName": "work_order_template",
+    "pagination": "pager"
+}

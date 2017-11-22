@@ -1,24 +1,19 @@
-'use strict';
+(function() {
+    'use strict';
 
-angular
-    .module('app')
-    .controller('WorkOrderFormController', function ($scope, $uibModalInstance, entity, disabled, $timeout, AssetSpecificationType, WorkOrderTemplate) {
+    angular
+        .module('app')
+        .controller('WorkOrderTemplateDialogController', WorkOrderTemplateDialogController);
+
+    WorkOrderTemplateDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'WorkOrderTemplate', 'AssetSpecificationType'];
+
+    function WorkOrderTemplateDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, WorkOrderTemplate, AssetSpecificationType) {
         var vm = this;
 
         vm.workOrderTemplate = entity;
         vm.clear = clear;
         vm.save = save;
-        vm.disabled = false;
-        console.dir(disabled);
-        if (!angular.isUndefinedOrNull(disabled)) {
-            vm.disabled = disabled;
-        }
         vm.assetspecificationtypes = AssetSpecificationType.query();
-
-        if (angular.isUndefinedOrNull(vm.workOrderTemplate.id)) {
-            vm.workOrderTemplate.workOrderType = "PM";
-            vm.workOrderTemplate.functionType = "DAILY";
-        }
 
         $timeout(function (){
             angular.element('.form-group:eq(1)>input').focus();
@@ -46,4 +41,7 @@ angular
         function onSaveError () {
             vm.isSaving = false;
         }
-    });
+
+
+    }
+})();

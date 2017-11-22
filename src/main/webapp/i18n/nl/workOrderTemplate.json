@@ -1,0 +1,29 @@
+{
+    "appApp": {
+        "workOrderTemplate" : {
+            "home": {
+                "title": "Work Order Templates",
+                "createLabel": "Maak een nieuwe Work Order Template",
+                "createOrEditLabel": "Maak of wijzig een Work Order Template",
+                "search": "Search for Work Order Template"
+            },
+            "created": "A new Work Order Template is created with identifier {{ param }}",
+            "updated": "A Work Order Template is updated with identifier {{ param }}",
+            "deleted": "A Work Order Template is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Bent u zeker dat u Work Order Template {{ id }} wilt verwijderen?"
+            },
+            "detail": {
+                "title": "Work Order Template"
+            },
+            "numberOfDays": "Number Of Days",
+            "hoursOfUsage": "Hours Of Usage",
+            "description": "Description",
+            "dueDays": "Due Days",
+            "workOrderType": "Work Order Type",
+            "functionType": "Function Type",
+            "name": "Name",
+            "assetSpecificationType": "Asset Specification Type"
+        }
+    }
+}

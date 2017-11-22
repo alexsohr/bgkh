@@ -1,0 +1,51 @@
+
+<div>
+    <h2><span data-translate="appApp.workOrderTemplate.detail.title">Work Order Template</span> {{vm.workOrderTemplate.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="dl-horizontal jh-entity-details">
+        <dt><span data-translate="appApp.workOrderTemplate.numberOfDays">Number Of Days</span></dt>
+        <dd>
+            <span>{{vm.workOrderTemplate.numberOfDays}}</span>
+        </dd>
+        <dt><span data-translate="appApp.workOrderTemplate.hoursOfUsage">Hours Of Usage</span></dt>
+        <dd>
+            <span>{{vm.workOrderTemplate.hoursOfUsage}}</span>
+        </dd>
+        <dt><span data-translate="appApp.workOrderTemplate.description">Description</span></dt>
+        <dd>
+            <span>{{vm.workOrderTemplate.description}}</span>
+        </dd>
+        <dt><span data-translate="appApp.workOrderTemplate.dueDays">Due Days</span></dt>
+        <dd>
+            <span>{{vm.workOrderTemplate.dueDays}}</span>
+        </dd>
+        <dt><span data-translate="appApp.workOrderTemplate.workOrderType">Work Order Type</span></dt>
+        <dd>
+            <span data-translate="{{'appApp.WorkOrderTemplateType.' + vm.workOrderTemplate.workOrderType}}">{{vm.workOrderTemplate.workOrderType}}</span>
+        </dd>
+        <dt><span data-translate="appApp.workOrderTemplate.functionType">Function Type</span></dt>
+        <dd>
+            <span data-translate="{{'appApp.WorkOrderTemplateFunctionType.' + vm.workOrderTemplate.functionType}}">{{vm.workOrderTemplate.functionType}}</span>
+        </dd>
+        <dt><span data-translate="appApp.workOrderTemplate.name">Name</span></dt>
+        <dd>
+            <span>{{vm.workOrderTemplate.name}}</span>
+        </dd>
+        <dt><span data-translate="appApp.workOrderTemplate.assetSpecificationType">Asset Specification Type</span></dt>
+        <dd>
+            <a ui-sref="asset-specification-type-detail({id:vm.workOrderTemplate.assetSpecificationTypeId})">{{vm.workOrderTemplate.assetSpecificationTypeId}}</a>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            ui-sref="{{ vm.previousState }}"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span data-translate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button" ui-sref="work-order-template-detail.edit({id:vm.workOrderTemplate.id})" class="btn btn-primary">
+        <span class="glyphicon glyphicon-pencil"></span>
+        <span class="hidden-xs hidden-sm" data-translate="entity.action.edit"> Edit</span>
+    </button>
+</div>
