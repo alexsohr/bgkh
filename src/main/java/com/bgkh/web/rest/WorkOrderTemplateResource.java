@@ -1,5 +1,6 @@
 package com.bgkh.web.rest;
 
+import com.bgkh.service.mapper.WorkOrderTemplateMapper;
 import com.codahale.metrics.annotation.Timed;
 import com.bgkh.service.WorkOrderTemplateService;
 import com.bgkh.web.rest.util.HeaderUtil;
@@ -23,6 +24,7 @@ import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -33,7 +35,7 @@ import java.util.stream.Collectors;
 public class WorkOrderTemplateResource {
 
     private final Logger log = LoggerFactory.getLogger(WorkOrderTemplateResource.class);
-        
+
     @Inject
     private WorkOrderTemplateService workOrderTemplateService;
 
@@ -112,6 +114,14 @@ public class WorkOrderTemplateResource {
                 result,
                 HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping("/work-order-templates-by-asset-type/{assetTypeId}")
+    @Timed
+    public ResponseEntity<List<WorkOrderTemplateDTO>> getWorkOrderTemplateByAssetTypeId(@PathVariable Long assetTypeId) {
+        log.debug("REST request to get WorkOrderTemplate by Asset type id : {}", assetTypeId);
+        List<WorkOrderTemplateDTO> workOrderTemplateDTOs = workOrderTemplateService.findAllByAssetTypeId(assetTypeId);
+        return new ResponseEntity<>(workOrderTemplateDTOs, HttpStatus.OK);
     }
 
     /**

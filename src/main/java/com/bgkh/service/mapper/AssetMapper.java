@@ -24,7 +24,6 @@ public interface AssetMapper {
 
     List<AssetDTO> assetsToAssetDTOs(List<Asset> assets);
 
-    @Mapping(target = "workOrders", ignore = true)
     @Mapping(target = "strategic" , expression = "java(Boolean.valueOf(assetDTO.getStrategic()))")
     @Mapping(source = "supervisorId", target = "supervisor")
     @Mapping(source = "technicianId", target = "technician")

@@ -15,7 +15,6 @@ public interface WorkOrderTemplateMapper {
     @Mapping(source = "assetSpecificationType.id", target = "assetSpecificationTypeId")
     WorkOrderTemplateDTO workOrderTemplateToWorkOrderTemplateDTO(WorkOrderTemplate workOrderTemplate);
 
-    List<WorkOrderTemplateDTO> workOrderTemplatesToWorkOrderTemplateDTOs(List<WorkOrderTemplate> workOrderTemplates);
 
     @Mapping(source = "assetSpecificationTypeId", target = "assetSpecificationType")
     WorkOrderTemplate workOrderTemplateDTOToWorkOrderTemplate(WorkOrderTemplateDTO workOrderTemplateDTO);

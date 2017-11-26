@@ -58,7 +58,7 @@ public class Asset implements Serializable {
     @Column(name = "manufacture", length = 250)
     private String manufacture;
 
-    @Min(value = 0)
+    @DecimalMin(value = "0")
     @Column(name = "capacity", precision=10, scale=2)
     private BigDecimal capacity;
 
@@ -71,11 +71,6 @@ public class Asset implements Serializable {
 
     @Column(name = "capacity_unit")
     private String unit;
-
-    @OneToMany(mappedBy = "asset", fetch = FetchType.LAZY)
-    @JsonIgnore
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Set<WorkOrder> workOrders = new HashSet<>();
 
     @ManyToOne
     private User supervisor;
@@ -239,31 +234,6 @@ public class Asset implements Serializable {
 
     public void setUnit(String unit) {
         this.unit = unit;
-    }
-
-    public Set<WorkOrder> getWorkOrders() {
-        return workOrders;
-    }
-
-    public Asset workOrders(Set<WorkOrder> workOrders) {
-        this.workOrders = workOrders;
-        return this;
-    }
-
-    public Asset addWorkOrder(WorkOrder workOrder) {
-        workOrders.add(workOrder);
-        workOrder.setAsset(this);
-        return this;
-    }
-
-    public Asset removeWorkOrder(WorkOrder workOrder) {
-        workOrders.remove(workOrder);
-        workOrder.setAsset(null);
-        return this;
-    }
-
-    public void setWorkOrders(Set<WorkOrder> workOrders) {
-        this.workOrders = workOrders;
     }
 
     public User getSupervisor() {

@@ -9,14 +9,6 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
-import com.bgkh.domain.enumeration.WorkOrderStatus;
-
-import com.bgkh.domain.enumeration.WorkOrderType;
-
-import com.bgkh.domain.enumeration.WorkOrderPriority;
-
-import com.bgkh.domain.enumeration.WorkOrderEstStatus;
-
 /**
  * A WorkOrder.
  */
@@ -32,46 +24,22 @@ public class WorkOrder implements Serializable {
     private Long id;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "work_order_status", nullable = false)
-    private WorkOrderStatus workOrderStatus;
+    @Column(name = "track", nullable = false)
+    private Boolean track;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "work_order_type", nullable = false)
-    private WorkOrderType workOrderType;
-
-    @Size(min = 10, max = 500)
-    @Column(name = "description", length = 500)
+    @Column(name = "description")
     private String description;
 
-    @NotNull
-    @Column(name = "date_completed", nullable = false)
-    private LocalDate dateCompleted;
-
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "priority", nullable = false)
-    private WorkOrderPriority priority;
-
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "est", nullable = false)
-    private WorkOrderEstStatus est;
-
-    @Column(name = "estimated_hours")
-    private Long estimatedHours;
-
-    @Size(min = 10, max = 500)
-    @Column(name = "comments", length = 500)
-    private String comments;
-
-    @NotNull
-    @Column(name = "tracker", nullable = false)
-    private Boolean tracker;
+    @Column(name = "track_date")
+    private LocalDate trackDate;
 
     @ManyToOne
+    @NotNull
     private Asset asset;
+
+    @ManyToOne
+    @NotNull
+    private WorkOrderTemplate workOrderTemplate;
 
     public Long getId() {
         return id;
@@ -81,30 +49,17 @@ public class WorkOrder implements Serializable {
         this.id = id;
     }
 
-    public WorkOrderStatus getWorkOrderStatus() {
-        return workOrderStatus;
+    public Boolean isTrack() {
+        return track;
     }
 
-    public WorkOrder workOrderStatus(WorkOrderStatus workOrderStatus) {
-        this.workOrderStatus = workOrderStatus;
+    public WorkOrder track(Boolean track) {
+        this.track = track;
         return this;
     }
 
-    public void setWorkOrderStatus(WorkOrderStatus workOrderStatus) {
-        this.workOrderStatus = workOrderStatus;
-    }
-
-    public WorkOrderType getWorkOrderType() {
-        return workOrderType;
-    }
-
-    public WorkOrder workOrderType(WorkOrderType workOrderType) {
-        this.workOrderType = workOrderType;
-        return this;
-    }
-
-    public void setWorkOrderType(WorkOrderType workOrderType) {
-        this.workOrderType = workOrderType;
+    public void setTrack(Boolean track) {
+        this.track = track;
     }
 
     public String getDescription() {
@@ -120,82 +75,17 @@ public class WorkOrder implements Serializable {
         this.description = description;
     }
 
-    public LocalDate getDateCompleted() {
-        return dateCompleted;
+    public LocalDate getTrackDate() {
+        return trackDate;
     }
 
-    public WorkOrder dateCompleted(LocalDate dateCompleted) {
-        this.dateCompleted = dateCompleted;
+    public WorkOrder trackDate(LocalDate trackDate) {
+        this.trackDate = trackDate;
         return this;
     }
 
-    public void setDateCompleted(LocalDate dateCompleted) {
-        this.dateCompleted = dateCompleted;
-    }
-
-    public WorkOrderPriority getPriority() {
-        return priority;
-    }
-
-    public WorkOrder priority(WorkOrderPriority priority) {
-        this.priority = priority;
-        return this;
-    }
-
-    public void setPriority(WorkOrderPriority priority) {
-        this.priority = priority;
-    }
-
-    public WorkOrderEstStatus getEst() {
-        return est;
-    }
-
-    public WorkOrder est(WorkOrderEstStatus est) {
-        this.est = est;
-        return this;
-    }
-
-    public void setEst(WorkOrderEstStatus est) {
-        this.est = est;
-    }
-
-    public Long getEstimatedHours() {
-        return estimatedHours;
-    }
-
-    public WorkOrder estimatedHours(Long estimatedHours) {
-        this.estimatedHours = estimatedHours;
-        return this;
-    }
-
-    public void setEstimatedHours(Long estimatedHours) {
-        this.estimatedHours = estimatedHours;
-    }
-
-    public String getComments() {
-        return comments;
-    }
-
-    public WorkOrder comments(String comments) {
-        this.comments = comments;
-        return this;
-    }
-
-    public void setComments(String comments) {
-        this.comments = comments;
-    }
-
-    public Boolean isTracker() {
-        return tracker;
-    }
-
-    public WorkOrder tracker(Boolean tracker) {
-        this.tracker = tracker;
-        return this;
-    }
-
-    public void setTracker(Boolean tracker) {
-        this.tracker = tracker;
+    public void setTrackDate(LocalDate trackDate) {
+        this.trackDate = trackDate;
     }
 
     public Asset getAsset() {
@@ -211,39 +101,44 @@ public class WorkOrder implements Serializable {
         this.asset = asset;
     }
 
+    public WorkOrderTemplate getWorkOrderTemplate() {
+        return workOrderTemplate;
+    }
+
+    public WorkOrder workOrderTemplate(WorkOrderTemplate workOrderTemplate) {
+        this.workOrderTemplate = workOrderTemplate;
+        return this;
+    }
+
+    public void setWorkOrderTemplate(WorkOrderTemplate workOrderTemplate) {
+        this.workOrderTemplate = workOrderTemplate;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
         WorkOrder workOrder = (WorkOrder) o;
-        if (workOrder.id == null || id == null) {
-            return false;
-        }
-        return Objects.equals(id, workOrder.id);
+
+        if (!asset.equals(workOrder.asset)) return false;
+        return workOrderTemplate.equals(workOrder.workOrderTemplate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        int result = asset.hashCode();
+        result = 31 * result + workOrderTemplate.hashCode();
+        return result;
     }
 
     @Override
     public String toString() {
         return "WorkOrder{" +
             "id=" + id +
-            ", workOrderStatus='" + workOrderStatus + "'" +
-            ", workOrderType='" + workOrderType + "'" +
+            ", track='" + track + "'" +
             ", description='" + description + "'" +
-            ", dateCompleted='" + dateCompleted + "'" +
-            ", priority='" + priority + "'" +
-            ", est='" + est + "'" +
-            ", estimatedHours='" + estimatedHours + "'" +
-            ", comments='" + comments + "'" +
-            ", tracker='" + tracker + "'" +
+            ", trackDate='" + trackDate + "'" +
             '}';
     }
 }

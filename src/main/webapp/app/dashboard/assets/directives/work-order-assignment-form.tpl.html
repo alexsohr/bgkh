@@ -1,0 +1,54 @@
+<div>
+    <form name="workOrderTemplateAssignmentForm" class="form-group" role="form" ng-submit="workOrderAssignmentVm.save()" novalidate show-validation>
+
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="workOrderAssignmentVm.clear()">&times;</button>
+            <h4 class="modal-title" id="myAssetLabel">{{$root.getWord('Assign Work Order to Asset')}}</h4>
+        </div>
+        <div class="modal-body">
+            <div class="step-content">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>{{$root.getWord('Name')}}</th>
+                                        <th>{{$root.getWord('Work order type')}}</th>
+                                        <th>{{$root.getWord('Work order function')}}</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="workOrderTemplate in workOrderAssignmentVm.workOrderTemplates">
+                                        <td>{{workOrderTemplate.name}}</td>
+                                        <td>{{workOrderTemplate.workOrderType}}</td>
+                                        <td>{{workOrderTemplate.functionType}}</td>
+                                        <td>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" class="checkbox style-0" name="hasNextStep"
+                                                           ng-model="workOrderTemplate.assign" ng-checked="workOrderTemplate.assign"
+                                                           value="{{workOrderTemplate.id}}">
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="workOrderAssignmentVm.clear()">
+                    <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" class="btn btn-primary" ng-hide="workOrderAssignmentVm.disabled" ng-disabled="workOrderTemplateAssignmentForm.$invalid || workOrderAssignmentVm.isSaving" >
+                    <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

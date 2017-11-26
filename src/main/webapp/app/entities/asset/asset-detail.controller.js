@@ -5,9 +5,9 @@
         .module('app')
         .controller('AssetDetailController', AssetDetailController);
 
-    AssetDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'Asset', 'WorkOrder', 'User', 'UploadFile', 'AssetSpecificationType'];
+    AssetDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'Asset', 'User', 'UploadFile', 'AssetSpecificationType'];
 
-    function AssetDetailController($scope, $rootScope, $stateParams, previousState, entity, Asset, WorkOrder, User, UploadFile, AssetSpecificationType) {
+    function AssetDetailController($scope, $rootScope, $stateParams, previousState, entity, Asset, User, UploadFile, AssetSpecificationType) {
         var vm = this;
 
         vm.asset = entity;

@@ -1,5 +1,5 @@
 {
-    "app": {
+    "appApp": {
         "workOrder" : {
             "home": {
                 "title": "Work Orders",
@@ -16,16 +16,11 @@
             "detail": {
                 "title": "Work Order"
             },
-            "workOrderStatus": "Work Order Status",
-            "workOrderType": "Work Order Type",
+            "track": "Track",
             "description": "Description",
-            "dateCompleted": "Date Completed",
-            "priority": "Priority",
-            "est": "Est",
-            "estimatedHours": "Estimated Hours",
-            "comments": "Comments",
-            "tracker": "Tracker",
-            "asset": "Asset"
+            "trackDate": "Track Date",
+            "asset": "Asset",
+            "workOrderTemplate": "Work Order Template"
         }
     }
 }

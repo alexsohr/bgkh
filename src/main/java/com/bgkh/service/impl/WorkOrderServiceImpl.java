@@ -4,6 +4,7 @@ import com.bgkh.service.WorkOrderService;
 import com.bgkh.domain.WorkOrder;
 import com.bgkh.repository.WorkOrderRepository;
 import com.bgkh.service.dto.WorkOrderDTO;
+import com.bgkh.service.dto.WorkOrderDTOs;
 import com.bgkh.service.mapper.WorkOrderMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,8 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class WorkOrderServiceImpl implements WorkOrderService{
 
     private final Logger log = LoggerFactory.getLogger(WorkOrderServiceImpl.class);
-    
+
     @Inject
     private WorkOrderRepository workOrderRepository;
 
@@ -48,11 +48,11 @@ public class WorkOrderServiceImpl implements WorkOrderService{
 
     /**
      *  Get all the workOrders.
-     *  
+     *
      *  @param pageable the pagination information
      *  @return the list of entities
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public Page<WorkOrderDTO> findAll(Pageable pageable) {
         log.debug("Request to get all WorkOrders");
         Page<WorkOrder> result = workOrderRepository.findAll(pageable);
@@ -65,7 +65,7 @@ public class WorkOrderServiceImpl implements WorkOrderService{
      *  @param id the id of the entity
      *  @return the entity
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public WorkOrderDTO findOne(Long id) {
         log.debug("Request to get WorkOrder : {}", id);
         WorkOrder workOrder = workOrderRepository.findOne(id);
@@ -81,5 +81,39 @@ public class WorkOrderServiceImpl implements WorkOrderService{
     public void delete(Long id) {
         log.debug("Request to delete WorkOrder : {}", id);
         workOrderRepository.delete(id);
+    }
+
+    @Override
+    public List<WorkOrderDTO> findAllByAssetId(Long assetId) {
+        List<WorkOrderDTO> allByAssetId = workOrderRepository.findAllByAssetId(assetId).stream()
+            .map(workOrderMapper::workOrderToWorkOrderDTO)
+            .collect(Collectors.toCollection(LinkedList::new));
+
+        return allByAssetId;
+    }
+
+    @Override
+    public WorkOrderDTOs saveAll(WorkOrderDTOs workOrderDTOs) {
+        List<WorkOrder> allByAssetIdForDelete = workOrderRepository.findAllByAssetId(workOrderDTOs.getAssetId());
+        List<WorkOrder> workOrders = workOrderDTOs.getWorkOrders().stream().
+            map(workOrderMapper::workOrderDTOToWorkOrder).
+            collect(Collectors.toList());
+        List<WorkOrder> allByAssetId = new ArrayList<>(allByAssetIdForDelete);
+
+        allByAssetIdForDelete.removeAll(workOrders);
+        workOrderRepository.delete(allByAssetIdForDelete);
+
+        Iterator<WorkOrder> iterator = workOrders.iterator();
+        while (iterator.hasNext()) {
+            WorkOrder workOrder = iterator.next();
+            if (allByAssetId.contains(workOrder)) {
+                iterator.remove();
+            }
+            else {
+                workOrderRepository.save(workOrder);
+            }
+        }
+
+        return workOrderDTOs;
     }
 }

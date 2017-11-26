@@ -1,5 +1,6 @@
 package com.bgkh.service;
 
+import com.bgkh.domain.Asset;
 import com.bgkh.service.dto.AssetDTO;
 import com.bgkh.service.dto.AssetDTOs;
 
@@ -65,4 +66,8 @@ public interface AssetService {
      *  @param id the id of the entity
      */
     void delete(Long id);
+
+    List<Asset> findAllByParentId(long id);
+
+    int findCountByParentId(long id);
 }

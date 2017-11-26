@@ -38,13 +38,14 @@ public class AssetDTO implements Serializable {
     @Size(min = 1, max = 250)
     private String manufacture;
 
-    @Min(value = 0)
+    @DecimalMin(value = "0")
     private BigDecimal capacity;
 
     @Min(value = 1800)
     private Integer year;
 
     private String unit;
+
 
     private Long supervisorId;
 

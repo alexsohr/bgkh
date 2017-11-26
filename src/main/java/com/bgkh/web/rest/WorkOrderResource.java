@@ -1,5 +1,6 @@
 package com.bgkh.web.rest;
 
+import com.bgkh.service.dto.WorkOrderDTOs;
 import com.codahale.metrics.annotation.Timed;
 import com.bgkh.service.WorkOrderService;
 import com.bgkh.web.rest.util.HeaderUtil;
@@ -33,7 +34,7 @@ import java.util.stream.Collectors;
 public class WorkOrderResource {
 
     private final Logger log = LoggerFactory.getLogger(WorkOrderResource.class);
-        
+
     @Inject
     private WorkOrderService workOrderService;
 
@@ -94,6 +95,25 @@ public class WorkOrderResource {
         Page<WorkOrderDTO> page = workOrderService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/work-orders");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+
+    @GetMapping("/work-orders-by-asset/{assetId}")
+    @Timed
+    public ResponseEntity<List<WorkOrderDTO>> getWorkOrders(@PathVariable Long assetId) {
+        log.debug("REST request to get WorkOrder with asset Id : {}", assetId);
+        List<WorkOrderDTO> workOrderDTOs = workOrderService.findAllByAssetId(assetId);
+        return new ResponseEntity<>(workOrderDTOs, HttpStatus.OK);
+    }
+
+    @PostMapping("/work-orders-by-asset")
+    @Timed
+    public ResponseEntity<WorkOrderDTOs> createWorkOrders(@Valid @RequestBody WorkOrderDTOs workOrderDTOs) throws URISyntaxException {
+        log.debug("REST request to save WorkOrder : {}", workOrderDTOs);
+        WorkOrderDTOs result = workOrderService.saveAll(workOrderDTOs);
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityCreationAlert("workOrders", result.toString()))
+            .body(result);
     }
 
     /**

@@ -5,15 +5,14 @@
         .module('app')
         .controller('AssetDialogController', AssetDialogController);
 
-    AssetDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'Asset', 'WorkOrder', 'User', 'UploadFile', 'AssetSpecificationType'];
+    AssetDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'Asset', 'User', 'UploadFile', 'AssetSpecificationType'];
 
-    function AssetDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, Asset, WorkOrder, User, UploadFile, AssetSpecificationType) {
+    function AssetDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, Asset, User, UploadFile, AssetSpecificationType) {
         var vm = this;
 
         vm.asset = entity;
         vm.clear = clear;
         vm.save = save;
-        vm.workorders = WorkOrder.query();
         vm.users = User.query();
         vm.uploadfiles = UploadFile.query();
         vm.assetspecificationtypes = AssetSpecificationType.query();

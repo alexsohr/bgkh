@@ -40,4 +40,7 @@ public interface AssetRepository extends JpaRepository<Asset,Long> {
 
     @Query("select asset from Asset asset where asset.parentId =:id")
     List<Asset> findAllByParentId(@Param("id") Long id);
+
+    @Query("select count(asset) from Asset asset where asset.parentId =:id")
+    int findCountByParentId(@Param("id") Long id);
 }

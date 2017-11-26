@@ -16,6 +16,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -105,8 +106,8 @@ public class AssetServiceImpl implements AssetService {
         AssetDTO newAssetDTO = saveNewAsset(asset, parentId);
         response.add(newAssetDTO);
 
-        List<Asset> allChileAssets = assetRepository.findAllByParentId(asset.getId());
-        for (Asset child : allChileAssets) {
+        List<Asset> allChildAssets = findAllByParentId(asset.getId());
+        for (Asset child : allChildAssets) {
             findAndCopyChildren(child, newAssetDTO.getId(), response);
         }
     }
@@ -116,7 +117,6 @@ public class AssetServiceImpl implements AssetService {
         Asset newAssetEntity = new Asset();
 
         BeanUtils.copyProperties(asset, newAssetEntity);
-        newAssetEntity.setWorkOrders(null);
 
         newAssetEntity.setParentId(parentId);
         newAssetEntity.setId(null);
@@ -308,4 +308,16 @@ public class AssetServiceImpl implements AssetService {
         log.debug("*********************************************");
         assetRepository.delete(assets);
     }
+
+    @Override
+    public List<Asset> findAllByParentId(long id) {
+        return assetRepository.findAllByParentId(id);
+    }
+
+    @Override
+    public int findCountByParentId(long id) {
+        return assetRepository.findCountByParentId(id);
+    }
+
+
 }

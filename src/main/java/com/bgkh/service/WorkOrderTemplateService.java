@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class WorkOrderTemplateService {
 
     private final Logger log = LoggerFactory.getLogger(WorkOrderTemplateService.class);
-    
+
     @Inject
     private WorkOrderTemplateRepository workOrderTemplateRepository;
 
@@ -47,11 +47,11 @@ public class WorkOrderTemplateService {
 
     /**
      *  Get all the workOrderTemplates.
-     *  
+     *
      *  @param pageable the pagination information
      *  @return the list of entities
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public Page<WorkOrderTemplateDTO> findAll(Pageable pageable) {
         log.debug("Request to get all WorkOrderTemplates");
         Page<WorkOrderTemplate> result = workOrderTemplateRepository.findAll(pageable);
@@ -64,7 +64,7 @@ public class WorkOrderTemplateService {
      *  @param id the id of the entity
      *  @return the entity
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public WorkOrderTemplateDTO findOne(Long id) {
         log.debug("Request to get WorkOrderTemplate : {}", id);
         WorkOrderTemplate workOrderTemplate = workOrderTemplateRepository.findOne(id);
@@ -80,5 +80,11 @@ public class WorkOrderTemplateService {
     public void delete(Long id) {
         log.debug("Request to delete WorkOrderTemplate : {}", id);
         workOrderTemplateRepository.delete(id);
+    }
+
+    public List<WorkOrderTemplateDTO> findAllByAssetTypeId(Long assetTypeId) {
+        return workOrderTemplateRepository.findAllByAssetTypeId(assetTypeId).stream()
+            .map(workOrderTemplateMapper::workOrderTemplateToWorkOrderTemplateDTO)
+            .collect(Collectors.toCollection(LinkedList::new));
     }
 }

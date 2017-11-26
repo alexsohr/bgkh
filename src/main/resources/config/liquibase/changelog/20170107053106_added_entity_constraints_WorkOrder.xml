@@ -14,5 +14,11 @@
                                  referencedColumnNames="id"
                                  referencedTableName="asset"/>
 
+        <addForeignKeyConstraint baseColumnNames="work_order_template_id"
+                                 baseTableName="work_order"
+                                 constraintName="fk_work_order_work_order_template_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="work_order_template"/>
+
     </changeSet>
 </databaseChangeLog>

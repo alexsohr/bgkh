@@ -2,87 +2,45 @@
     "fluentMethods": true,
     "relationships": [
         {
-            "relationshipType": "many-to-one",
             "relationshipName": "asset",
             "otherEntityName": "asset",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "workOrderTemplate",
+            "otherEntityName": "workOrderTemplate",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
             "otherEntityField": "id"
         }
     ],
     "fields": [
         {
-            "fieldName": "workOrderStatus",
-            "fieldType": "WorkOrderStatus",
-            "fieldValues": "IN_SERVICE,OUT_OF_SERVICE",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
-            "fieldName": "workOrderType",
-            "fieldType": "WorkOrderType",
-            "fieldValues": "STRATEGIC,NON_STRATEGIC",
+            "fieldName": "track",
+            "fieldType": "Boolean",
             "fieldValidateRules": [
                 "required"
             ]
         },
         {
             "fieldName": "description",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "minlength",
-                "maxlength"
-            ],
-            "fieldValidateRulesMinlength": 10,
-            "fieldValidateRulesMaxlength": 500
+            "fieldType": "String"
         },
         {
-            "fieldName": "dateCompleted",
+            "fieldName": "trackDate",
             "fieldType": "LocalDate",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
-            "fieldName": "priority",
-            "fieldType": "WorkOrderPriority",
-            "fieldValues": "URGENT,HIGH,MEDIUM,LOW",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
-            "fieldName": "est",
-            "fieldType": "WorkOrderEstStatus",
-            "fieldValues": "NOT_STARTED,IN_PROGRESS,FINISHED",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
-            "fieldName": "estimatedHours",
-            "fieldType": "Long"
-        },
-        {
-            "fieldName": "comments",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "minlength",
-                "maxlength"
-            ],
-            "fieldValidateRulesMinlength": 10,
-            "fieldValidateRulesMaxlength": 500
-        },
-        {
-            "fieldName": "tracker",
-            "fieldType": "Boolean",
-            "fieldValidateRules": [
-                "required"
-            ]
+            "fieldValidateRules": []
         }
     ],
     "changelogDate": "20170107053106",
-    "entityTableName": "work_order",
     "dto": "mapstruct",
-    "pagination": "pagination",
-    "service": "serviceImpl"
+    "service": "serviceImpl",
+    "entityTableName": "work_order",
+    "pagination": "pagination"
 }

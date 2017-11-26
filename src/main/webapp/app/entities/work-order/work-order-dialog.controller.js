@@ -5,9 +5,9 @@
         .module('app')
         .controller('WorkOrderDialogController', WorkOrderDialogController);
 
-    WorkOrderDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'WorkOrder', 'Asset'];
+    WorkOrderDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'WorkOrder', 'Asset', 'WorkOrderTemplate'];
 
-    function WorkOrderDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, WorkOrder, Asset) {
+    function WorkOrderDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, WorkOrder, Asset, WorkOrderTemplate) {
         var vm = this;
 
         vm.workOrder = entity;
@@ -16,6 +16,7 @@
         vm.openCalendar = openCalendar;
         vm.save = save;
         vm.assets = Asset.query();
+        vm.workordertemplates = WorkOrderTemplate.query();
 
         $timeout(function (){
             angular.element('.form-group:eq(1)>input').focus();
@@ -35,7 +36,7 @@
         }
 
         function onSaveSuccess (result) {
-            $scope.$emit('app:workOrderUpdate', result);
+            $scope.$emit('appApp:workOrderUpdate', result);
             $uibModalInstance.close(result);
             vm.isSaving = false;
         }
@@ -44,7 +45,7 @@
             vm.isSaving = false;
         }
 
-        vm.datePickerOpenStatus.dateCompleted = false;
+        vm.datePickerOpenStatus.trackDate = false;
 
         function openCalendar (date) {
             vm.datePickerOpenStatus[date] = true;

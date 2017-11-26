@@ -4,150 +4,75 @@
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
                 ng-click="vm.clear()">&times;</button>
-        <h4 class="modal-title" id="myWorkOrderLabel" >Create or edit a Work Order</h4>
+        <h4 class="modal-title" id="myWorkOrderLabel" data-translate="appApp.workOrder.home.createOrEditLabel">Create or edit a Work Order</h4>
     </div>
     <div class="modal-body">
         <jhi-alert-error></jhi-alert-error>
         <div class="form-group" ng-show="vm.workOrder.id">
-            <label for="id" >ID</label>
+            <label for="id" data-translate="global.field.id">ID</label>
             <input type="text" class="form-control" id="id" name="id"
                     ng-model="vm.workOrder.id" readonly />
         </div>
         <div class="form-group">
-            <label class="control-label"  for="field_workOrderStatus">Work Order Status</label>
-            <select class="form-control" name="workOrderStatus" ng-model="vm.workOrder.workOrderStatus" id="field_workOrderStatus" required>
-                <option value="IN_SERVICE" >IN_SERVICE</option>
-                <option value="OUT_OF_SERVICE" >OUT_OF_SERVICE</option>
-            </select>
-            <div ng-show="editForm.workOrderStatus.$invalid">
+            <label class="control-label" data-translate="appApp.workOrder.track" for="field_track">Track</label>
+            <input type="checkbox" class="form-control" name="track" id="field_track"
+                    ng-model="vm.workOrder.track"
+                     />
+            <div ng-show="editForm.track.$invalid">
                 <p class="help-block"
-                    ng-show="editForm.workOrderStatus.$error.required" >
+                    ng-show="editForm.track.$error.required" data-translate="entity.validation.required">
                     This field is required.
                 </p>
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label"  for="field_workOrderType">Work Order Type</label>
-            <select class="form-control" name="workOrderType" ng-model="vm.workOrder.workOrderType" id="field_workOrderType" required>
-                <option value="STRATEGIC" >STRATEGIC</option>
-                <option value="NON_STRATEGIC" >NON_STRATEGIC</option>
-            </select>
-            <div ng-show="editForm.workOrderType.$invalid">
-                <p class="help-block"
-                    ng-show="editForm.workOrderType.$error.required" >
-                    This field is required.
-                </p>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label"  for="field_description">Description</label>
+            <label class="control-label" data-translate="appApp.workOrder.description" for="field_description">Description</label>
             <input type="text" class="form-control" name="description" id="field_description"
                     ng-model="vm.workOrder.description"
-                    ng-minlength="10" ng-maxlength="500" />
-            <div ng-show="editForm.description.$invalid">
-                <p class="help-block"
-                    ng-show="editForm.description.$error.minlength"  translate-value-min="10">
-                    This field is required to be at least 10 characters.
-                </p>
-                <p class="help-block"
-                    ng-show="editForm.description.$error.maxlength"  translate-value-max="500">
-                    This field cannot be longer than 500 characters.
-                </p>
-            </div>
+                     />
         </div>
         <div class="form-group">
-            <label class="control-label"  for="field_dateCompleted">Date Completed</label>
+            <label class="control-label" data-translate="appApp.workOrder.trackDate" for="field_trackDate">Track Date</label>
                 <div class="input-group">
-                    <input id="field_dateCompleted" type="text" class="form-control" name="dateCompleted" uib-datepicker-popup="{{dateformat}}" ng-model="vm.workOrder.dateCompleted" is-open="vm.datePickerOpenStatus.dateCompleted"
-                    required/>
+                    <input id="field_trackDate" type="text" class="form-control" name="trackDate" uib-datepicker-popup="{{dateformat}}" ng-model="vm.workOrder.trackDate" is-open="vm.datePickerOpenStatus.trackDate"
+                    />
                     <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('dateCompleted')"><i class="glyphicon glyphicon-calendar"></i></button>
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('trackDate')"><i class="glyphicon glyphicon-calendar"></i></button>
                     </span>
                 </div>
-            <div ng-show="editForm.dateCompleted.$invalid">
-                <p class="help-block"
-                    ng-show="editForm.dateCompleted.$error.required" >
-                    This field is required.
-                </p>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label"  for="field_priority">Priority</label>
-            <select class="form-control" name="priority" ng-model="vm.workOrder.priority" id="field_priority" required>
-                <option value="URGENT" >URGENT</option>
-                <option value="HIGH" >HIGH</option>
-                <option value="MEDIUM" >MEDIUM</option>
-                <option value="LOW" >LOW</option>
-            </select>
-            <div ng-show="editForm.priority.$invalid">
-                <p class="help-block"
-                    ng-show="editForm.priority.$error.required" >
-                    This field is required.
-                </p>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label"  for="field_est">Est</label>
-            <select class="form-control" name="est" ng-model="vm.workOrder.est" id="field_est" required>
-                <option value="NOT_STARTED" >NOT_STARTED</option>
-                <option value="IN_PROGRESS" >IN_PROGRESS</option>
-                <option value="FINISHED" >FINISHED</option>
-            </select>
-            <div ng-show="editForm.est.$invalid">
-                <p class="help-block"
-                    ng-show="editForm.est.$error.required" >
-                    This field is required.
-                </p>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label"  for="field_estimatedHours">Estimated Hours</label>
-            <input type="number" class="form-control" name="estimatedHours" id="field_estimatedHours"
-                    ng-model="vm.workOrder.estimatedHours"
-                     />
-        </div>
-        <div class="form-group">
-            <label class="control-label"  for="field_comments">Comments</label>
-            <input type="text" class="form-control" name="comments" id="field_comments"
-                    ng-model="vm.workOrder.comments"
-                    ng-minlength="10" ng-maxlength="500" />
-            <div ng-show="editForm.comments.$invalid">
-                <p class="help-block"
-                    ng-show="editForm.comments.$error.minlength"  translate-value-min="10">
-                    This field is required to be at least 10 characters.
-                </p>
-                <p class="help-block"
-                    ng-show="editForm.comments.$error.maxlength"  translate-value-max="500">
-                    This field cannot be longer than 500 characters.
-                </p>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label"  for="field_tracker">Tracker</label>
-            <input type="checkbox" class="form-control" name="tracker" id="field_tracker"
-                    ng-model="vm.workOrder.tracker"
-                     />
-            <div ng-show="editForm.tracker.$invalid">
-                <p class="help-block"
-                    ng-show="editForm.tracker.$error.required" >
-                    This field is required.
-                </p>
-            </div>
         </div>
 
         <div class="form-group">
-            <label  for="field_asset">Asset</label>
-            <select class="form-control" id="field_asset" name="asset" ng-model="vm.workOrder.assetId" ng-options="asset.id as asset.id for asset in vm.assets"            >
+            <label data-translate="appApp.workOrder.asset" for="field_asset">Asset</label>
+            <select class="form-control" id="field_asset" name="asset" ng-model="vm.workOrder.assetId" ng-options="asset.id as asset.id for asset in vm.assets"             required>
                 <option value=""></option>
             </select>
+        </div>
+        <div ng-show="editForm.asset.$invalid">
+            <p class="help-block"
+                ng-show="editForm.asset.$error.required" data-translate="entity.validation.required">
+                This field is required.
+            </p>
+        </div>
+        <div class="form-group">
+            <label data-translate="appApp.workOrder.workOrderTemplate" for="field_workOrderTemplate">Work Order Template</label>
+            <select class="form-control" id="field_workOrderTemplate" name="workOrderTemplate" ng-model="vm.workOrder.workOrderTemplateId" ng-options="workOrderTemplate.id as workOrderTemplate.id for workOrderTemplate in vm.workordertemplates"             required>
+                <option value=""></option>
+            </select>
+        </div>
+        <div ng-show="editForm.workOrderTemplate.$invalid">
+            <p class="help-block"
+                ng-show="editForm.workOrderTemplate.$error.required" data-translate="entity.validation.required">
+                This field is required.
+            </p>
         </div>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">
-            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span >Cancel</span>
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span data-translate="entity.action.cancel">Cancel</span>
         </button>
         <button type="submit" ng-disabled="editForm.$invalid || vm.isSaving" class="btn btn-primary">
-            <span class="glyphicon glyphicon-save"></span>&nbsp;<span >Save</span>
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span data-translate="entity.action.save">Save</span>
         </button>
     </div>
 </form>

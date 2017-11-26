@@ -2,12 +2,6 @@
     "fluentMethods": true,
     "relationships": [
         {
-            "relationshipType": "one-to-many",
-            "relationshipName": "workOrder",
-            "otherEntityName": "workOrder",
-            "otherEntityRelationshipName": "asset"
-        },
-        {
             "relationshipName": "supervisor",
             "otherEntityName": "user",
             "relationshipType": "many-to-one",

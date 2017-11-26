@@ -14,4 +14,8 @@ public interface AssetSpecificationTypeRepository extends JpaRepository<AssetSpe
     @Override
     @Query("select assetSpecificationType from AssetSpecificationType assetSpecificationType order by name asc")
     List<AssetSpecificationType> findAll();
+
+    //TODO set filter for data matches asset with sub_asset type
+    @Query("select assetSpecificationType from AssetSpecificationType assetSpecificationType order by name asc")
+    List<AssetSpecificationType> findAllWorkOrderAssetSpecificationTypes();
 }

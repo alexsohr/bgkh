@@ -2,9 +2,11 @@
     'use strict';
     angular
         .module('app')
-        .factory('AssetSpecificationType', AssetSpecificationType);
+        .factory('AssetSpecificationType', AssetSpecificationType)
+        .factory('WorkOrderAssetSpecificationType', WorkOrderAssetSpecificationType);
 
     AssetSpecificationType.$inject = ['$resource'];
+    WorkOrderAssetSpecificationType.$inject = ['$resource'];
 
     function AssetSpecificationType ($resource) {
         var resourceUrl =  'api/asset-specification-types/:id';
@@ -21,6 +23,13 @@
                 }
             },
             'update': { method:'PUT' }
+        });
+    }
+
+    function WorkOrderAssetSpecificationType($resource) {
+        var resourceUrl =  'api/work-order-asset-specification-types';
+        return $resource(resourceUrl, {}, {
+            'query': { method: 'GET', isArray: true}
         });
     }
 })();

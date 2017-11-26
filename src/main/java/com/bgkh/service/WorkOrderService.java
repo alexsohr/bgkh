@@ -1,8 +1,12 @@
 package com.bgkh.service;
 
+import com.bgkh.domain.WorkOrder;
 import com.bgkh.service.dto.WorkOrderDTO;
+import com.bgkh.service.dto.WorkOrderDTOs;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
+
 import java.util.List;
 
 /**
@@ -20,7 +24,7 @@ public interface WorkOrderService {
 
     /**
      *  Get all the workOrders.
-     *  
+     *
      *  @param pageable the pagination information
      *  @return the list of entities
      */
@@ -40,4 +44,8 @@ public interface WorkOrderService {
      *  @param id the id of the entity
      */
     void delete(Long id);
+
+    List<WorkOrderDTO> findAllByAssetId(Long assetId);
+
+    WorkOrderDTOs saveAll(WorkOrderDTOs workOrderDTOs);
 }

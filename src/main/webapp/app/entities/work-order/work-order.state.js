@@ -14,10 +14,10 @@
             url: '/work-order?page&sort&search',
             data: {
                 authorities: ['ROLE_USER'],
-                title: 'app.workOrder.home.title'
+                pageTitle: 'appApp.workOrder.home.title'
             },
             views: {
-                'content@app': {
+                'content@': {
                     templateUrl: 'app/entities/work-order/work-orders.html',
                     controller: 'WorkOrderController',
                     controllerAs: 'vm'
@@ -46,10 +46,6 @@
                 }],
                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
                     $translatePartialLoader.addPart('workOrder');
-                    $translatePartialLoader.addPart('workOrderStatus');
-                    $translatePartialLoader.addPart('workOrderType');
-                    $translatePartialLoader.addPart('workOrderPriority');
-                    $translatePartialLoader.addPart('workOrderEstStatus');
                     $translatePartialLoader.addPart('global');
                     return $translate.refresh();
                 }]
@@ -60,10 +56,10 @@
             url: '/work-order/{id}',
             data: {
                 authorities: ['ROLE_USER'],
-                title: 'app.workOrder.detail.title'
+                pageTitle: 'appApp.workOrder.detail.title'
             },
             views: {
-                'content@app': {
+                'content@': {
                     templateUrl: 'app/entities/work-order/work-order-detail.html',
                     controller: 'WorkOrderDetailController',
                     controllerAs: 'vm'
@@ -72,10 +68,6 @@
             resolve: {
                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
                     $translatePartialLoader.addPart('workOrder');
-                    $translatePartialLoader.addPart('workOrderStatus');
-                    $translatePartialLoader.addPart('workOrderType');
-                    $translatePartialLoader.addPart('workOrderPriority');
-                    $translatePartialLoader.addPart('workOrderEstStatus');
                     return $translate.refresh();
                 }],
                 entity: ['$stateParams', 'WorkOrder', function($stateParams, WorkOrder) {
@@ -132,15 +124,9 @@
                     resolve: {
                         entity: function () {
                             return {
-                                workOrderStatus: null,
-                                workOrderType: null,
+                                track: false,
                                 description: null,
-                                dateCompleted: null,
-                                priority: null,
-                                est: null,
-                                estimatedHours: null,
-                                comments: null,
-                                tracker: false,
+                                trackDate: null,
                                 id: null
                             };
                         }

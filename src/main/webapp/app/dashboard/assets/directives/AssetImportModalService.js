@@ -1,5 +1,5 @@
 angular
-    .module('app').service('AssetImportModalService', function ($uibModal, Asset) {
+    .module('app').service('AssetImportModalService', function ($uibModal, Asset, WorkOrderTemplateByAssetType, WorkOrderByAsset) {
     var open = false,
         modalInstance;
 
@@ -15,6 +15,64 @@ angular
         modalInstance.dismiss(reason);
     };
 
+    this.openWorkOrderAssignment = function (id, assetSpecificationTypeId) {
+        var modal = $uibModal.open({
+            templateUrl: 'app/dashboard/assets/directives/work-order-assignment-form.tpl.html',
+            controller: 'WorkOrderAssignmentController',
+            controllerAs: 'workOrderAssignmentVm',
+            backdrop: 'static',
+            size: 'lg',
+            resolve: {
+                workOrders: ['WorkOrderByAsset', function (WorkOrderByAsset) {
+                    return WorkOrderByAsset.query({id: id}).$promise;
+                }],
+                workOrderTemplates: ['WorkOrderTemplateByAssetType', function (WorkOrderTemplateByAssetType) {
+                    return WorkOrderTemplateByAssetType.query({id: assetSpecificationTypeId}).$promise;
+                }],
+                assetId: id,
+                assetTypeId: assetSpecificationTypeId
+            }
+        }).closed.then(function () {
+            open = false;
+        });
+
+        //Set open
+        open = true;
+
+        //Set modalInstance
+        modalInstance = modal;
+
+        //Modal is closed/resolved/dismissed
+
+        return modal;
+    }
+
+    this.openManageWorkOrder = function (id) {
+        var modal = $uibModal.open({
+            templateUrl: 'app/dashboard/assets/directives/manage-work-order-form.tpl.html',
+            controller: 'ManageWorkOrderController',
+            controllerAs: 'manageWorkOrderVm',
+            backdrop: 'static',
+            size: 'lg',
+            resolve: {
+                entity: ['Asset', function (Asset) {
+                    return Asset.get({id: id}).$promise;
+                }]
+            }
+        }).closed.then(function () {
+            open = false;
+        });
+
+        //Set open
+        open = true;
+
+        //Set modalInstance
+        modalInstance = modal;
+
+        //Modal is closed/resolved/dismissed
+
+        return modal;
+    }
 
     this.openMove = function (id) {
         var modal = $uibModal.open({

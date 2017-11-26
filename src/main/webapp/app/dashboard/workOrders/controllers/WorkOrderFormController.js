@@ -2,7 +2,7 @@
 
 angular
     .module('app')
-    .controller('WorkOrderFormController', function ($scope, $uibModalInstance, entity, disabled, $timeout, AssetSpecificationType, WorkOrderTemplate) {
+    .controller('WorkOrderFormController', function ($scope, $uibModalInstance, entity, disabled, $timeout, WorkOrderAssetSpecificationType, WorkOrderTemplate) {
         var vm = this;
 
         vm.workOrderTemplate = entity;
@@ -13,7 +13,7 @@ angular
         if (!angular.isUndefinedOrNull(disabled)) {
             vm.disabled = disabled;
         }
-        vm.assetspecificationtypes = AssetSpecificationType.query();
+        vm.assetspecificationtypes = WorkOrderAssetSpecificationType.query();
 
         if (angular.isUndefinedOrNull(vm.workOrderTemplate.id)) {
             vm.workOrderTemplate.workOrderType = "PM";

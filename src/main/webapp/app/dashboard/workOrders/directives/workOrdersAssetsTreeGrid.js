@@ -8,7 +8,7 @@ angular.module('app').directive('workOrdersAssetsTreeGrid', function () {
         templateUrl: 'app/dashboard/workOrders/directives/work-order-assets-tree-grid.tpl.html',
         scope: true,
         controllerAs: 'workOrdersAssetsTreeGrid',
-        controller: function ($scope, $rootScope, $compile, $element, $sce, $templateCache, AssetSpecificationType, WorkOrderTemplate, Asset, WorkOrderAddModalService) {
+        controller: function ($scope, $rootScope, $compile, $element, $sce, $templateCache, WorkOrderAssetSpecificationType, WorkOrderTemplate, Asset, WorkOrderAddModalService) {
             var vm = this;
             $scope.assetSpecificationTypes = [];
             $scope.workOrderTemplates = [];
@@ -20,7 +20,7 @@ angular.module('app').directive('workOrdersAssetsTreeGrid', function () {
             $scope.loadWorkOrders();
 
             function loadWorkOrders() {
-                AssetSpecificationType.query(function (assetSpecificationTypes) {
+                WorkOrderAssetSpecificationType.query(function (assetSpecificationTypes) {
                     WorkOrderTemplate.query(function (workOrderTemplates) {
                         $scope.workOrders = getTree(assetSpecificationTypes, workOrderTemplates);
                         $scope.tree_data = angular.copy($scope.workOrders);

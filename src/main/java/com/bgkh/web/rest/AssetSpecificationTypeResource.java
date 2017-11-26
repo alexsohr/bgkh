@@ -1,5 +1,9 @@
 package com.bgkh.web.rest;
 
+import com.bgkh.domain.Asset;
+import com.bgkh.repository.AssetRepository;
+import com.bgkh.service.AssetService;
+import com.bgkh.service.dto.AssetDTO;
 import com.codahale.metrics.annotation.Timed;
 import com.bgkh.domain.AssetSpecificationType;
 
@@ -17,8 +21,7 @@ import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * REST controller for managing AssetSpecificationType.
@@ -28,9 +31,12 @@ import java.util.Optional;
 public class AssetSpecificationTypeResource {
 
     private final Logger log = LoggerFactory.getLogger(AssetSpecificationTypeResource.class);
-        
+
     @Inject
     private AssetSpecificationTypeRepository assetSpecificationTypeRepository;
+
+    @Inject
+    private AssetService assetService;
 
     /**
      * POST  /asset-specification-types : Create a new assetSpecificationType.
@@ -84,6 +90,34 @@ public class AssetSpecificationTypeResource {
     public List<AssetSpecificationType> getAllAssetSpecificationTypes() {
         log.debug("REST request to get all AssetSpecificationTypes");
         List<AssetSpecificationType> assetSpecificationTypes = assetSpecificationTypeRepository.findAll();
+        return assetSpecificationTypes;
+    }
+
+
+    /**
+     * GET  /asset-specification-types : get all the assetSpecificationTypes.
+     *
+     * @return the ResponseEntity with status 200 (OK) and the list of assetSpecificationTypes in body
+     */
+    @GetMapping("/work-order-asset-specification-types")
+    @Timed
+    public List<AssetSpecificationType> getAllWorkOrderAssetSpecificationTypes() {
+        log.debug("REST request to get all AssetSpecificationTypes for WorkOrder");
+        List<AssetDTO> allByParentId = assetService.findAll();
+        List<AssetSpecificationType> assetSpecificationTypes = assetSpecificationTypeRepository.findAllWorkOrderAssetSpecificationTypes();
+        Set<AssetSpecificationType> resultSpecificationTypes = new HashSet<>();
+        for (AssetDTO asset: allByParentId) {
+            int childCount = assetService.findCountByParentId(asset.getId());
+            if (childCount == 0) {
+                for (AssetSpecificationType specificationType: assetSpecificationTypes) {
+                    if (asset.getAssetSpecificationTypeId().equals(specificationType.getId())) {
+                        resultSpecificationTypes.add(specificationType);
+                        break;
+                    }
+                }
+            }
+        }
+        assetSpecificationTypes = new ArrayList<>(resultSpecificationTypes);
         return assetSpecificationTypes;
     }
 

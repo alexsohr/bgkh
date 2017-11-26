@@ -41,7 +41,13 @@ angular.module('app').directive('assetsTreeGrid', function () {
                     "<button class=\"btn btn-primary btn-xs dropdown-toggle\" data-toggle=\"dropdown\">" +
                     $rootScope.getWord('Action') + " <span class=\"caret\"></span>" +
                     "</button>" +
-                    "<ul class=\"dropdown-menu\">" +
+                    "<ul class=\"dropdown-menu dropdown-menu-right pull-right\" aria-labelledby=\"dLabel\">" +
+                    "<li ng-if='row.branch.children.length == 0'>" +
+                    "<a ng-click='cellTemplateScope.openWorkOrderAssignment(row.branch.id, row.branch.assetSpecificationTypeId)' >" + $rootScope.getWord('Assign work orders') + "</a>" +
+                    "</li>" +
+                    "<li ng-if='row.branch.children.length == 0'>" +
+                    "<a ng-click='cellTemplateScope.openManageWorkOrder(row.branch.id)' >" + $rootScope.getWord('Manage work orders') + "</a>" +
+                    "</li>" +
                     "<li>" +
                     "<a ng-click='cellTemplateScope.openAssetEditModal(row.branch.id)' >" + $rootScope.getWord('Edit') + "</a>" +
                     "</li>" +
@@ -94,6 +100,16 @@ angular.module('app').directive('assetsTreeGrid', function () {
                                 $scope.deleteCalled = true;
                             }
                         },
+                        openWorkOrderAssignment: function (branchId, assetSpecificationTypeId) {
+                            if (!AssetImportModalService.isOpen()) {
+                                AssetImportModalService.openWorkOrderAssignment(branchId, assetSpecificationTypeId);
+                            }
+                        },
+                        openManageWorkOrder: function (branchId) {
+                            if (!AssetImportModalService.isOpen()) {
+                                AssetImportModalService.openManageWorkOrder(branchId);
+                            }
+                        },
                         openAssetEditModal: function (branchId) {
                             if (!AssetImportModalService.isOpen()) {
                                 AssetImportModalService.openEdit(branchId);
@@ -130,6 +146,7 @@ angular.module('app').directive('assetsTreeGrid', function () {
             function loadAssets() {
                 Asset.query(function (result) {
                     $scope.tree_data = getTree(result, 'id', 'parentId');
+                    console.dir($scope.tree_data);
                     $scope.searchQuery = null;
                 });
             }
