@@ -116,6 +116,16 @@ public class WorkOrderResource {
             .body(result);
     }
 
+    @PostMapping("/work-orders-with-track")
+    @Timed
+    public ResponseEntity<WorkOrderDTOs> updateWorkOrdersWithTrack(@Valid @RequestBody WorkOrderDTOs workOrderDTOs) throws URISyntaxException {
+        log.debug("REST request to save WorkOrder track : {}", workOrderDTOs);
+        WorkOrderDTOs result = workOrderService.saveAllWorkOrderTrack(workOrderDTOs);
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityCreationAlert("workOrders", result.toString()))
+            .body(result);
+    }
+
     /**
      * GET  /work-orders/:id : get the "id" workOrder.
      *

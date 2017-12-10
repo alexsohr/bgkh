@@ -46,7 +46,7 @@ angular.module('app').directive('assetsTreeGrid', function () {
                     "<a ng-click='cellTemplateScope.openWorkOrderAssignment(row.branch.id, row.branch.assetSpecificationTypeId)' >" + $rootScope.getWord('Assign work orders') + "</a>" +
                     "</li>" +
                     "<li ng-if='row.branch.children.length == 0'>" +
-                    "<a ng-click='cellTemplateScope.openManageWorkOrder(row.branch.id)' >" + $rootScope.getWord('Manage work orders') + "</a>" +
+                    "<a ng-click='cellTemplateScope.openManageWorkOrder(row.branch.id, row.branch.assetSpecificationTypeId)' >" + $rootScope.getWord('Manage work orders') + "</a>" +
                     "</li>" +
                     "<li>" +
                     "<a ng-click='cellTemplateScope.openAssetEditModal(row.branch.id)' >" + $rootScope.getWord('Edit') + "</a>" +
@@ -105,9 +105,9 @@ angular.module('app').directive('assetsTreeGrid', function () {
                                 AssetImportModalService.openWorkOrderAssignment(branchId, assetSpecificationTypeId);
                             }
                         },
-                        openManageWorkOrder: function (branchId) {
+                        openManageWorkOrder: function (branchId, assetSpecificationTypeId) {
                             if (!AssetImportModalService.isOpen()) {
-                                AssetImportModalService.openManageWorkOrder(branchId);
+                                AssetImportModalService.openManageWorkOrder(branchId, assetSpecificationTypeId);
                             }
                         },
                         openAssetEditModal: function (branchId) {

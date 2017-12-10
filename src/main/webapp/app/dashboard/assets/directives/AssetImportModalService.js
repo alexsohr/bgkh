@@ -47,17 +47,22 @@ angular
         return modal;
     }
 
-    this.openManageWorkOrder = function (id) {
+    this.openManageWorkOrder = function (id, assetSpecificationTypeId) {
         var modal = $uibModal.open({
-            templateUrl: 'app/dashboard/assets/directives/manage-work-order-form.tpl.html',
-            controller: 'ManageWorkOrderController',
-            controllerAs: 'manageWorkOrderVm',
+            templateUrl: 'app/dashboard/assets/directives/work-order-switch-form.tpl.html',
+            controller: 'WorkOrderSwitchController',
+            controllerAs: 'workOrderSwitchVm',
             backdrop: 'static',
             size: 'lg',
             resolve: {
-                entity: ['Asset', function (Asset) {
-                    return Asset.get({id: id}).$promise;
-                }]
+                workOrders: ['WorkOrderByAsset', function (WorkOrderByAsset) {
+                    return WorkOrderByAsset.query({id: id}).$promise;
+                }],
+                workOrderTemplates: ['WorkOrderTemplateByAssetType', function (WorkOrderTemplateByAssetType) {
+                    return WorkOrderTemplateByAssetType.query({id: assetSpecificationTypeId}).$promise;
+                }],
+                assetId: id,
+                assetTypeId: assetSpecificationTypeId
             }
         }).closed.then(function () {
             open = false;

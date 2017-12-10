@@ -3,6 +3,7 @@
     angular
         .module('app')
         .factory('WorkOrder', WorkOrder)
+        .factory('WorkOrderWithTrack', WorkOrderWithTrack)
         .factory('WorkOrderByAsset', WorkOrderByAsset);
 
     WorkOrder.$inject = ['$resource', 'DateUtils'];
@@ -15,6 +16,11 @@
 
     function WorkOrder ($resource, DateUtils) {
         var resourceUrl =  'api/work-orders/:id';
+        return gerCRUD(resourceUrl, $resource, DateUtils);
+    }
+
+    function WorkOrderWithTrack ($resource, DateUtils) {
+        var resourceUrl =  'api/work-orders-with-track/:id';
         return gerCRUD(resourceUrl, $resource, DateUtils);
     }
 

@@ -58,11 +58,31 @@
                                         <div class="radio">
                                             <label>
                                                 <input type="radio" class="radiobox style-0" name="functionType" value="DAILY" ng-checked="vm.workOrderTemplate.functionType == 'DAILY'" ng-model="vm.workOrderTemplate.functionType" ng-disabled="vm.disabled">
-                                                <span>{{$root.getWord('Daily based')}}</span>
+                                                <span>{{$root.getWord('DAILY')}}</span>
                                             </label>
                                             <label>
-                                                <input type="radio" class="radiobox style-0" name="functionType" value="USAGE_HOURS" ng-model="vm.workOrderTemplate.functionType" ng-disabled="vm.disabled">
-                                                <span>{{$root.getWord('Hourly base')}}</span>
+                                                <input type="radio" class="radiobox style-0" name="functionType" value="WEEKLY" ng-checked="vm.workOrderTemplate.functionType == 'WEEKLY'" ng-model="vm.workOrderTemplate.functionType" ng-disabled="vm.disabled">
+                                                <span>{{$root.getWord('WEEKLY')}}</span>
+                                            </label>
+                                            <label>
+                                                <input type="radio" class="radiobox style-0" name="functionType" value="MONTHLY" ng-checked="vm.workOrderTemplate.functionType == 'MONTHLY'" ng-model="vm.workOrderTemplate.functionType" ng-disabled="vm.disabled">
+                                                <span>{{$root.getWord('MONTHLY')}}</span>
+                                            </label>
+                                            <label>
+                                                <input type="radio" class="radiobox style-0" name="functionType" value="QUARTERLY" ng-checked="vm.workOrderTemplate.functionType == 'QUARTERLY'" ng-model="vm.workOrderTemplate.functionType" ng-disabled="vm.disabled">
+                                                <span>{{$root.getWord('QUARTERLY')}}</span>
+                                            </label>
+                                            <label>
+                                                <input type="radio" class="radiobox style-0" name="functionType" value="HALF_YEAR" ng-checked="vm.workOrderTemplate.functionType == 'HALF_YEAR'" ng-model="vm.workOrderTemplate.functionType" ng-disabled="vm.disabled">
+                                                <span>{{$root.getWord('HALF_YEAR')}}</span>
+                                            </label>
+                                            <label>
+                                                <input type="radio" class="radiobox style-0" name="functionType" value="ANNUALLY" ng-checked="vm.workOrderTemplate.functionType == 'ANNUALLY'" ng-model="vm.workOrderTemplate.functionType" ng-disabled="vm.disabled">
+                                                <span>{{$root.getWord('ANNUALLY')}}</span>
+                                            </label>
+                                            <label>
+                                                <input type="radio" class="radiobox style-0" name="functionType" value="USAGE_HOURS" ng-checked="vm.workOrderTemplate.functionType == 'USAGE_HOURS'" ng-model="vm.workOrderTemplate.functionType" ng-disabled="vm.disabled">
+                                                <span>{{$root.getWord('USAGE_HOURS')}}</span>
                                             </label>
                                         </div>
                                     </div>

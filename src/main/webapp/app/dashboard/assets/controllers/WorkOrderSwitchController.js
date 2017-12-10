@@ -2,7 +2,7 @@
 
 angular
     .module('app')
-    .controller('WorkOrderAssignmentController', function ($rootScope, $scope, $uibModalInstance, workOrders, workOrderTemplates, WorkOrderByAsset, assetId, assetTypeId) {
+    .controller('WorkOrderSwitchController', function ($rootScope, $scope, $uibModalInstance, WorkOrderWithTrack, workOrders, workOrderTemplates, assetId, assetTypeId) {
         var vm = this;
 
         vm.workOrderTemplates = workOrderTemplates;
@@ -13,18 +13,24 @@ angular
         vm.save = save;
         findAssignedWorkOrderTemplates();
 
-        function findAssignedWorkOrderTemplates () {
+        function findAssignedWorkOrderTemplates() {
             angular.forEach(vm.workOrderTemplates, function(workOrderTemplate) {
                 if (angular.isObject(workOrderTemplate)) {
                     angular.forEach(vm.workOrderAssigneds, function(workOrderAssigned) {
                         if (angular.isObject(workOrderAssigned) && workOrderAssigned.workOrderTemplateId === workOrderTemplate.id) {
                             workOrderTemplate.assign = true;
+                            workOrderTemplate.workOrderId = workOrderAssigned.id;
+                            if (workOrderAssigned.track === true) {
+                                workOrderTemplate.track = true;
+                            } else {
+                                workOrderTemplate.track = false;
+                            }
                         }
                     });
                 }
             });
         }
-        console.dir(vm.workOrderTemplates);
+
         function clear () {
             $uibModalInstance.dismiss('cancel');
         }
@@ -35,14 +41,15 @@ angular
             angular.forEach(vm.workOrderTemplates, function(workOrderTemplate) {
                 if (angular.isObject(workOrderTemplate) && workOrderTemplate.assign === true) {
                     var workOrder = {};
+                    workOrder.id = workOrderTemplate.workOrderId;
                     workOrder.assetId = vm.assetId;
-                    workOrder.track = false;
+                    workOrder.track = workOrderTemplate.track;
                     workOrder.workOrderTemplateId = workOrderTemplate.id;
                     workOrders.push(workOrder);
                 }
             });
             var workOrderDTO = {workOrders: workOrders, assetId: vm.assetId};
-            WorkOrderByAsset.save(workOrderDTO, onSaveSuccess, onSaveError);
+            WorkOrderWithTrack.save(workOrderDTO, onSaveSuccess, onSaveError);
         }
 
         function onSaveSuccess (result) {

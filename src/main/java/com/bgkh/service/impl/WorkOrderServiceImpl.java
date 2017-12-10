@@ -116,4 +116,21 @@ public class WorkOrderServiceImpl implements WorkOrderService{
 
         return workOrderDTOs;
     }
+
+
+    @Override
+    public WorkOrderDTOs saveAllWorkOrderTrack(WorkOrderDTOs workOrderDTOs) {
+
+        List<WorkOrder> workOrders = workOrderDTOs.getWorkOrders().stream().
+            map(workOrderMapper::workOrderDTOToWorkOrder).
+            collect(Collectors.toList());
+
+        Iterator<WorkOrder> iterator = workOrders.iterator();
+        while (iterator.hasNext()) {
+            WorkOrder workOrder = iterator.next();
+                workOrderRepository.save(workOrder);
+        }
+
+        return workOrderDTOs;
+    }
 }

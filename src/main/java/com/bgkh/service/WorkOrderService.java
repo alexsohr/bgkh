@@ -48,4 +48,6 @@ public interface WorkOrderService {
     List<WorkOrderDTO> findAllByAssetId(Long assetId);
 
     WorkOrderDTOs saveAll(WorkOrderDTOs workOrderDTOs);
+
+    WorkOrderDTOs saveAllWorkOrderTrack(WorkOrderDTOs workOrderDTOs);
 }
