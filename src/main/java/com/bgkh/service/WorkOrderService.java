@@ -31,6 +31,13 @@ public interface WorkOrderService {
     Page<WorkOrderDTO> findAll(Pageable pageable);
 
     /**
+     *  Get all the workOrders.
+     *
+     *  @return the list of entities
+     */
+    List<WorkOrderDTO> findAll();
+
+    /**
      *  Get the "id" workOrder.
      *
      *  @param id the id of the entity

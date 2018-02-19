@@ -56,5 +56,17 @@
 
     <cache alias="com.bgkh.domain.WorkOrder.workOrderTemplates" uses-template="simple"/>
 
+    <cache alias="com.bgkh.domain.WorkOrderSchedule" uses-template="simple"/>
+
+    <cache alias="com.bgkh.domain.WorkOrderSchedule.workOrders" uses-template="simple"/>
+
+    <cache alias="com.bgkh.domain.WorkOrderHistory" uses-template="simple"/>
+
+    <cache alias="com.bgkh.domain.WorkOrderHistory.workOrderSchedules" uses-template="simple"/>
+
+    <cache alias="com.bgkh.domain.WorkOrder.workOrderSchedules" uses-template="simple"/>
+
+    <cache alias="com.bgkh.domain.WorkOrderSchedule.workOrderHistories" uses-template="simple"/>
+
     <!-- jhipster-needle-ehcache-add-entry -->
 </config>

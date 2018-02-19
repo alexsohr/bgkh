@@ -20,6 +20,7 @@ public interface WorkOrderMapper {
 
     @Mapping(source = "assetId", target = "asset")
     @Mapping(source = "workOrderTemplateId", target = "workOrderTemplate")
+    @Mapping(target = "workOrderSchedules", ignore = true)
     WorkOrder workOrderDTOToWorkOrder(WorkOrderDTO workOrderDTO);
 
     List<WorkOrder> workOrderDTOsToWorkOrders(List<WorkOrderDTO> workOrderDTOs);

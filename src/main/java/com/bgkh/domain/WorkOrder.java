@@ -1,5 +1,6 @@
 package com.bgkh.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -7,6 +8,8 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -40,6 +43,11 @@ public class WorkOrder implements Serializable {
     @ManyToOne
     @NotNull
     private WorkOrderTemplate workOrderTemplate;
+
+    @OneToMany(mappedBy = "workOrder")
+    @JsonIgnore
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<WorkOrderSchedule> workOrderSchedules = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -112,6 +120,31 @@ public class WorkOrder implements Serializable {
 
     public void setWorkOrderTemplate(WorkOrderTemplate workOrderTemplate) {
         this.workOrderTemplate = workOrderTemplate;
+    }
+
+    public Set<WorkOrderSchedule> getWorkOrderSchedules() {
+        return workOrderSchedules;
+    }
+
+    public WorkOrder workOrderSchedules(Set<WorkOrderSchedule> workOrderSchedules) {
+        this.workOrderSchedules = workOrderSchedules;
+        return this;
+    }
+
+    public WorkOrder addWorkOrderSchedule(WorkOrderSchedule workOrderSchedule) {
+        workOrderSchedules.add(workOrderSchedule);
+        workOrderSchedule.setWorkOrder(this);
+        return this;
+    }
+
+    public WorkOrder removeWorkOrderSchedule(WorkOrderSchedule workOrderSchedule) {
+        workOrderSchedules.remove(workOrderSchedule);
+        workOrderSchedule.setWorkOrder(null);
+        return this;
+    }
+
+    public void setWorkOrderSchedules(Set<WorkOrderSchedule> workOrderSchedules) {
+        this.workOrderSchedules = workOrderSchedules;
     }
 
     @Override

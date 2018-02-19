@@ -1,0 +1,66 @@
+<div>
+    <h2 data-translate="appApp.workOrderSchedule.home.title">Work Order Schedules</h2>
+    <jhi-alert></jhi-alert>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-4 no-padding-left">
+                <button class="btn btn-primary" ui-sref="work-order-schedule.new" >
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <span  data-translate="appApp.workOrderSchedule.home.createLabel">
+                        Create new Work Order Schedule
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive">
+        <table class="jh-table table table-striped">
+            <thead>
+                <tr>
+                    <th><span data-translate="global.field.id">ID</span></th>
+                    <th><span data-translate="appApp.workOrderSchedule.createDate">Create Date</span></th>
+                    <th><span data-translate="appApp.workOrderSchedule.expireDate">Expire Date</span></th>
+                    <th><span data-translate="appApp.workOrderSchedule.description">Description</span></th>
+                    <th><span data-translate="appApp.workOrderSchedule.scheduleStatus">Schedule Status</span></th>
+                    <th><span data-translate="appApp.workOrderSchedule.workOrder">Work Order</span></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="workOrderSchedule in vm.workOrderSchedules track by workOrderSchedule.id">
+                    <td><a ui-sref="work-order-schedule-detail({id:workOrderSchedule.id})">{{workOrderSchedule.id}}</a></td>
+                        <td>{{workOrderSchedule.createDate | date:'mediumDate'}}</td>
+                        <td>{{workOrderSchedule.expireDate | date:'mediumDate'}}</td>
+                    <td>{{workOrderSchedule.description}}</td>
+                    <td data-translate="{{'appApp.ScheduleStatus.' + workOrderSchedule.scheduleStatus}}">{{workOrderSchedule.scheduleStatus}}</td>
+                    <td>
+                        <a ui-sref="work-order-detail({id:workOrderSchedule.workOrder.id})">{{workOrderSchedule.workOrder.id}}</a>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group flex-btn-group-container">
+                            <button type="submit"
+                                    ui-sref="work-order-schedule-detail({id:workOrderSchedule.id})"
+                                    class="btn btn-info btn-sm">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                                <span class="hidden-xs hidden-sm" data-translate="entity.action.view"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="work-order-schedule.edit({id:workOrderSchedule.id})"
+                                    class="btn btn-primary btn-sm">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="hidden-xs hidden-sm" data-translate="entity.action.edit"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="work-order-schedule.delete({id:workOrderSchedule.id})"
+                                    class="btn btn-danger btn-sm">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                                <span class="hidden-xs hidden-sm" data-translate="entity.action.delete"></span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

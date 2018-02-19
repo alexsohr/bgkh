@@ -3,14 +3,14 @@
 
     angular
         .module(workOrderSwitchVm)
-        .controller('WorkOrderDeleteController',WorkOrderDeleteController);
+        .controller('WorkOrderScheduleDeleteController',WorkOrderScheduleDeleteController);
 
-    WorkOrderDeleteController.$inject = ['$uibModalInstance', 'entity', 'WorkOrder'];
+    WorkOrderScheduleDeleteController.$inject = ['$uibModalInstance', 'entity', 'WorkOrderSchedule'];
 
-    function WorkOrderDeleteController($uibModalInstance, entity, WorkOrder) {
+    function WorkOrderScheduleDeleteController($uibModalInstance, entity, WorkOrderSchedule) {
         var vm = this;
 
-        vm.workOrder = entity;
+        vm.workOrderSchedule = entity;
         vm.clear = clear;
         vm.confirmDelete = confirmDelete;
 
@@ -19,7 +19,7 @@
         }
 
         function confirmDelete (id) {
-            WorkOrder.delete({id: id},
+            WorkOrderSchedule.delete({id: id},
                 function () {
                     $uibModalInstance.close(true);
                 });

@@ -9,73 +9,55 @@
 
     function stateConfig($stateProvider) {
         $stateProvider
-        .state('work-order', {
+        .state('work-order-schedule', {
             parent: 'entity',
-            url: '/work-order?page&sort&search',
+            url: '/work-order-schedule',
             data: {
                 authorities: ['ROLE_USER'],
-                pageTitle: 'appApp.workOrder.home.title'
+                pageTitle: 'appApp.workOrderSchedule.home.title'
             },
             views: {
                 'content@': {
-                    templateUrl: 'app/entities/work-order/work-orders.html',
-                    controller: 'WorkOrderController',
+                    templateUrl: 'app/entities/work-order-schedule/work-order-schedules.html',
+                    controller: 'WorkOrderScheduleController',
                     controllerAs: 'vm'
                 }
             },
-            params: {
-                page: {
-                    value: '1',
-                    squash: true
-                },
-                sort: {
-                    value: 'id,asc',
-                    squash: true
-                },
-                search: null
-            },
             resolve: {
-                pagingParams: ['$stateParams', 'PaginationUtil', function ($stateParams, PaginationUtil) {
-                    return {
-                        page: PaginationUtil.parsePage($stateParams.page),
-                        sort: $stateParams.sort,
-                        predicate: PaginationUtil.parsePredicate($stateParams.sort),
-                        ascending: PaginationUtil.parseAscending($stateParams.sort),
-                        search: $stateParams.search
-                    };
-                }],
                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
-                    $translatePartialLoader.addPart('workOrder');
+                    $translatePartialLoader.addPart('workOrderSchedule');
+                    $translatePartialLoader.addPart('scheduleStatus');
                     $translatePartialLoader.addPart('global');
                     return $translate.refresh();
                 }]
             }
         })
-        .state('work-order-detail', {
+        .state('work-order-schedule-detail', {
             parent: 'entity',
-            url: '/work-order/{id}',
+            url: '/work-order-schedule/{id}',
             data: {
                 authorities: ['ROLE_USER'],
-                pageTitle: 'appApp.workOrder.detail.title'
+                pageTitle: 'appApp.workOrderSchedule.detail.title'
             },
             views: {
                 'content@': {
-                    templateUrl: 'app/entities/work-order/work-order-detail.html',
-                    controller: 'WorkOrderDetailController',
+                    templateUrl: 'app/entities/work-order-schedule/work-order-schedule-detail.html',
+                    controller: 'WorkOrderScheduleDetailController',
                     controllerAs: 'vm'
                 }
             },
             resolve: {
                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
-                    $translatePartialLoader.addPart('workOrder');
+                    $translatePartialLoader.addPart('workOrderSchedule');
+                    $translatePartialLoader.addPart('scheduleStatus');
                     return $translate.refresh();
                 }],
-                entity: ['$stateParams', 'WorkOrder', function($stateParams, WorkOrder) {
-                    return WorkOrder.get({id : $stateParams.id}).$promise;
+                entity: ['$stateParams', 'WorkOrderSchedule', function($stateParams, WorkOrderSchedule) {
+                    return WorkOrderSchedule.get({id : $stateParams.id}).$promise;
                 }],
                 previousState: ["$state", function ($state) {
                     var currentStateData = {
-                        name: $state.current.name || 'work-order',
+                        name: $state.current.name || 'work-order-schedule',
                         params: $state.params,
                         url: $state.href($state.current.name, $state.params)
                     };
@@ -83,22 +65,22 @@
                 }]
             }
         })
-        .state('work-order-detail.edit', {
-            parent: 'work-order-detail',
+        .state('work-order-schedule-detail.edit', {
+            parent: 'work-order-schedule-detail',
             url: '/detail/edit',
             data: {
                 authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/work-order/work-order-dialog.html',
-                    controller: 'WorkOrderDialogController',
+                    templateUrl: 'app/entities/work-order-schedule/work-order-schedule-dialog.html',
+                    controller: 'WorkOrderScheduleDialogController',
                     controllerAs: 'vm',
                     backdrop: 'static',
                     size: 'lg',
                     resolve: {
-                        entity: ['WorkOrder', function(WorkOrder) {
-                            return WorkOrder.get({id : $stateParams.id}).$promise;
+                        entity: ['WorkOrderSchedule', function(WorkOrderSchedule) {
+                            return WorkOrderSchedule.get({id : $stateParams.id}).$promise;
                         }]
                     }
                 }).result.then(function() {
@@ -108,80 +90,81 @@
                 });
             }]
         })
-        .state('work-order.new', {
-            parent: 'work-order',
+        .state('work-order-schedule.new', {
+            parent: 'work-order-schedule',
             url: '/new',
             data: {
                 authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/work-order/work-order-dialog.html',
-                    controller: 'WorkOrderDialogController',
+                    templateUrl: 'app/entities/work-order-schedule/work-order-schedule-dialog.html',
+                    controller: 'WorkOrderScheduleDialogController',
                     controllerAs: 'vm',
                     backdrop: 'static',
                     size: 'lg',
                     resolve: {
                         entity: function () {
                             return {
-                                track: false,
+                                createDate: null,
+                                expireDate: null,
                                 description: null,
-                                trackDate: null,
+                                scheduleStatus: null,
                                 id: null
                             };
                         }
                     }
                 }).result.then(function() {
-                    $state.go('work-order', null, { reload: 'work-order' });
+                    $state.go('work-order-schedule', null, { reload: 'work-order-schedule' });
                 }, function() {
-                    $state.go('work-order');
+                    $state.go('work-order-schedule');
                 });
             }]
         })
-        .state('work-order.edit', {
-            parent: 'work-order',
+        .state('work-order-schedule.edit', {
+            parent: 'work-order-schedule',
             url: '/{id}/edit',
             data: {
                 authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/work-order/work-order-dialog.html',
-                    controller: 'WorkOrderDialogController',
+                    templateUrl: 'app/entities/work-order-schedule/work-order-schedule-dialog.html',
+                    controller: 'WorkOrderScheduleDialogController',
                     controllerAs: 'vm',
                     backdrop: 'static',
                     size: 'lg',
                     resolve: {
-                        entity: ['WorkOrder', function(WorkOrder) {
-                            return WorkOrder.get({id : $stateParams.id}).$promise;
+                        entity: ['WorkOrderSchedule', function(WorkOrderSchedule) {
+                            return WorkOrderSchedule.get({id : $stateParams.id}).$promise;
                         }]
                     }
                 }).result.then(function() {
-                    $state.go('work-order', null, { reload: 'work-order' });
+                    $state.go('work-order-schedule', null, { reload: 'work-order-schedule' });
                 }, function() {
                     $state.go('^');
                 });
             }]
         })
-        .state('work-order.delete', {
-            parent: 'work-order',
+        .state('work-order-schedule.delete', {
+            parent: 'work-order-schedule',
             url: '/{id}/delete',
             data: {
                 authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/work-order/work-order-delete-dialog.html',
-                    controller: 'WorkOrderDeleteController',
+                    templateUrl: 'app/entities/work-order-schedule/work-order-schedule-delete-dialog.html',
+                    controller: 'WorkOrderScheduleDeleteController',
                     controllerAs: 'vm',
                     size: 'md',
                     resolve: {
-                        entity: ['WorkOrder', function(WorkOrder) {
-                            return WorkOrder.get({id : $stateParams.id}).$promise;
+                        entity: ['WorkOrderSchedule', function(WorkOrderSchedule) {
+                            return WorkOrderSchedule.get({id : $stateParams.id}).$promise;
                         }]
                     }
                 }).result.then(function() {
-                    $state.go('work-order', null, { reload: 'work-order' });
+                    $state.go('work-order-schedule', null, { reload: 'work-order-schedule' });
                 }, function() {
                     $state.go('^');
                 });

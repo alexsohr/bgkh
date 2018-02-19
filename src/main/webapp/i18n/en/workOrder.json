@@ -20,7 +20,8 @@
             "description": "Description",
             "trackDate": "Track Date",
             "asset": "Asset",
-            "workOrderTemplate": "Work Order Template"
+            "workOrderTemplate": "Work Order Template",
+            "workOrderSchedule": "Work Order Schedule"
         }
     }
 }

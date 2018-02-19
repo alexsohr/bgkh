@@ -18,6 +18,12 @@
                 "required"
             ],
             "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "workOrderSchedule",
+            "otherEntityName": "workOrderSchedule",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "workOrder"
         }
     ],
     "fields": [

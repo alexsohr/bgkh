@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @Transactional
-public class WorkOrderServiceImpl implements WorkOrderService{
+public class WorkOrderServiceImpl implements WorkOrderService {
 
     private final Logger log = LoggerFactory.getLogger(WorkOrderServiceImpl.class);
 
@@ -47,10 +47,10 @@ public class WorkOrderServiceImpl implements WorkOrderService{
     }
 
     /**
-     *  Get all the workOrders.
+     * Get all the workOrders.
      *
-     *  @param pageable the pagination information
-     *  @return the list of entities
+     * @param pageable the pagination information
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public Page<WorkOrderDTO> findAll(Pageable pageable) {
@@ -60,10 +60,23 @@ public class WorkOrderServiceImpl implements WorkOrderService{
     }
 
     /**
-     *  Get one workOrder by id.
+     * Get all the workOrders.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @return the list of entities
+     */
+    @Transactional(readOnly = true)
+    public List<WorkOrderDTO> findAll() {
+        log.debug("Request to get all WorkOrders");
+        List<WorkOrder> result = workOrderRepository.findAll();
+        return result.stream().map(workOrderMapper::workOrderToWorkOrderDTO)
+            .collect(Collectors.toCollection(LinkedList::new));
+    }
+
+    /**
+     * Get one workOrder by id.
+     *
+     * @param id the id of the entity
+     * @return the entity
      */
     @Transactional(readOnly = true)
     public WorkOrderDTO findOne(Long id) {
@@ -74,9 +87,9 @@ public class WorkOrderServiceImpl implements WorkOrderService{
     }
 
     /**
-     *  Delete the  workOrder by id.
+     * Delete the  workOrder by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
         log.debug("Request to delete WorkOrder : {}", id);
@@ -108,8 +121,7 @@ public class WorkOrderServiceImpl implements WorkOrderService{
             WorkOrder workOrder = iterator.next();
             if (allByAssetId.contains(workOrder)) {
                 iterator.remove();
-            }
-            else {
+            } else {
                 workOrderRepository.save(workOrder);
             }
         }
@@ -128,7 +140,7 @@ public class WorkOrderServiceImpl implements WorkOrderService{
         Iterator<WorkOrder> iterator = workOrders.iterator();
         while (iterator.hasNext()) {
             WorkOrder workOrder = iterator.next();
-                workOrderRepository.save(workOrder);
+            workOrderRepository.save(workOrder);
         }
 
         return workOrderDTOs;

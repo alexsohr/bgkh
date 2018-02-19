@@ -1,0 +1,31 @@
+
+<div>
+    <h2><span data-translate="appApp.workOrderHistory.detail.title">Work Order History</span> {{vm.workOrderHistory.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="dl-horizontal jh-entity-details">
+        <dt><span data-translate="appApp.workOrderHistory.createDate">Create Date</span></dt>
+        <dd>
+            <span>{{vm.workOrderHistory.createDate | date:'mediumDate'}}</span>
+        </dd>
+        <dt><span data-translate="appApp.workOrderHistory.historyStatus">History Status</span></dt>
+        <dd>
+            <span data-translate="{{'appApp.HistoryStatus.' + vm.workOrderHistory.historyStatus}}">{{vm.workOrderHistory.historyStatus}}</span>
+        </dd>
+        <dt><span data-translate="appApp.workOrderHistory.workOrderSchedule">Work Order Schedule</span></dt>
+        <dd>
+            <a ui-sref="work-order-schedule-detail({id:vm.workOrderHistory.workOrderSchedule.id})">{{vm.workOrderHistory.workOrderSchedule.id}}</a>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            ui-sref="{{ vm.previousState }}"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span data-translate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button" ui-sref="work-order-history-detail.edit({id:vm.workOrderHistory.id})" class="btn btn-primary">
+        <span class="glyphicon glyphicon-pencil"></span>
+        <span class="hidden-xs hidden-sm" data-translate="entity.action.edit"> Edit</span>
+    </button>
+</div>

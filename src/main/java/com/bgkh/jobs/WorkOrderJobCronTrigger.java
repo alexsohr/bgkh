@@ -4,6 +4,8 @@
 package com.bgkh.jobs;
 
 import com.bgkh.config.QuartzConfiguration;
+import com.bgkh.service.WorkOrderJobScheduleService;
+import com.bgkh.service.WorkOrderService;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobDetail;
@@ -16,6 +18,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.quartz.CronTriggerFactoryBean;
 import org.springframework.scheduling.quartz.JobDetailFactoryBean;
 import org.springframework.stereotype.Component;
+
+import javax.inject.Inject;
 
 /**
  * @author pavan.solapure
@@ -30,8 +34,12 @@ public class WorkOrderJobCronTrigger implements Job {
 	@Value("${work.order.job.schedule}")
 	private String frequency;
 
+	@Inject
+	private WorkOrderJobScheduleService workOrderJobScheduleService;
+
 	@Override
 	public void execute(JobExecutionContext jobExecutionContext) {
+        workOrderJobScheduleService.processWorkOrderSchedules();
 		logger.info("Running JobWithCronTrigger | frequency {}", frequency);
 	}
 

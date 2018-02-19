@@ -3,20 +3,18 @@
 
     angular
         .module(workOrderSwitchVm)
-        .controller('WorkOrderDialogController', WorkOrderDialogController);
+        .controller('WorkOrderHistoryDialogController', WorkOrderHistoryDialogController);
 
-    WorkOrderDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'WorkOrder', 'Asset', 'WorkOrderTemplate', 'WorkOrderSchedule'];
+    WorkOrderHistoryDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'WorkOrderHistory', 'WorkOrderSchedule'];
 
-    function WorkOrderDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, WorkOrder, Asset, WorkOrderTemplate, WorkOrderSchedule) {
+    function WorkOrderHistoryDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, WorkOrderHistory, WorkOrderSchedule) {
         var vm = this;
 
-        vm.workOrder = entity;
+        vm.workOrderHistory = entity;
         vm.clear = clear;
         vm.datePickerOpenStatus = {};
         vm.openCalendar = openCalendar;
         vm.save = save;
-        vm.assets = Asset.query();
-        vm.workordertemplates = WorkOrderTemplate.query();
         vm.workorderschedules = WorkOrderSchedule.query();
 
         $timeout(function (){
@@ -29,15 +27,15 @@
 
         function save () {
             vm.isSaving = true;
-            if (vm.workOrder.id !== null) {
-                WorkOrder.update(vm.workOrder, onSaveSuccess, onSaveError);
+            if (vm.workOrderHistory.id !== null) {
+                WorkOrderHistory.update(vm.workOrderHistory, onSaveSuccess, onSaveError);
             } else {
-                WorkOrder.save(vm.workOrder, onSaveSuccess, onSaveError);
+                WorkOrderHistory.save(vm.workOrderHistory, onSaveSuccess, onSaveError);
             }
         }
 
         function onSaveSuccess (result) {
-            $scope.$emit('appApp:workOrderUpdate', result);
+            $scope.$emit('appApp:workOrderHistoryUpdate', result);
             $uibModalInstance.close(result);
             vm.isSaving = false;
         }
@@ -46,7 +44,7 @@
             vm.isSaving = false;
         }
 
-        vm.datePickerOpenStatus.trackDate = false;
+        vm.datePickerOpenStatus.createDate = false;
 
         function openCalendar (date) {
             vm.datePickerOpenStatus[date] = true;

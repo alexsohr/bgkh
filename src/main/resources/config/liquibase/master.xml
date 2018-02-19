@@ -12,6 +12,8 @@
     <include file="classpath:config/liquibase/changelog/20170220044752_added_entity_UploadFile.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170301030829_added_entity_AssetSpecificationType.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20171108022130_added_entity_WorkOrderTemplate.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20180219030330_added_entity_WorkOrderSchedule.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20180219031010_added_entity_WorkOrderHistory.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
 
     <include file="classpath:config/liquibase/changelog/20170107053106_added_entity_constraints_WorkOrder.xml" relativeToChangelogFile="false"/>
@@ -19,5 +21,7 @@
     <include file="classpath:config/liquibase/changelog/20170219232039_added_entity_constraints_AssetSpecificationTypeValue.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170107053105_added_entity_constraints_Asset.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20171108022130_added_entity_constraints_WorkOrderTemplate.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20180219030330_added_entity_constraints_WorkOrderSchedule.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20180219031010_added_entity_constraints_WorkOrderHistory.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
 </databaseChangeLog>
