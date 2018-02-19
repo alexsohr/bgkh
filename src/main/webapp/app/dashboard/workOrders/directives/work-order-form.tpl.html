@@ -88,7 +88,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row" ng-if="vm.workOrderTemplate.functionType == 'DAILY'">
+                            <div class="row" ng-if="vm.workOrderTemplate.functionType != 'USAGE_HOURS'">
                                 <div class="col-md-12" ng-class="{ 'has-error' : workOrderTemplateEditForm.numberOfDays.$invalid}">
                                     <label class="control-label">{{$root.getWord('Number of days')}}</label>
                                     <div class="col-md-12">
