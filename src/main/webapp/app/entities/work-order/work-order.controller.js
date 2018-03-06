@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module(workOrderSwitchVm)
+        .module('app')
         .controller('WorkOrderController', WorkOrderController);
 
     WorkOrderController.$inject = ['$scope', '$state', 'WorkOrder', 'ParseLinks', 'AlertService', 'paginationConstants', 'pagingParams'];

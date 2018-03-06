@@ -51,7 +51,7 @@ angular
         var modal = $uibModal.open({
             templateUrl: 'app/dashboard/assets/directives/work-order-switch-form.tpl.html',
             controller: 'WorkOrderSwitchController',
-            controllerAs: 'workOrderSwitchVm',
+            controllerAs: 'vm',
             backdrop: 'static',
             size: 'lg',
             resolve: {

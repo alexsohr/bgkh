@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module(workOrderSwitchVm)
+        .module('app')
         .config(stateConfig);
 
     stateConfig.$inject = ['$stateProvider'];

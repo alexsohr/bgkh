@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module(workOrderSwitchVm)
+        .module('app')
         .config(stateConfig);
 
     stateConfig.$inject = ['$stateProvider'];
@@ -110,6 +110,7 @@
                                 expireDate: null,
                                 description: null,
                                 scheduleStatus: null,
+                                completedDate: null,
                                 id: null
                             };
                         }

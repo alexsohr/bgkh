@@ -1,10 +1,10 @@
 <div>
-    <form name="workOrderTemplateSwitchForm" class="form-group" role="form" ng-submit="workOrderSwitchVm.save()"
+    <form name="workOrderTemplateSwitchForm" class="form-group" role="form" ng-submit="vm.save()"
           novalidate show-validation>
 
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                    ng-click="workOrderSwitchVm.clear()">&times;
+                    ng-click="vm.clear()">&times;
             </button>
             <h4 class="modal-title" id="myAssetLabel">{{$rootScope.getWord('Manage work orders')}}</h4>
         </div>
@@ -23,7 +23,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr ng-repeat="workOrderTemplate in workOrderSwitchVm.workOrderTemplates" ng-if="workOrderTemplate.assign === true">
+                                <tr ng-repeat="workOrderTemplate in vm.workOrderTemplates" ng-if="workOrderTemplate.assign === true">
                                     <td>{{workOrderTemplate.name}}</td>
                                     <td>{{workOrderTemplate.workOrderType}}</td>
                                     <td>{{$root.getWord(workOrderTemplate.functionType)}}</td>
@@ -49,11 +49,11 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="workOrderSwitchVm.clear()">
+                <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">
                     <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
                 </button>
-                <button type="submit" class="btn btn-primary" ng-hide="workOrderSwitchVm.disabled"
-                        ng-disabled="workOrderTemplateSwitchForm.$invalid || workOrderSwitchVm.isSaving">
+                <button type="submit" class="btn btn-primary" ng-hide="vm.disabled"
+                        ng-disabled="workOrderTemplateSwitchForm.$invalid || vm.isSaving">
                     <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span>
                 </button>
             </div>

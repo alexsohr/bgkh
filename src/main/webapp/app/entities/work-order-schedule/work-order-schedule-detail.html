@@ -20,9 +20,21 @@
         <dd>
             <span data-translate="{{'appApp.ScheduleStatus.' + vm.workOrderSchedule.scheduleStatus}}">{{vm.workOrderSchedule.scheduleStatus}}</span>
         </dd>
+        <dt><span data-translate="appApp.workOrderSchedule.completedDate">Completed Date</span></dt>
+        <dd>
+            <span>{{vm.workOrderSchedule.completedDate | date:'mediumDate'}}</span>
+        </dd>
         <dt><span data-translate="appApp.workOrderSchedule.workOrder">Work Order</span></dt>
         <dd>
             <a ui-sref="work-order-detail({id:vm.workOrderSchedule.workOrder.id})">{{vm.workOrderSchedule.workOrder.id}}</a>
+        </dd>
+        <dt><span data-translate="appApp.workOrderSchedule.asset">Asset</span></dt>
+        <dd>
+            <a ui-sref="asset-detail({id:vm.workOrderSchedule.asset.id})">{{vm.workOrderSchedule.asset.id}}</a>
+        </dd>
+        <dt><span data-translate="appApp.workOrderSchedule.workOrderTemplate">Work Order Template</span></dt>
+        <dd>
+            <a ui-sref="work-order-template-detail({id:vm.workOrderSchedule.workOrderTemplate.id})">{{vm.workOrderSchedule.workOrderTemplate.id}}</a>
         </dd>
     </dl>
 

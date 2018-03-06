@@ -1,7 +1,7 @@
 (function() {
     'use strict';
     angular
-        .module(workOrderSwitchVm)
+        .module('app')
         .factory('WorkOrderHistory', WorkOrderHistory);
 
     WorkOrderHistory.$inject = ['$resource', 'DateUtils'];

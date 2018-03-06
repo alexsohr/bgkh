@@ -19,7 +19,7 @@ import java.util.List;
 public class WorkOrderScheduleServiceImpl implements WorkOrderScheduleService{
 
     private final Logger log = LoggerFactory.getLogger(WorkOrderScheduleServiceImpl.class);
-
+    
     @Inject
     private WorkOrderScheduleRepository workOrderScheduleRepository;
 
@@ -37,10 +37,10 @@ public class WorkOrderScheduleServiceImpl implements WorkOrderScheduleService{
 
     /**
      *  Get all the workOrderSchedules.
-     *
+     *  
      *  @return the list of entities
      */
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true) 
     public List<WorkOrderSchedule> findAll() {
         log.debug("Request to get all WorkOrderSchedules");
         List<WorkOrderSchedule> result = workOrderScheduleRepository.findAll();
@@ -54,7 +54,7 @@ public class WorkOrderScheduleServiceImpl implements WorkOrderScheduleService{
      *  @param id the id of the entity
      *  @return the entity
      */
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true) 
     public WorkOrderSchedule findOne(Long id) {
         log.debug("Request to get WorkOrderSchedule : {}", id);
         WorkOrderSchedule workOrderSchedule = workOrderScheduleRepository.findOne(id);

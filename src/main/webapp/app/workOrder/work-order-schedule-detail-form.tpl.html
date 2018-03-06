@@ -1,0 +1,108 @@
+<div>
+    <form name="workOrderScheduleEditForm" class="asset-edit-form form-group" role="form" ng-submit="vm.save()" novalidate show-validation>
+
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="vm.clear()">&times;</button>
+            <h4 class="modal-title" id="myAssetLabel">{{$root.getWord('Work Order Schedule Detail')}}</h4>
+        </div>
+        <div class="modal-body">
+            <fieldset>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="control-label">{{$root.getWord('Name')}}</label>
+                        <div class="col-md-12">
+                            <input class="form-control" ng-model="entity.workOrder.workOrderTemplate.name" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="control-label">{{$root.getWord('Type')}}</label>
+                        <div class="col-md-12">
+                            <input class="form-control" ng-model="entity.workOrder.workOrderTemplate.workOrderType" readonly />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="control-label">{{$root.getWord('Work order function')}}</label>
+                        <div class="col-md-12">
+                            <input class="form-control" value="{{$root.getWord(entity.workOrder.workOrderTemplate.functionType)}}" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="control-label">{{$root.getWord('Status')}}</label>
+                        <div class="col-md-12">
+                            <input class="form-control" value="{{$root.getWord(entity.scheduleStatus)}}" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="control-label">{{$root.getWord('Issue Date')}}</label>
+                        <div class="col-md-12">
+                            <input class="form-control" value="{{vm.convertToDate(entity.createDate)}} " readonly />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="control-label">{{$root.getWord('Due day')}}</label>
+                        <div class="col-md-12">
+                            <input class="form-control" value="{{vm.convertToExpDate(entity.expireDate)}}" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="control-label">{{$root.getWord('New Status')}}</label>
+                        <div class="col-md-12">
+                            <select class="form-control" ng-model="newStatus">
+                                <option value="REOPENED">{{$root.getWord('REOPENED')}}</option>
+                                <option value="DELAYED">{{$root.getWord('DELAYED')}}</option>
+                                <option value="IN_PROGRESS">{{$root.getWord('IN_PROGRESS')}}</option>
+                                <option value="COMPLETED">{{$root.getWord('COMPLETED')}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="control-label">{{$root.getWord('Comment')}}</label>
+                        <div class="col-md-12">
+                            <textarea rows="3" ng-model="comment" class="custom-scroll form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <br>
+            <div class="panel-group smart-accordion-default" id="accordion-2">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion-2" href="#collapseOne-1" class="collapsed"> <i class="fa fa-fw fa-plus-circle txt-color-green"></i> <i class="fa fa-fw fa-minus-circle txt-color-red"></i> {{$root.getWord('Asset Details')}} </a></h4>
+                    </div>
+                    <div id="collapseOne-1" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <div smart-include="app/workOrder/asset-detail.tpl.html"></div>
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="panel panel-default">-->
+                    <!--<div class="panel-heading">-->
+                        <!--<h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion-2" href="#collapseTwo-1" class="collapsed"> <i class="fa fa-fw fa-plus-circle txt-color-green"></i> <i class="fa fa-fw fa-minus-circle txt-color-red"></i> Collapsible Group Item #2 </a></h4>-->
+                    <!--</div>-->
+                    <!--<div id="collapseTwo-1" class="panel-collapse collapse">-->
+                        <!--<div class="panel-body">-->
+                            <!--Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">
+                    <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" class="btn btn-primary" ng-hide="vm.disabled" ng-disabled="workOrderScheduleEditForm.$invalid || vm.isSaving" >
+                    <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+

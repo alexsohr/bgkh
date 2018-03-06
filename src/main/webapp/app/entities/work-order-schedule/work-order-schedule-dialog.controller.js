@@ -2,12 +2,12 @@
     'use strict';
 
     angular
-        .module(workOrderSwitchVm)
+        .module('app')
         .controller('WorkOrderScheduleDialogController', WorkOrderScheduleDialogController);
 
-    WorkOrderScheduleDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'WorkOrderSchedule', 'WorkOrder', 'WorkOrderHistory'];
+    WorkOrderScheduleDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'WorkOrderSchedule', 'WorkOrder', 'WorkOrderHistory', 'Asset', 'WorkOrderTemplate'];
 
-    function WorkOrderScheduleDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, WorkOrderSchedule, WorkOrder, WorkOrderHistory) {
+    function WorkOrderScheduleDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, WorkOrderSchedule, WorkOrder, WorkOrderHistory, Asset, WorkOrderTemplate) {
         var vm = this;
 
         vm.workOrderSchedule = entity;
@@ -17,6 +17,8 @@
         vm.save = save;
         vm.workorders = WorkOrder.query();
         vm.workorderhistories = WorkOrderHistory.query();
+        vm.assets = Asset.query();
+        vm.workordertemplates = WorkOrderTemplate.query();
 
         $timeout(function (){
             angular.element('.form-group:eq(1)>input').focus();
@@ -47,6 +49,7 @@
 
         vm.datePickerOpenStatus.createDate = false;
         vm.datePickerOpenStatus.expireDate = false;
+        vm.datePickerOpenStatus.completedDate = false;
 
         function openCalendar (date) {
             vm.datePickerOpenStatus[date] = true;

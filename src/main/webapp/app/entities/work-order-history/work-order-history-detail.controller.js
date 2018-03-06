@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module(workOrderSwitchVm)
+        .module('app')
         .controller('WorkOrderHistoryDetailController', WorkOrderHistoryDetailController);
 
     WorkOrderHistoryDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'WorkOrderHistory', 'WorkOrderSchedule'];

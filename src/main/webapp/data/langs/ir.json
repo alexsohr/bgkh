@@ -181,7 +181,7 @@
   "View Assets": "نمایش تجهیز",
   "Duplicate Assets": "کپی تجهیزات",
   "Move Asset": "جابجایی تجهیز",
-  "Asset Details": "جزئیات تجهیزات",
+  "Asset Details": "جزئیات تجهیز",
   "Sub-tree": "گروه تجهیزات",
   "Asset Group Name": "نام گروه تجهیزات",
   "Next Step Configuration": "تنظیم مرحله بعد",
@@ -225,5 +225,10 @@
   "NOTE": "توجه",
   "Overview": "نمایش",
   "Data submitted successfully": "اطلاعات با موفقیت ذخیره شد",
-  "1 second ago": "۱ ثانیه قبل"
+  "1 second ago": "۱ ثانیه قبل",
+  "Issue Date": "تاریخ صدور",
+  "NOT_STARTED": "صادر شده",
+  "IN_PROGRESS": "در حال انجام",
+  "FINISHED": "پایان یافته",
+  "Work Order Schedule Detail": "جزئیات دستور کار صادر شده"
 }

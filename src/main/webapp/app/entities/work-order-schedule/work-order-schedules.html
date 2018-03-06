@@ -23,7 +23,10 @@
                     <th><span data-translate="appApp.workOrderSchedule.expireDate">Expire Date</span></th>
                     <th><span data-translate="appApp.workOrderSchedule.description">Description</span></th>
                     <th><span data-translate="appApp.workOrderSchedule.scheduleStatus">Schedule Status</span></th>
+                    <th><span data-translate="appApp.workOrderSchedule.completedDate">Completed Date</span></th>
                     <th><span data-translate="appApp.workOrderSchedule.workOrder">Work Order</span></th>
+                    <th><span data-translate="appApp.workOrderSchedule.asset">Asset</span></th>
+                    <th><span data-translate="appApp.workOrderSchedule.workOrderTemplate">Work Order Template</span></th>
                     <th></th>
                 </tr>
             </thead>
@@ -34,8 +37,15 @@
                         <td>{{workOrderSchedule.expireDate | date:'mediumDate'}}</td>
                     <td>{{workOrderSchedule.description}}</td>
                     <td data-translate="{{'appApp.ScheduleStatus.' + workOrderSchedule.scheduleStatus}}">{{workOrderSchedule.scheduleStatus}}</td>
+                        <td>{{workOrderSchedule.completedDate | date:'mediumDate'}}</td>
                     <td>
                         <a ui-sref="work-order-detail({id:workOrderSchedule.workOrder.id})">{{workOrderSchedule.workOrder.id}}</a>
+                    </td>
+                    <td>
+                        <a ui-sref="asset-detail({id:workOrderSchedule.asset.id})">{{workOrderSchedule.asset.id}}</a>
+                    </td>
+                    <td>
+                        <a ui-sref="work-order-template-detail({id:workOrderSchedule.workOrderTemplate.id})">{{workOrderSchedule.workOrderTemplate.id}}</a>
                     </td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">

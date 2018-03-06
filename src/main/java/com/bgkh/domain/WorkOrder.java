@@ -169,9 +169,11 @@ public class WorkOrder implements Serializable {
     public String toString() {
         return "WorkOrder{" +
             "id=" + id +
-            ", track='" + track + "'" +
-            ", description='" + description + "'" +
-            ", trackDate='" + trackDate + "'" +
+            ", track=" + track +
+            ", description='" + description + '\'' +
+            ", trackDate=" + trackDate +
+            ", asset=" + asset +
+            ", workOrderTemplate=" + workOrderTemplate +
             '}';
     }
 }

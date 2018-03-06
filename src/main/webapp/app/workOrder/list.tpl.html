@@ -1,0 +1,46 @@
+<!-- MAIN CONTENT -->
+<div id="content">
+    <div class="row">
+        <div smart-include="app/layout/partials/dashboard-sub-header.tpl.html"></div>
+    </div>
+    <!-- widget grid -->
+    <section widget-grid id="widget-grid">
+
+
+        <div class="row">
+            <article class="col-sm-12">
+
+                <div jarvis-widget id="standard-datatable-widget" data-widget-color="orange" data-widget-editbutton="false">
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-briefcase"></i> </span>
+                        <h2>{{$root.getWord('Work orders')}}</h2>
+                    </header>
+                    <div>
+                        <div class="widget-body">
+                            <table datatable dt-options="vm.standardOptions" dt-columns="vm.standardColumns" class="table table-striped table-bordered table-hover" width="100%">
+                                <thead>
+                                <tr>
+                                    <th>{{$root.getWord('Name')}}</th>
+                                    <th data-class="expand"><i class="fa fa-fw fa-briefcase txt-color-blue hidden-md hidden-sm hidden-xs"></i> {{$root.getWord('Type')}}</th>
+                                    <th><i class="fa fa-fw fa-wrench txt-color-blue hidden-md hidden-sm hidden-xs"></i> {{$root.getWord('Work order function')}}</th>
+                                    <th><i class="txt-color-blue hidden-md hidden-sm hidden-xs"></i> {{$root.getWord('Status')}}</th>
+                                    <th><i class="fa fa-fw fa-gear txt-color-blue hidden-md hidden-sm hidden-xs"></i>{{$root.getWord('Asset Name')}}</th>
+                                    <th>{{$root.getWord('Asset Code')}}</th>
+                                    <th><i class="fa fa-fw fa-calendar txt-color-blue hidden-md hidden-sm hidden-xs"></i> {{$root.getWord('Issue Date')}}</th>
+                                    <th><i class="fa fa-fw fa-calendar txt-color-blue hidden-md hidden-sm hidden-xs"></i> {{$root.getWord('Due day')}}</th>
+                                    <th><i class="fa fa-fw fa-sliders txt-color-blue hidden-md hidden-sm hidden-xs"></i> {{$root.getWord('Action')}}</th>
+                                </tr>
+                                </thead>
+
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+
+        </div>
+
+    </section>
+</div>

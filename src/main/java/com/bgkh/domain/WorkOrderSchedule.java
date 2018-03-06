@@ -5,6 +5,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -40,6 +41,9 @@ public class WorkOrderSchedule implements Serializable {
     @Column(name = "schedule_status")
     private ScheduleStatus scheduleStatus;
 
+    @Column(name = "completed_date")
+    private LocalDate completedDate;
+
     @ManyToOne
     private WorkOrder workOrder;
 
@@ -47,6 +51,14 @@ public class WorkOrderSchedule implements Serializable {
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<WorkOrderHistory> workOrderHistories = new HashSet<>();
+
+    @ManyToOne
+    @NotNull
+    private Asset asset;
+
+    @ManyToOne
+    @NotNull
+    private WorkOrderTemplate workOrderTemplate;
 
     public Long getId() {
         return id;
@@ -108,6 +120,19 @@ public class WorkOrderSchedule implements Serializable {
         this.scheduleStatus = scheduleStatus;
     }
 
+    public LocalDate getCompletedDate() {
+        return completedDate;
+    }
+
+    public WorkOrderSchedule completedDate(LocalDate completedDate) {
+        this.completedDate = completedDate;
+        return this;
+    }
+
+    public void setCompletedDate(LocalDate completedDate) {
+        this.completedDate = completedDate;
+    }
+
     public WorkOrder getWorkOrder() {
         return workOrder;
     }
@@ -146,6 +171,32 @@ public class WorkOrderSchedule implements Serializable {
         this.workOrderHistories = workOrderHistories;
     }
 
+    public Asset getAsset() {
+        return asset;
+    }
+
+    public WorkOrderSchedule asset(Asset asset) {
+        this.asset = asset;
+        return this;
+    }
+
+    public void setAsset(Asset asset) {
+        this.asset = asset;
+    }
+
+    public WorkOrderTemplate getWorkOrderTemplate() {
+        return workOrderTemplate;
+    }
+
+    public WorkOrderSchedule workOrderTemplate(WorkOrderTemplate workOrderTemplate) {
+        this.workOrderTemplate = workOrderTemplate;
+        return this;
+    }
+
+    public void setWorkOrderTemplate(WorkOrderTemplate workOrderTemplate) {
+        this.workOrderTemplate = workOrderTemplate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -174,6 +225,7 @@ public class WorkOrderSchedule implements Serializable {
             ", expireDate='" + expireDate + "'" +
             ", description='" + description + "'" +
             ", scheduleStatus='" + scheduleStatus + "'" +
+            ", completedDate='" + completedDate + "'" +
             '}';
     }
 }

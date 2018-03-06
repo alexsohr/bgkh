@@ -17,7 +17,7 @@ angular.module('app', [
     'ui.router',
     'ui.bootstrap',
     'ngFileUpload',
-
+    'angularMoment',
     // Smartadmin Angular Common Module
     'SmartAdmin',
 
@@ -29,6 +29,7 @@ angular.module('app', [
     'app.layout',
     'app.chat',
     'app.dashboard',
+    'app.workOrder',
     'app.calendar',
     'app.tables',
     'app.graphs',
@@ -85,14 +86,15 @@ angular.module('app', [
 .constant('APP_CONFIG', window.appConfig)
 
 .run(function ($rootScope
-    , $state, $stateParams, Language, Assets
+    , $state, $stateParams, Language, Assets, amMoment
     ) {
+
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
     $rootScope.lang = {};
 
     $rootScope.currentLanguage = "ir";
-
+    amMoment.changeLocale('fa');
     Language.getLanguages(function(data){
 
         $rootScope.currentLanguage = data[0];

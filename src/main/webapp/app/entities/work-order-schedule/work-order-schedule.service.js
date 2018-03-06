@@ -1,7 +1,7 @@
 (function() {
     'use strict';
     angular
-        .module(workOrderSwitchVm)
+        .module('app')
         .factory('WorkOrderSchedule', WorkOrderSchedule);
 
     WorkOrderSchedule.$inject = ['$resource', 'DateUtils'];
@@ -18,6 +18,7 @@
                         data = angular.fromJson(data);
                         data.createDate = DateUtils.convertLocalDateFromServer(data.createDate);
                         data.expireDate = DateUtils.convertLocalDateFromServer(data.expireDate);
+                        data.completedDate = DateUtils.convertLocalDateFromServer(data.completedDate);
                     }
                     return data;
                 }
@@ -28,6 +29,7 @@
                     var copy = angular.copy(data);
                     copy.createDate = DateUtils.convertLocalDateToServer(copy.createDate);
                     copy.expireDate = DateUtils.convertLocalDateToServer(copy.expireDate);
+                    copy.completedDate = DateUtils.convertLocalDateToServer(copy.completedDate);
                     return angular.toJson(copy);
                 }
             },
@@ -37,6 +39,7 @@
                     var copy = angular.copy(data);
                     copy.createDate = DateUtils.convertLocalDateToServer(copy.createDate);
                     copy.expireDate = DateUtils.convertLocalDateToServer(copy.expireDate);
+                    copy.completedDate = DateUtils.convertLocalDateToServer(copy.completedDate);
                     return angular.toJson(copy);
                 }
             }

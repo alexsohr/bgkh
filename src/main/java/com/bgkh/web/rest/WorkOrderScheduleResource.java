@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -39,7 +40,7 @@ public class WorkOrderScheduleResource {
      */
     @PostMapping("/work-order-schedules")
     @Timed
-    public ResponseEntity<WorkOrderSchedule> createWorkOrderSchedule(@RequestBody WorkOrderSchedule workOrderSchedule) throws URISyntaxException {
+    public ResponseEntity<WorkOrderSchedule> createWorkOrderSchedule(@Valid @RequestBody WorkOrderSchedule workOrderSchedule) throws URISyntaxException {
         log.debug("REST request to save WorkOrderSchedule : {}", workOrderSchedule);
         if (workOrderSchedule.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("workOrderSchedule", "idexists", "A new workOrderSchedule cannot already have an ID")).body(null);
@@ -61,7 +62,7 @@ public class WorkOrderScheduleResource {
      */
     @PutMapping("/work-order-schedules")
     @Timed
-    public ResponseEntity<WorkOrderSchedule> updateWorkOrderSchedule(@RequestBody WorkOrderSchedule workOrderSchedule) throws URISyntaxException {
+    public ResponseEntity<WorkOrderSchedule> updateWorkOrderSchedule(@Valid @RequestBody WorkOrderSchedule workOrderSchedule) throws URISyntaxException {
         log.debug("REST request to update WorkOrderSchedule : {}", workOrderSchedule);
         if (workOrderSchedule.getId() == null) {
             return createWorkOrderSchedule(workOrderSchedule);

@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module(workOrderSwitchVm)
+        .module('app')
         .controller('WorkOrderScheduleDeleteController',WorkOrderScheduleDeleteController);
 
     WorkOrderScheduleDeleteController.$inject = ['$uibModalInstance', 'entity', 'WorkOrderSchedule'];

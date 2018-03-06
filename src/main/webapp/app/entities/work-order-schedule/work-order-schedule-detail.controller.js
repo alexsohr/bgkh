@@ -2,12 +2,12 @@
     'use strict';
 
     angular
-        .module(workOrderSwitchVm)
+        .module('app')
         .controller('WorkOrderScheduleDetailController', WorkOrderScheduleDetailController);
 
-    WorkOrderScheduleDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'WorkOrderSchedule', 'WorkOrder', 'WorkOrderHistory'];
+    WorkOrderScheduleDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'WorkOrderSchedule', 'WorkOrder', 'WorkOrderHistory', 'Asset', 'WorkOrderTemplate'];
 
-    function WorkOrderScheduleDetailController($scope, $rootScope, $stateParams, previousState, entity, WorkOrderSchedule, WorkOrder, WorkOrderHistory) {
+    function WorkOrderScheduleDetailController($scope, $rootScope, $stateParams, previousState, entity, WorkOrderSchedule, WorkOrder, WorkOrderHistory, Asset, WorkOrderTemplate) {
         var vm = this;
 
         vm.workOrderSchedule = entity;

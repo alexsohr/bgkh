@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module(workOrderSwitchVm)
+        .module('app')
         .controller('WorkOrderDialogController', WorkOrderDialogController);
 
     WorkOrderDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'WorkOrder', 'Asset', 'WorkOrderTemplate', 'WorkOrderSchedule'];
