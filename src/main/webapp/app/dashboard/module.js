@@ -17,6 +17,7 @@ angular.module('app.dashboard', ['ui.router', 'treeGrid'])
                     }
                 },
                 data: {
+                    authorities: ['ROLE_ADMIN, ROLE_MANAGER, ROLE_SUPERVISOR'],
                     title: 'Dashboard'
                 },
                 resolve: {

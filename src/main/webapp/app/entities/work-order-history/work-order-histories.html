@@ -21,6 +21,7 @@
                     <th><span data-translate="global.field.id">ID</span></th>
                     <th><span data-translate="appApp.workOrderHistory.createDate">Create Date</span></th>
                     <th><span data-translate="appApp.workOrderHistory.historyStatus">History Status</span></th>
+                    <th><span data-translate="appApp.workOrderHistory.comment">Comment</span></th>
                     <th><span data-translate="appApp.workOrderHistory.workOrderSchedule">Work Order Schedule</span></th>
                     <th></th>
                 </tr>
@@ -30,6 +31,7 @@
                     <td><a ui-sref="work-order-history-detail({id:workOrderHistory.id})">{{workOrderHistory.id}}</a></td>
                         <td>{{workOrderHistory.createDate | date:'mediumDate'}}</td>
                     <td data-translate="{{'appApp.HistoryStatus.' + workOrderHistory.historyStatus}}">{{workOrderHistory.historyStatus}}</td>
+                    <td>{{workOrderHistory.comment}}</td>
                     <td>
                         <a ui-sref="work-order-schedule-detail({id:workOrderHistory.workOrderSchedule.id})">{{workOrderHistory.workOrderSchedule.id}}</a>
                     </td>

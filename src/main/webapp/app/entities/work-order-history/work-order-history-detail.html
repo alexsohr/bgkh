@@ -12,6 +12,10 @@
         <dd>
             <span data-translate="{{'appApp.HistoryStatus.' + vm.workOrderHistory.historyStatus}}">{{vm.workOrderHistory.historyStatus}}</span>
         </dd>
+        <dt><span data-translate="appApp.workOrderHistory.comment">Comment</span></dt>
+        <dd>
+            <span>{{vm.workOrderHistory.comment}}</span>
+        </dd>
         <dt><span data-translate="appApp.workOrderHistory.workOrderSchedule">Work Order Schedule</span></dt>
         <dd>
             <a ui-sref="work-order-schedule-detail({id:vm.workOrderHistory.workOrderSchedule.id})">{{vm.workOrderHistory.workOrderSchedule.id}}</a>

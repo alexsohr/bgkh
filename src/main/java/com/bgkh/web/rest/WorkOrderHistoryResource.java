@@ -1,5 +1,6 @@
 package com.bgkh.web.rest;
 
+import com.bgkh.service.WorkOrderHistoryService;
 import com.codahale.metrics.annotation.Timed;
 import com.bgkh.domain.WorkOrderHistory;
 
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -27,9 +29,12 @@ import java.util.Optional;
 public class WorkOrderHistoryResource {
 
     private final Logger log = LoggerFactory.getLogger(WorkOrderHistoryResource.class);
-        
+
     @Inject
     private WorkOrderHistoryRepository workOrderHistoryRepository;
+
+    @Inject
+    private WorkOrderHistoryService workOrderHistoryService;
 
     /**
      * POST  /work-order-histories : Create a new workOrderHistory.
@@ -40,12 +45,12 @@ public class WorkOrderHistoryResource {
      */
     @PostMapping("/work-order-histories")
     @Timed
-    public ResponseEntity<WorkOrderHistory> createWorkOrderHistory(@RequestBody WorkOrderHistory workOrderHistory) throws URISyntaxException {
+    public ResponseEntity<WorkOrderHistory> createWorkOrderHistory(@Valid @RequestBody WorkOrderHistory workOrderHistory) throws URISyntaxException {
         log.debug("REST request to save WorkOrderHistory : {}", workOrderHistory);
         if (workOrderHistory.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("workOrderHistory", "idexists", "A new workOrderHistory cannot already have an ID")).body(null);
         }
-        WorkOrderHistory result = workOrderHistoryRepository.save(workOrderHistory);
+        WorkOrderHistory result = workOrderHistoryService.save(workOrderHistory);
         return ResponseEntity.created(new URI("/api/work-order-histories/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert("workOrderHistory", result.getId().toString()))
             .body(result);
@@ -62,7 +67,7 @@ public class WorkOrderHistoryResource {
      */
     @PutMapping("/work-order-histories")
     @Timed
-    public ResponseEntity<WorkOrderHistory> updateWorkOrderHistory(@RequestBody WorkOrderHistory workOrderHistory) throws URISyntaxException {
+    public ResponseEntity<WorkOrderHistory> updateWorkOrderHistory(@Valid @RequestBody WorkOrderHistory workOrderHistory) throws URISyntaxException {
         log.debug("REST request to update WorkOrderHistory : {}", workOrderHistory);
         if (workOrderHistory.getId() == null) {
             return createWorkOrderHistory(workOrderHistory);

@@ -1,7 +1,7 @@
 <!-- MAIN CONTENT -->
 <div id="content">
     <div class="row">
-        <div smart-include="app/layout/partials/dashboard-sub-header.tpl.html"></div>
+        <!--<div smart-include="app/layout/partials/dashboard-sub-header.tpl.html"></div>-->
     </div>
     <!-- widget grid -->
     <section widget-grid id="widget-grid">
@@ -17,7 +17,7 @@
                     </header>
                     <div>
                         <div class="widget-body">
-                            <table datatable dt-options="vm.standardOptions" dt-columns="vm.standardColumns" class="table table-striped table-bordered table-hover" width="100%">
+                            <table datatable dt-options="vm.standardOptions" dt-columns="vm.standardColumns" dt-instance="vm.dtInstanceCallback"  class="table table-striped table-bordered table-hover" width="100%">
                                 <thead>
                                 <tr>
                                     <th>{{$root.getWord('Name')}}</th>

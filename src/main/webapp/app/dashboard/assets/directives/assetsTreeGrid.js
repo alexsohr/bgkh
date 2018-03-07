@@ -43,6 +43,9 @@ angular.module('app').directive('assetsTreeGrid', function () {
                     "</button>" +
                     "<ul class=\"dropdown-menu dropdown-menu-right pull-right\" aria-labelledby=\"dLabel\">" +
                     "<li ng-if='row.branch.children.length == 0'>" +
+                    "<a ng-click='cellTemplateScope.openWorkOrderHistory(row.branch.id)' >" + $rootScope.getWord('Show work order history') + "</a>" +
+                    "</li>" +
+                    "<li ng-if='row.branch.children.length == 0'>" +
                     "<a ng-click='cellTemplateScope.openWorkOrderAssignment(row.branch.id, row.branch.assetSpecificationTypeId)' >" + $rootScope.getWord('Assign work orders') + "</a>" +
                     "</li>" +
                     "<li ng-if='row.branch.children.length == 0'>" +
@@ -98,6 +101,11 @@ angular.module('app').directive('assetsTreeGrid', function () {
                                     $scope.deleteCalled = false;
                                 });
                                 $scope.deleteCalled = true;
+                            }
+                        },
+                        openWorkOrderHistory: function (branchId) {
+                            if (!AssetImportModalService.isOpen()) {
+                                AssetImportModalService.openWorkOrderHistory(branchId);
                             }
                         },
                         openWorkOrderAssignment: function (branchId, assetSpecificationTypeId) {

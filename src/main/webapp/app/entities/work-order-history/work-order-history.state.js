@@ -108,6 +108,7 @@
                             return {
                                 createDate: null,
                                 historyStatus: null,
+                                comment: null,
                                 id: null
                             };
                         }

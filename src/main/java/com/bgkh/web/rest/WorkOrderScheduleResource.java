@@ -27,7 +27,7 @@ import java.util.Optional;
 public class WorkOrderScheduleResource {
 
     private final Logger log = LoggerFactory.getLogger(WorkOrderScheduleResource.class);
-        
+
     @Inject
     private WorkOrderScheduleService workOrderScheduleService;
 
@@ -83,6 +83,18 @@ public class WorkOrderScheduleResource {
     public List<WorkOrderSchedule> getAllWorkOrderSchedules() {
         log.debug("REST request to get all WorkOrderSchedules");
         return workOrderScheduleService.findAll();
+    }
+
+    /**
+     * GET  /work-order-schedules : get all the workOrderSchedules.
+     *
+     * @return the ResponseEntity with status 200 (OK) and the list of workOrderSchedules in body
+     */
+    @GetMapping("/work-order-schedules-by-user")
+    @Timed
+    public List<WorkOrderSchedule> getAllWorkOrderSchedulesByUser() {
+        log.debug("REST request to get all WorkOrderSchedulesByUser");
+        return workOrderScheduleService.findAllByUser();
     }
 
     /**

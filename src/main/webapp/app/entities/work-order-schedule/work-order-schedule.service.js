@@ -2,10 +2,18 @@
     'use strict';
     angular
         .module('app')
-        .factory('WorkOrderSchedule', WorkOrderSchedule);
+        .factory('WorkOrderSchedule', WorkOrderSchedule)
+        .factory('WorkOrderScheduleByUser', WorkOrderScheduleByUser);
 
     WorkOrderSchedule.$inject = ['$resource', 'DateUtils'];
+    WorkOrderScheduleByUser.$inject = ['$resource'];
 
+    function WorkOrderScheduleByUser ($resource) {
+        var resourceUrl =  'api/work-order-schedules-by-user';
+        return $resource(resourceUrl, {}, {
+            'query': { method: 'GET', isArray: true}
+        });
+    }
     function WorkOrderSchedule ($resource, DateUtils) {
         var resourceUrl =  'api/work-order-schedules/:id';
 

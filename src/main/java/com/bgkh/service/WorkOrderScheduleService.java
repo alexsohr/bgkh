@@ -18,11 +18,11 @@ public interface WorkOrderScheduleService {
 
     /**
      *  Get all the workOrderSchedules.
-     *  
+     *
      *  @return the list of entities
      */
     List<WorkOrderSchedule> findAll();
-
+    List<WorkOrderSchedule> findAllByUser();
     /**
      *  Get the "id" workOrderSchedule.
      *

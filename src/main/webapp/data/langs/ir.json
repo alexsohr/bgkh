@@ -224,11 +224,17 @@
   "All the data is loaded": "تمام اطلاعات بارگزاری شد.",
   "NOTE": "توجه",
   "Overview": "نمایش",
+  "Show work order history": "نمایش سابقه تجهیز",
   "Data submitted successfully": "اطلاعات با موفقیت ذخیره شد",
   "1 second ago": "۱ ثانیه قبل",
   "Issue Date": "تاریخ صدور",
   "NOT_STARTED": "صادر شده",
   "IN_PROGRESS": "در حال انجام",
   "FINISHED": "پایان یافته",
+  "REOPENED": "دوباره باز شده",
+  "DELAYED": "عقب افتاده",
+  "COMPLETED": "پایان یافته",
+  "New Status": "وضعیت جدید",
+  "Comment": "توضیحات",
   "Work Order Schedule Detail": "جزئیات دستور کار صادر شده"
 }

@@ -5,29 +5,35 @@
         .module('app.workOrder')
         .controller('workOrderScheduleDetailController', workOrderScheduleDetailController);
 
-    workOrderScheduleDetailController.$inject = ['$rootScope', '$scope', '$state', '$uibModalInstance', 'entity'];
+    workOrderScheduleDetailController.$inject = ['$rootScope', '$scope', '$state', '$uibModalInstance', 'entity', 'WorkOrderHistory'];
 
-    function workOrderScheduleDetailController($rootScope, $scope, $state, $uibModalInstance, entity) {
+    function workOrderScheduleDetailController($rootScope, $scope, $state, $uibModalInstance, entity, WorkOrderHistory) {
         var vm = this;
         $scope.entity = entity;
         $scope.asset = entity.workOrder.asset;
         $scope.disableForm = true;
+        $scope.newStatus = "";
+        $scope.comment = "";
         vm.clear = function () {
             $uibModalInstance.dismiss('cancel');
         }
 
         vm.save = function () {
             vm.isSaving = true;
-            AssetCopy.save($scope.entity, onSaveSuccess, onSaveError);
+            var data = {};
+            data.workOrderSchedule = entity;
+            data.comment = $scope.comment;
+            data.historyStatus = $scope.newStatus;
+            WorkOrderHistory.save(data, onSaveSuccess, onSaveError);
         }
 
-        vm.onSaveSuccess = function(result) {
+        var onSaveSuccess = function(result) {
             $scope.$emit('app:workOrderScheduleUpdate', result);
             $uibModalInstance.close(result);
             vm.isSaving = false;
         }
 
-        vm.onSaveError = function() {
+        var onSaveError = function() {
             vm.isSaving = false;
         }
 

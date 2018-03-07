@@ -1,13 +1,15 @@
 package com.bgkh.domain;
 
-import com.bgkh.domain.enumeration.HistoryStatus;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
+
+import com.bgkh.domain.enumeration.HistoryStatus;
 
 /**
  * A WorkOrderHistory.
@@ -29,6 +31,10 @@ public class WorkOrderHistory implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "history_status")
     private HistoryStatus historyStatus;
+
+    @NotNull
+    @Column(name = "comment", nullable = false)
+    private String comment;
 
     @ManyToOne
     private WorkOrderSchedule workOrderSchedule;
@@ -65,6 +71,19 @@ public class WorkOrderHistory implements Serializable {
 
     public void setHistoryStatus(HistoryStatus historyStatus) {
         this.historyStatus = historyStatus;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public WorkOrderHistory comment(String comment) {
+        this.comment = comment;
+        return this;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public WorkOrderSchedule getWorkOrderSchedule() {
@@ -106,6 +125,7 @@ public class WorkOrderHistory implements Serializable {
             "id=" + id +
             ", createDate='" + createDate + "'" +
             ", historyStatus='" + historyStatus + "'" +
+            ", comment='" + comment + "'" +
             '}';
     }
 }

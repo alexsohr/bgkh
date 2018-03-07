@@ -86,7 +86,7 @@ angular.module('app', [
 .constant('APP_CONFIG', window.appConfig)
 
 .run(function ($rootScope
-    , $state, $stateParams, Language, Assets, amMoment
+    , $state, $stateParams, Language, Assets, amMoment, Auth
     ) {
 
     $rootScope.$state = $state;
@@ -113,7 +113,12 @@ angular.module('app', [
         // current is an object that is the route where we are currently
         var currentPath = current.originalPath;
         var nextPath = next.originalPath;
-
+        // if (Auth.getPreviousState()) {
+        //     var previousState = Auth.getPreviousState();
+        //     Auth.resetPreviousState();
+        //     $state.go(previousState.name, previousState.params);
+        // }
+        //
         console.log('Starting to leave %s to go to %s', currentPath, nextPath);
     });
     $rootScope.$on('$locationChangeStart', function(event, newUrl, oldUrl) {
