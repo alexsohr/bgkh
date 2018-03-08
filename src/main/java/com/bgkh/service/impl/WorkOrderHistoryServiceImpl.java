@@ -1,6 +1,7 @@
 package com.bgkh.service.impl;
 
 import com.bgkh.domain.WorkOrderHistory;
+import com.bgkh.domain.WorkOrderSchedule;
 import com.bgkh.domain.enumeration.HistoryStatus;
 import com.bgkh.domain.enumeration.ScheduleStatus;
 import com.bgkh.repository.WorkOrderHistoryRepository;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
 /**
@@ -32,14 +32,16 @@ public class WorkOrderHistoryServiceImpl implements WorkOrderHistoryService {
 
     @Override
     public WorkOrderHistory save(WorkOrderHistory workOrderHistory) {
+        WorkOrderSchedule workOrderSchedule = workOrderScheduleRepository.getOne(workOrderHistory.getWorkOrderSchedule().getId());
         workOrderHistory.setCreateDate(ZonedDateTime.now());
         if (workOrderHistory.getHistoryStatus().equals(HistoryStatus.COMPLETED)) {
-            workOrderHistory.getWorkOrderSchedule().setScheduleStatus(ScheduleStatus.COMPLETED);
-            workOrderHistory.getWorkOrderSchedule().setCompletedDate(ZonedDateTime.now());
+            workOrderSchedule.setScheduleStatus(ScheduleStatus.COMPLETED);
+            workOrderSchedule.setCompletedDate(ZonedDateTime.now());
         } else {
-            workOrderHistory.getWorkOrderSchedule().setScheduleStatus(ScheduleStatus.IN_PROGRESS);
+            workOrderSchedule.setScheduleStatus(ScheduleStatus.IN_PROGRESS);
         }
-        workOrderScheduleRepository.save(workOrderHistory.getWorkOrderSchedule());
+        workOrderScheduleRepository.save(workOrderSchedule);
+        workOrderHistory.setWorkOrderSchedule(workOrderSchedule);
         return workOrderHistoryRepository.save(workOrderHistory);
     }
 }

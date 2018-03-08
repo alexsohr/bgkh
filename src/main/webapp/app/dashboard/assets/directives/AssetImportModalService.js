@@ -23,8 +23,8 @@ angular
             backdrop: 'static',
             size: 'lg',
             resolve: {
-                entity: ['Asset', function (Asset) {
-                    return Asset.get({id: id}).$promise;
+                entity: ['WorkOrderHistoryByAssetId', function (WorkOrderHistoryByAssetId) {
+                    return WorkOrderHistoryByAssetId.query({id: id}).$promise;
                 }]
                 // workOrders: ['WorkOrderByAsset', function (WorkOrderByAsset) {
                 //     return WorkOrderByAsset.query({id: id}).$promise;

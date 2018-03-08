@@ -10,12 +10,25 @@
     function AssetWorkOrderHistoryController($timeout, $scope, $stateParams, $uibModalInstance, entity, Asset, AssetCopy, AssetImportModalService) {
         var vm = this;
 
-        vm.asset = entity;
-        vm.assetList = {};
-        vm.assetList.assetList = [];
+        vm.entity = entity;
+        vm.workOrderSchedules = [];
+        function transformData() {
+            angular.forEach(vm.entity, function (workOrderHistory) {
+                if (vm.workOrderSchedules[workOrderHistory.workOrderSchedule.id] === undefined) {
+                    vm.workOrderSchedules[workOrderHistory.workOrderSchedule.id] = [];
+                    vm.workOrderSchedules[workOrderHistory.workOrderSchedule.id] = workOrderHistory.workOrderSchedule;
+                    vm.workOrderSchedules[workOrderHistory.workOrderSchedule.id].workOrderHistories = [];
+                }
+                vm.workOrderSchedules[workOrderHistory.workOrderSchedule.id].workOrderHistories.push(workOrderHistory);
+            });
+            vm.workOrderSchedules = vm.workOrderSchedules.filter(function(x){
+                return (x !== (undefined || null || ''));
+            });
+        }
+        transformData();
+        vm.workOrderSchedules.reverse();
+        console.log(vm.workOrderSchedules);
         vm.clear = clear;
-        vm.save = save;
-        vm.selectedParentTree = selectedParentTree;
 
         $timeout(function () {
             angular.element('.form-group:eq(1)>input').focus();
@@ -23,29 +36,6 @@
 
         function clear() {
             $uibModalInstance.dismiss('cancel');
-        }
-
-        function save() {
-            vm.isSaving = true;
-            vm.assetList.assetList.push(vm.asset);
-            vm.assetList.parentId = vm.asset.parentId;
-            AssetCopy.save(vm.assetList, onSaveSuccess, onSaveError);
-        }
-
-        function onSaveSuccess(result) {
-            $scope.$emit('app:assetUpdate', result);
-            $uibModalInstance.close(result);
-            vm.isSaving = false;
-        }
-
-        function onSaveError() {
-            vm.isSaving = false;
-        }
-
-        function selectedParentTree(branch) {
-            if (!angular.isUndefinedOrNull(branch)) {
-                vm.asset.parentId = branch.id;
-            }
         }
     }
 })();

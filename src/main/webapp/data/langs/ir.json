@@ -236,5 +236,6 @@
   "COMPLETED": "پایان یافته",
   "New Status": "وضعیت جدید",
   "Comment": "توضیحات",
-  "Work Order Schedule Detail": "جزئیات دستور کار صادر شده"
+  "Work Order Schedule Detail": "سابقه تجهیز",
+  "Work Order form": "دستور کار صادر شده"
 }

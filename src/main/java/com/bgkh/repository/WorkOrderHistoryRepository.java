@@ -13,6 +13,6 @@ import java.util.List;
 @SuppressWarnings("unused")
 public interface WorkOrderHistoryRepository extends JpaRepository<WorkOrderHistory,Long> {
 
-    @Query("select workOrderHistory from WorkOrderHistory workOrderHistory where workOrderHistory.workOrderSchedule.asset.id = :id order by workOrderHistory.workOrderSchedule.createDate desc, workOrderHistory.createDate desc")
+    @Query("select workOrderHistory from WorkOrderHistory workOrderHistory where workOrderHistory.workOrderSchedule.asset.id = :id order by workOrderHistory.workOrderSchedule.createDate desc, workOrderHistory.createDate")
     List<WorkOrderHistory> findAllByAssetId(@Param("id") Long id);
 }
