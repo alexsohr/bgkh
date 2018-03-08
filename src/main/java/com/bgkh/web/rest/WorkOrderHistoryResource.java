@@ -92,6 +92,19 @@ public class WorkOrderHistoryResource {
     }
 
     /**
+     * GET  /work-order-histories : get all the workOrderHistories.
+     *
+     * @return the ResponseEntity with status 200 (OK) and the list of workOrderHistories in body
+     */
+    @GetMapping("/work-order-histories/asset/{id}")
+    @Timed
+    public List<WorkOrderHistory> getAllWorkOrderHistoriesByAssetId(@PathVariable Long id) {
+        log.debug("REST request to get all getAllWorkOrderHistoriesByAssetId");
+        List<WorkOrderHistory> workOrderHistories = workOrderHistoryRepository.findAllByAssetId(id);
+        return workOrderHistories;
+    }
+
+    /**
      * GET  /work-order-histories/:id : get the "id" workOrderHistory.
      *
      * @param id the id of the workOrderHistory to retrieve

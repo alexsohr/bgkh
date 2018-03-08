@@ -13,7 +13,7 @@ import java.util.List;
 @SuppressWarnings("unused")
 public interface WorkOrderScheduleRepository extends JpaRepository<WorkOrderSchedule,Long> {
 
-    @Query("select schedule from WorkOrderSchedule schedule where schedule.workOrder.id = :workOrderId and schedule.asset.id = :assetId and schedule.workOrderTemplate.id = :templateId")
+    @Query("select schedule from WorkOrderSchedule schedule where schedule.workOrder.id = :workOrderId and schedule.asset.id = :assetId and schedule.workOrderTemplate.id = :templateId order by schedule.createDate desc")
     List<WorkOrderSchedule> findAllByWorkOrder(@Param("workOrderId") Long workOrderId, @Param("assetId") Long assetId, @Param("templateId") Long templateId);
 
     @Query("select schedule from WorkOrderSchedule schedule where schedule.asset.technician.id = :userId and schedule.scheduleStatus <> 'COMPLETED' order by schedule.createDate")

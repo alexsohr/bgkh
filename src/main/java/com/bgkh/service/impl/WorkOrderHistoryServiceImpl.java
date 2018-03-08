@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 
 /**
  * Created by alex on 3/6/18.
@@ -31,10 +32,10 @@ public class WorkOrderHistoryServiceImpl implements WorkOrderHistoryService {
 
     @Override
     public WorkOrderHistory save(WorkOrderHistory workOrderHistory) {
-        workOrderHistory.setCreateDate(LocalDate.now());
+        workOrderHistory.setCreateDate(ZonedDateTime.now());
         if (workOrderHistory.getHistoryStatus().equals(HistoryStatus.COMPLETED)) {
             workOrderHistory.getWorkOrderSchedule().setScheduleStatus(ScheduleStatus.COMPLETED);
-            workOrderHistory.getWorkOrderSchedule().setCompletedDate(LocalDate.now());
+            workOrderHistory.getWorkOrderSchedule().setCompletedDate(ZonedDateTime.now());
         } else {
             workOrderHistory.getWorkOrderSchedule().setScheduleStatus(ScheduleStatus.IN_PROGRESS);
         }

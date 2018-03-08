@@ -45,7 +45,7 @@
         $rootScope.$on('app:workOrderScheduleUpdate', function (event, result) {
             // vm.dtInstance.changeData('api/work-order-schedules/');
             vm.dtInstance.changeData(function() {
-                return $resource('api/work-order-schedules/').query().$promise;
+                return WorkOrderScheduleByUser.query().$promise;
             });
             console.log(vm);
             // vm.dtInstance.rerender();

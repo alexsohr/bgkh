@@ -1,18 +1,17 @@
 package com.bgkh.domain;
 
+import com.bgkh.domain.enumeration.ScheduleStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
-
-import com.bgkh.domain.enumeration.ScheduleStatus;
+import java.util.Set;
 
 /**
  * A WorkOrderSchedule.
@@ -29,10 +28,10 @@ public class WorkOrderSchedule implements Serializable {
     private Long id;
 
     @Column(name = "create_date")
-    private LocalDate createDate;
+    private ZonedDateTime createDate = ZonedDateTime.now();
 
     @Column(name = "expire_date")
-    private LocalDate expireDate;
+    private ZonedDateTime expireDate = ZonedDateTime.now();
 
     @Column(name = "description")
     private String description;
@@ -42,7 +41,7 @@ public class WorkOrderSchedule implements Serializable {
     private ScheduleStatus scheduleStatus;
 
     @Column(name = "completed_date")
-    private LocalDate completedDate;
+    private ZonedDateTime completedDate;
 
     @ManyToOne
     private WorkOrder workOrder;
@@ -68,29 +67,29 @@ public class WorkOrderSchedule implements Serializable {
         this.id = id;
     }
 
-    public LocalDate getCreateDate() {
+    public ZonedDateTime getCreateDate() {
         return createDate;
     }
 
-    public WorkOrderSchedule createDate(LocalDate createDate) {
+    public WorkOrderSchedule createDate(ZonedDateTime createDate) {
         this.createDate = createDate;
         return this;
     }
 
-    public void setCreateDate(LocalDate createDate) {
+    public void setCreateDate(ZonedDateTime createDate) {
         this.createDate = createDate;
     }
 
-    public LocalDate getExpireDate() {
+    public ZonedDateTime getExpireDate() {
         return expireDate;
     }
 
-    public WorkOrderSchedule expireDate(LocalDate expireDate) {
+    public WorkOrderSchedule expireDate(ZonedDateTime expireDate) {
         this.expireDate = expireDate;
         return this;
     }
 
-    public void setExpireDate(LocalDate expireDate) {
+    public void setExpireDate(ZonedDateTime expireDate) {
         this.expireDate = expireDate;
     }
 
@@ -120,16 +119,16 @@ public class WorkOrderSchedule implements Serializable {
         this.scheduleStatus = scheduleStatus;
     }
 
-    public LocalDate getCompletedDate() {
+    public ZonedDateTime getCompletedDate() {
         return completedDate;
     }
 
-    public WorkOrderSchedule completedDate(LocalDate completedDate) {
+    public WorkOrderSchedule completedDate(ZonedDateTime completedDate) {
         this.completedDate = completedDate;
         return this;
     }
 
-    public void setCompletedDate(LocalDate completedDate) {
+    public void setCompletedDate(ZonedDateTime completedDate) {
         this.completedDate = completedDate;
     }
 

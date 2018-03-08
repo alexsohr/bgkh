@@ -1,10 +1,13 @@
 package com.bgkh.service.impl;
 
 import com.bgkh.domain.WorkOrder;
+import com.bgkh.domain.WorkOrderHistory;
 import com.bgkh.domain.WorkOrderSchedule;
 import com.bgkh.domain.WorkOrderTemplate;
+import com.bgkh.domain.enumeration.HistoryStatus;
 import com.bgkh.domain.enumeration.ScheduleStatus;
 import com.bgkh.domain.enumeration.WorkOrderTemplateFunctionType;
+import com.bgkh.repository.WorkOrderHistoryRepository;
 import com.bgkh.repository.WorkOrderRepository;
 import com.bgkh.repository.WorkOrderScheduleRepository;
 import com.bgkh.service.WorkOrderJobScheduleService;
@@ -14,7 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import java.time.LocalDate;
+import java.sql.Date;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.List;
 
@@ -32,6 +37,8 @@ public class WorkOrderJobScheduleServiceImpl implements WorkOrderJobScheduleServ
 
     @Inject
     private WorkOrderScheduleRepository workOrderScheduleRepository;
+    @Inject
+    private WorkOrderHistoryRepository workOrderHistoryRepository;
 
     @Override
     public void processWorkOrderSchedules() {
@@ -61,8 +68,8 @@ public class WorkOrderJobScheduleServiceImpl implements WorkOrderJobScheduleServ
         } else {
             if (lastWorkOrderSchedule == null) {
                 createNewDailyTemplate(workOrder);
-            } else {
-                calendar.setTime(java.sql.Date.valueOf(lastWorkOrderSchedule.getCompletedDate()));
+            } else if (lastWorkOrderSchedule.getScheduleStatus().equals(ScheduleStatus.COMPLETED)) {
+                calendar.setTime(Date.from(lastWorkOrderSchedule.getCompletedDate().toInstant()));
                 calendar.add(Calendar.DAY_OF_MONTH, workOrderTemplate.getNumberOfDays().intValue());
                 long nextSchedule = calendar.getTimeInMillis();
                 if (now >= nextSchedule) {
@@ -80,12 +87,19 @@ public class WorkOrderJobScheduleServiceImpl implements WorkOrderJobScheduleServ
         WorkOrderSchedule workOrderSchedule = new WorkOrderSchedule();
         workOrderSchedule.setAsset(workOrder.getAsset());
         workOrderSchedule.setDescription(workOrder.getDescription());
-        workOrderSchedule.setCreateDate(LocalDate.now());
-        workOrderSchedule.setExpireDate(LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH)));
+        workOrderSchedule.setCreateDate(ZonedDateTime.now());
+        workOrderSchedule.setExpireDate(ZonedDateTime.ofInstant(calendar.toInstant(), ZoneId.systemDefault()));
         workOrderSchedule.setScheduleStatus(ScheduleStatus.NOT_STARTED);
         workOrderSchedule.setWorkOrder(workOrder);
         workOrderSchedule.setWorkOrderTemplate(workOrder.getWorkOrderTemplate());
         workOrderScheduleRepository.save(workOrderSchedule);
+
+        WorkOrderHistory workOrderHistory = new WorkOrderHistory();
+        workOrderHistory.setComment("________________");
+        workOrderHistory.setCreateDate(ZonedDateTime.now());
+        workOrderHistory.setHistoryStatus(HistoryStatus.CREATED);
+        workOrderHistory.setWorkOrderSchedule(workOrderSchedule);
+        workOrderHistoryRepository.save(workOrderHistory);
         logger.info("New schedule created for workOrder: {}", workOrder);
     }
 

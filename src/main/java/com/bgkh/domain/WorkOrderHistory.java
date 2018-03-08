@@ -7,6 +7,8 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Objects;
 
 import com.bgkh.domain.enumeration.HistoryStatus;
@@ -26,7 +28,7 @@ public class WorkOrderHistory implements Serializable {
     private Long id;
 
     @Column(name = "create_date")
-    private LocalDate createDate;
+    private ZonedDateTime createDate = ZonedDateTime.now();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "history_status")
@@ -47,16 +49,16 @@ public class WorkOrderHistory implements Serializable {
         this.id = id;
     }
 
-    public LocalDate getCreateDate() {
+    public ZonedDateTime getCreateDate() {
         return createDate;
     }
 
-    public WorkOrderHistory createDate(LocalDate createDate) {
+    public WorkOrderHistory createDate(ZonedDateTime createDate) {
         this.createDate = createDate;
         return this;
     }
 
-    public void setCreateDate(LocalDate createDate) {
+    public void setCreateDate(ZonedDateTime createDate) {
         this.createDate = createDate;
     }
 
