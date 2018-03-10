@@ -44,14 +44,16 @@ public class WorkOrderJobScheduleServiceImpl implements WorkOrderJobScheduleServ
     public void processWorkOrderSchedules() {
         List<WorkOrder> workOrders = workOrderRepository.findAll();
         for(WorkOrder workOrder: workOrders) {
-            WorkOrderTemplate workOrderTemplate = workOrder.getWorkOrderTemplate();
-            List<WorkOrderSchedule> workOrderSchedules = workOrderScheduleRepository.findAllByWorkOrder(workOrder.getId(), workOrder.getAsset().getId(), workOrderTemplate.getId());
-            WorkOrderSchedule lastWorkOrderSchedule = null;
-            if (!workOrderSchedules.isEmpty()) {
-                lastWorkOrderSchedule = workOrderSchedules.get(0);
-            }
-            if (lastWorkOrderSchedule == null || lastWorkOrderSchedule.getScheduleStatus().equals(ScheduleStatus.COMPLETED)) {
-                processNewSchedule(workOrder, workOrderTemplate, lastWorkOrderSchedule);
+            if (workOrder.isTrack()) {
+                WorkOrderTemplate workOrderTemplate = workOrder.getWorkOrderTemplate();
+                List<WorkOrderSchedule> workOrderSchedules = workOrderScheduleRepository.findAllByWorkOrder(workOrder.getId(), workOrder.getAsset().getId(), workOrderTemplate.getId());
+                WorkOrderSchedule lastWorkOrderSchedule = null;
+                if (!workOrderSchedules.isEmpty()) {
+                    lastWorkOrderSchedule = workOrderSchedules.get(0);
+                }
+                if (lastWorkOrderSchedule == null || lastWorkOrderSchedule.getScheduleStatus().equals(ScheduleStatus.COMPLETED)) {
+                    processNewSchedule(workOrder, workOrderTemplate, lastWorkOrderSchedule);
+                }
             }
         }
     }

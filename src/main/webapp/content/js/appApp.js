@@ -9641,6 +9641,53 @@ angular
         }
     }]);
 
+'use strict';
+
+angular
+    .module('app')
+    .directive('hasAnyAuthority', ["Principal", function (Principal) {
+        var directive = {
+            restrict: 'A',
+            link: linkFunc
+        };
+
+        return directive;
+
+        function linkFunc(scope, element, attrs) {
+            var authorities = attrs.hasAnyAuthority.replace(/\s+/g, '').split(',');
+
+            var setVisible = function () {
+                    element.removeClass('hidden');
+                },
+                setHidden = function () {
+                    element.addClass('hidden');
+                },
+                defineVisibility = function (reset) {
+                    var result;
+                    if (reset) {
+                        setVisible();
+                    }
+
+                    result = Principal.hasAnyAuthority(authorities);
+                    if (result) {
+                        setVisible();
+                    } else {
+                        setHidden();
+                    }
+                };
+
+            if (authorities.length > 0) {
+                defineVisibility(true);
+
+                scope.$watch(function () {
+                    return Principal.isAuthenticated();
+                }, function () {
+                    defineVisibility(true);
+                });
+            }
+        }
+    }]);
+
 (function(){angular.module("app").run(["$templateCache", function($templateCache) {$templateCache.put("app/dashboard/live-feeds.tpl.html","<div jarvis-widget id=\"live-feeds-widget\" data-widget-togglebutton=\"false\" data-widget-editbutton=\"false\" data-widget-fullscreenbutton=\"false\" data-widget-colorbutton=\"false\" data-widget-deletebutton=\"false\"><!-- widget options:\r\n    usage: <div class=\"jarviswidget\" id=\"wid-id-0\" data-widget-editbutton=\"false\">\r\n\r\n    data-widget-colorbutton=\"false\"\r\n    data-widget-editbutton=\"false\"\r\n    data-widget-togglebutton=\"false\"\r\n    data-widget-deletebutton=\"false\"\r\n    data-widget-fullscreenbutton=\"false\"\r\n    data-widget-custombutton=\"false\"\r\n    data-widget-collapsed=\"true\"\r\n    data-widget-sortable=\"false\"\r\n\r\n    --><header><span class=\"widget-icon\"><i class=\"glyphicon glyphicon-stats txt-color-darken\"></i></span><h2>{{getWord(\'Statistics\')}}</h2><ul class=\"nav nav-tabs pull-right in\" id=\"myTab\"><li class=\"active\"><a data-toggle=\"tab\" href=\"#s1\"><i class=\"fa fa-clock-o\"></i> {{getWord(\'Work time/Designated time\')}}</a></li><li><a data-toggle=\"tab\" href=\"#s2\"><i class=\"fa fa-bolt\"></i> <span class=\"hidden-mobile hidden-tablet\">{{getWord(\'Electricity & Water/Time\')}}</span></a></li></ul></header><!-- widget div--><div class=\"no-padding\"><div class=\"widget-body\"><!-- content --><div id=\"myTabContent\" class=\"tab-content\"><div class=\"tab-pane fade active in padding-10 no-padding-bottom\" id=\"s1\"><div class=\"widget-body-toolbar bg-color-white\"><div class=\"col-sm-12 col-md-12 col-lg-8\"><form class=\"form-inline\" role=\"form\"><div class=\"form-group\"><label>{{getWord(\'From/To\')}}</label><div class=\"input-group\"><input type=\"text\" class=\"form-control\" style=\"direction: ltr\" data-smart-masked-input=\"1399/99/99\" data-mask-placeholder=\"-\"> <span class=\"input-group-addon\"><i class=\"fa fa-calendar\"></i></span></div><div class=\"input-group\"><input type=\"text\" class=\"form-control\" style=\"direction: ltr\" data-smart-masked-input=\"1399/99/99\" data-mask-placeholder=\"-\"> <span class=\"input-group-addon\"><i class=\"fa fa-calendar\"></i></span></div></div></form></div><div class=\"col-sm-12 col-md-12 col-lg-4\"><div class=\"smart-form\" id=\"work-toggles\"><div class=\"inline-group pull-right\"><label for=\"gra-0\" class=\"checkbox\"><input type=\"checkbox\" id=\"gra-0\" ng-model=\"workOrderShow\"> <i></i> {{getWord(\'Work orders time\')}}</label><label for=\"gra-1\" class=\"checkbox\"><input type=\"checkbox\" id=\"gra-1\" ng-model=\"designatedTimeShow\"> <i></i> {{getWord(\'Designated time\')}}</label></div></div></div></div><div class=\"padding-10\"><div id=\"statsChart\" class=\"chart-large has-legend-unique\" flot-basic flot-data=\"statsData\" flot-options=\"statsDisplayOptions\"></div></div></div><!-- end s2 tab pane --><div class=\"tab-pane fade in padding-10 no-padding-bottom\" id=\"s2\"><div class=\"widget-body-toolbar bg-color-white smart-form\" id=\"rev-toggles\"><div class=\"inline-group\"><label for=\"gra-3\" class=\"checkbox\"><input type=\"checkbox\" id=\"gra-3\" ng-model=\"electricityShow\"> <i></i> {{getWord(\'Electricity\')}}</label><label for=\"gra-4\" class=\"checkbox\"><input type=\"checkbox\" id=\"gra-4\" ng-model=\"waterShow\"> <i></i> {{getWord(\'Water\')}}</label></div></div><div class=\"padding-10\"><div id=\"flotcontainer\" class=\"chart-large has-legend-unique padding-10\" flot-basic flot-data=\"revenewData\" flot-options=\"revenewDisplayOptions\"></div></div></div><!-- end s3 tab pane --></div><!-- end content --></div></div><!-- end widget div --></div>");
 $templateCache.put("app/home/welcome.tpl.html","<!-- MAIN CONTENT --><div id=\"content\"><!-- widget grid --><section id=\"widget-grid1\" widget-grid><!-- row --><div class=\"row\"><article class=\"col-sm-6 span7 center\"><div jarvis-widget data-widget-editbutton=\"false\" data-widget-deletebutton=\"false\" data-widget-fullscreenbutton=\"false\" data-widget-togglebutton=\"false\" data-widget-color=\"blue\"><header><span class=\"widget-icon\"><i class=\"fa fa-user txt-color-white\"></i></span><h2>Login</h2></header><!-- widget div--><div><div class=\"widget-body no-padding\"><!-- content goes here --><div class=\"row\"><div class=\"col-md-4 col-md-offset-4\"><h1></h1></div><div class=\"col-md-8 col-md-offset-2\"><div class=\"alert alert-danger\" ng-show=\"vm.authenticationError\"><strong>Failed to sign in!</strong> Please check your credentials and try again.</div></div><div class=\"col-md-8 col-md-offset-2\"><form class=\"form\" role=\"form\" ng-submit=\"vm.login($event)\"><div class=\"form-group\"><label for=\"username\">Login</label><input type=\"text\" class=\"form-control\" id=\"username\" placeholder=\"Your username\" ng-model=\"vm.username\"></div><div class=\"form-group\"><label for=\"password\">Password</label><input type=\"password\" class=\"form-control\" id=\"password\" placeholder=\"Your password\" ng-model=\"vm.password\"></div><div class=\"form-group\"><label for=\"rememberMe\"><input type=\"checkbox\" id=\"rememberMe\" ng-model=\"vm.rememberMe\" checked=\"checked\"> <span>Remember me</span></label></div><button type=\"submit\" class=\"btn btn-primary\">Sign in</button></form><p></p><div>&nbsp;</div><!--<div class=\"alert alert-warning\">--><!--<a class=\"alert-link\" href=\"\" ng-click=\"vm.requestResetPassword()\">Did you--><!--forget--><!--your--><!--password?</a>--><!--</div>--><!--<div class=\"alert alert-warning\">--><!--You don\'t have an account yet? <a class=\"alert-link\" href=\"\"--><!--ng-click=\"vm.register()\">Register a--><!--new--><!--account</a>--><!--</div>--></div></div><!-- end content --></div></div><!-- end widget div --></div></article></div></section></div>");
 $templateCache.put("app/layout/layout.tpl.html","<!-- HEADER --><div data-smart-include=\"app/layout/partials/header.tpl.html\" class=\"placeholder-header\"></div><!-- END HEADER --><!-- Left panel : Navigation area --><!-- Note: This width of the aside area can be adjusted through LESS variables --><div data-smart-include=\"app/layout/partials/navigation.tpl.html\" class=\"placeholder-left-panel\"></div><!-- END NAVIGATION --><!-- MAIN PANEL --><div id=\"main\" role=\"main\"><demo-states></demo-states><!-- RIBBON --><div id=\"ribbon\"><span class=\"ribbon-button-alignment\"><span id=\"refresh\" class=\"btn btn-ribbon\" reset-widgets tooltip-placement=\"bottom\" smart-tooltip-html=\"<i class=\'text-warning fa fa-warning\'></i> Warning! This will reset all your widget settings.\"><i class=\"fa fa-refresh\"></i> </span></span><!-- breadcrumb --><state-breadcrumbs></state-breadcrumbs><!-- end breadcrumb --></div><!-- END RIBBON --><div data-smart-router-animation-wrap=\"content content@app\" data-wrap-for=\"#content\"><div data-ui-view=\"content\" data-autoscroll=\"false\"></div></div></div><!-- END MAIN PANEL --><!-- PAGE FOOTER --><div data-smart-include=\"app/layout/partials/footer.tpl.html\"></div><div data-smart-include=\"app/layout/shortcut/shortcut.tpl.html\"></div><!-- END PAGE FOOTER -->");
@@ -9809,53 +9856,6 @@ $templateCache.put("app/forms/views/form-layouts/form-layouts-demo.html","<!-- M
 $templateCache.put("app/forms/views/form-layouts/order-form.html","<form id=\"order-form\" class=\"smart-form\" novalidate=\"novalidate\"><header>Order services</header><fieldset><div class=\"row\"><section class=\"col col-6\"><label class=\"input\"><i class=\"icon-append fa fa-user\"></i> <input type=\"text\" name=\"name\" placeholder=\"Name\"></label></section><section class=\"col col-6\"><label class=\"input\"><i class=\"icon-append fa fa-briefcase\"></i> <input type=\"text\" name=\"company\" placeholder=\"Company\"></label></section></div><div class=\"row\"><section class=\"col col-6\"><label class=\"input\"><i class=\"icon-append fa fa-envelope-o\"></i> <input type=\"email\" name=\"email\" placeholder=\"E-mail\"></label></section><section class=\"col col-6\"><label class=\"input\"><i class=\"icon-append fa fa-phone\"></i> <input type=\"tel\" name=\"phone\" placeholder=\"Phone\" data-smart-masked-input=\"(999) 999-9999\"></label></section></div></fieldset><fieldset><div class=\"row\"><section class=\"col col-6\"><label class=\"select\"><select name=\"interested\"><option value=\"0\" selected=\"\" disabled=\"\">Interested in</option><option value=\"1\">design</option><option value=\"1\">development</option><option value=\"2\">illustration</option><option value=\"2\">branding</option><option value=\"3\">video</option></select><i></i></label></section><section class=\"col col-6\"><label class=\"select\"><select name=\"budget\"><option value=\"0\" selected=\"\" disabled=\"\">Budget</option><option value=\"1\">less than 5000$</option><option value=\"2\">5000$ - 10000$</option><option value=\"3\">10000$ - 20000$</option><option value=\"4\">more than 20000$</option></select><i></i></label></section></div><div class=\"row\"><section class=\"col col-6\"><label class=\"input\"><i class=\"icon-append fa fa-calendar\"></i> <input type=\"text\" name=\"startdate\" id=\"startdate\" data-smart-datepicker data-min-restrict=\"#finishdate\" placeholder=\"Expected start date\"></label></section><section class=\"col col-6\"><label class=\"input\"><i class=\"icon-append fa fa-calendar\"></i> <input type=\"text\" name=\"finishdate\" id=\"finishdate\" data-smart-datepicker data-max-restrict=\"#startdate\" placeholder=\"Expected finish date\"></label></section></div><section><div class=\"input input-file\"><span class=\"button\"><input id=\"file2\" type=\"file\" name=\"file2\" onchange=\"this.parentNode.nextSibling.value = this.value\">Browse</span><input type=\"text\" placeholder=\"Include some files\" readonly=\"\"></div></section><section><label class=\"textarea\"><i class=\"icon-append fa fa-comment\"></i><textarea rows=\"5\" name=\"comment\" placeholder=\"Tell us about your project\"></textarea></label></section></fieldset><footer><button type=\"submit\" class=\"btn btn-primary\">Validate Form</button></footer></form>");
 $templateCache.put("app/forms/views/form-layouts/registration-form.html","<form id=\"smart-form-register\" class=\"smart-form\" data-smart-registration-form><header>Registration form</header><fieldset><section><label class=\"input\"><i class=\"icon-append fa fa-user\"></i> <input type=\"text\" name=\"username\" placeholder=\"Username\"> <b class=\"tooltip tooltip-bottom-right\">Needed to enter the website</b></label></section><section><label class=\"input\"><i class=\"icon-append fa fa-envelope-o\"></i> <input type=\"email\" name=\"email\" placeholder=\"Email address\"> <b class=\"tooltip tooltip-bottom-right\">Needed to verify your account</b></label></section><section><label class=\"input\"><i class=\"icon-append fa fa-lock\"></i> <input type=\"password\" name=\"password\" placeholder=\"Password\" id=\"password\"> <b class=\"tooltip tooltip-bottom-right\">Don\'t forget your password</b></label></section><section><label class=\"input\"><i class=\"icon-append fa fa-lock\"></i> <input type=\"password\" name=\"passwordConfirm\" placeholder=\"Confirm password\"> <b class=\"tooltip tooltip-bottom-right\">Don\'t forget your password</b></label></section></fieldset><fieldset><div class=\"row\"><section class=\"col col-6\"><label class=\"input\"><input type=\"text\" name=\"firstname\" placeholder=\"First name\" ng-model=\"registration.firstname\"></label></section><section class=\"col col-6\"><label class=\"input\"><input type=\"text\" name=\"lastname\" placeholder=\"Last name\" ng-model=\"registration.lastname\"></label></section></div><div class=\"row\"><section class=\"col col-6\"><label class=\"select\"><select name=\"gender\"><option value=\"0\" selected=\"\" disabled=\"\">Gender</option><option value=\"1\">Male</option><option value=\"2\">Female</option><option value=\"3\">Prefer not to answer</option></select><i></i></label></section><section class=\"col col-6\"><label class=\"input\"><i class=\"icon-append fa fa-calendar\"></i> <input type=\"text\" name=\"request\" placeholder=\"Request activation on\" data-smart-datepicker data-dateformat=\"dd/mm/yy\" ng-model=\"registration.date\"></label></section></div><section><label class=\"checkbox\"><input type=\"checkbox\" name=\"subscription\" id=\"subscription\"> <i></i>I want to receive news and special offers</label><label class=\"checkbox\"><input type=\"checkbox\" name=\"terms\" id=\"terms\"> <i></i>I agree with the Terms and Conditions</label></section></fieldset><footer><button type=\"submit\" class=\"btn btn-primary\">Validate Form</button></footer></form>");
 $templateCache.put("app/forms/views/form-layouts/review-form.html","<form id=\"review-form\" class=\"smart-form\"><header>Review form</header><fieldset><section><label class=\"input\"><i class=\"icon-append fa fa-user\"></i> <input type=\"text\" name=\"name\" id=\"name\" placeholder=\"Your name\"></label></section><section><label class=\"input\"><i class=\"icon-append fa fa-envelope-o\"></i> <input type=\"email\" name=\"email\" id=\"email\" placeholder=\"Your e-mail\"></label></section><section><label class=\"label\"></label><label class=\"textarea\"><i class=\"icon-append fa fa-comment\"></i><textarea rows=\"3\" name=\"review\" id=\"review\" placeholder=\"Text of the review\"></textarea></label></section><section><div class=\"rating\"><input type=\"radio\" name=\"quality\" id=\"quality-5\"><label for=\"quality-5\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"quality\" id=\"quality-4\"><label for=\"quality-4\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"quality\" id=\"quality-3\"><label for=\"quality-3\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"quality\" id=\"quality-2\"><label for=\"quality-2\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"quality\" id=\"quality-1\"><label for=\"quality-1\"><i class=\"fa fa-star\"></i></label>Quality of the product</div><div class=\"rating\"><input type=\"radio\" name=\"reliability\" id=\"reliability-5\"><label for=\"reliability-5\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"reliability\" id=\"reliability-4\"><label for=\"reliability-4\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"reliability\" id=\"reliability-3\"><label for=\"reliability-3\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"reliability\" id=\"reliability-2\"><label for=\"reliability-2\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"reliability\" id=\"reliability-1\"><label for=\"reliability-1\"><i class=\"fa fa-star\"></i></label>Reliability of the product</div><div class=\"rating\"><input type=\"radio\" name=\"overall\" id=\"overall-5\"><label for=\"overall-5\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"overall\" id=\"overall-4\"><label for=\"overall-4\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"overall\" id=\"overall-3\"><label for=\"overall-3\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"overall\" id=\"overall-2\"><label for=\"overall-2\"><i class=\"fa fa-star\"></i></label><input type=\"radio\" name=\"overall\" id=\"overall-1\"><label for=\"overall-1\"><i class=\"fa fa-star\"></i></label>Overall rating</div></section></fieldset><footer><button type=\"submit\" class=\"btn btn-primary\">Validate Form</button></footer></form>");}]);})();
-'use strict';
-
-angular
-    .module('app')
-    .directive('hasAnyAuthority', ["Principal", function (Principal) {
-        var directive = {
-            restrict: 'A',
-            link: linkFunc
-        };
-
-        return directive;
-
-        function linkFunc(scope, element, attrs) {
-            var authorities = attrs.hasAnyAuthority.replace(/\s+/g, '').split(',');
-
-            var setVisible = function () {
-                    element.removeClass('hidden');
-                },
-                setHidden = function () {
-                    element.addClass('hidden');
-                },
-                defineVisibility = function (reset) {
-                    var result;
-                    if (reset) {
-                        setVisible();
-                    }
-
-                    result = Principal.hasAnyAuthority(authorities);
-                    if (result) {
-                        setVisible();
-                    } else {
-                        setHidden();
-                    }
-                };
-
-            if (authorities.length > 0) {
-                defineVisibility(true);
-
-                scope.$watch(function () {
-                    return Principal.isAuthenticated();
-                }, function () {
-                    defineVisibility(true);
-                });
-            }
-        }
-    }]);
-
 'use strict';
 
 angular
@@ -13035,12 +13035,6 @@ angular
         }
     }]);
 
-"use strict";
-
-angular.module('app').factory('Assets', ["$http", "APP_CONFIG", function ($http, APP_CONFIG) {
-    return $http.get(APP_CONFIG.apiRootUrl + '/assets.json');
-}]);
-
 angular
     .module('app').service('AssetImportModalService', ["$uibModal", "Asset", "WorkOrderTemplateByAssetType", "WorkOrderByAsset", function ($uibModal, Asset, WorkOrderTemplateByAssetType, WorkOrderByAsset) {
     var open = false,
@@ -14254,6 +14248,12 @@ angular.module('app').directive('assetsTreeGridCheckbox', function () {
         }
     }
 });
+
+"use strict";
+
+angular.module('app').factory('Assets', ["$http", "APP_CONFIG", function ($http, APP_CONFIG) {
+    return $http.get(APP_CONFIG.apiRootUrl + '/assets.json');
+}]);
 
 'use strict';
 
