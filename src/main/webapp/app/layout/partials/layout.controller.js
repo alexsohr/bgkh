@@ -5,9 +5,9 @@
         .module('app')
         .controller('LayoutController', LayoutController);
 
-    LayoutController.$inject = ['$state', 'Auth', 'Principal', 'ProfileService', 'LoginService'];
+    LayoutController.$inject = ['$state', 'Auth', 'Principal', 'ProfileService', 'LoginService', 'Users'];
 
-    function LayoutController ($state, Auth, Principal, ProfileService, LoginService) {
+    function LayoutController ($state, Auth, Principal, ProfileService, LoginService, Users) {
         var vm = this;
 
         vm.isNavbarCollapsed = true;
@@ -18,6 +18,11 @@
             vm.swaggerEnabled = response.swaggerEnabled;
         });
 
+        vm.user = {};
+        Users.initialized.then(function(){
+            vm.user = Users
+        });
+        console.log(Users.lastName);
         vm.login = login;
         vm.logout = logout;
         vm.toggleNavbar = toggleNavbar;

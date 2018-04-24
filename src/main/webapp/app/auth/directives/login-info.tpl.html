@@ -1,9 +1,8 @@
 <div class="login-info ng-cloak">
     <span> <!-- User image size is adjusted inside CSS, it should stay as it -->
-        <a ng-if="isAuthenticated" data-ui-sref="app.account.settings">
-            <img ng-src="{{user.picture}}" alt="me" class="online">
-                <span>{{user.lastName}}
-                </span>
+        <a ng-if="vm.isAuthenticated()" data-ui-sref="app.account.settings">
+            <img src="content/images/avatars/male.png" alt="me" class="online" />
+                <span>{{user.lastName}}</span>
             <!--<i class="fa fa-angle-down"></i>-->
         </a>
      </span>
