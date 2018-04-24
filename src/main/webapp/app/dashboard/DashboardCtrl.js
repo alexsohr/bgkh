@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('app.dashboard').controller('DashboardCtrl', function ($rootScope, $scope, notifications) {
+angular.module('app.dashboard').controller('DashboardCtrl', function ($rootScope, $scope, notifications, Principal, $state) {
 
     $scope.notifications = notifications.data;
 
@@ -246,4 +246,12 @@ angular.module('app.dashboard').controller('DashboardCtrl', function ($rootScope
         yaxes: {}
     };
 
+    Principal.identity().then(function(account) {
+        if (Principal.hasAnyAuthority(["ROLE_ADMIN"])) {
+            $state.go('app.dashboard');
+        } else {
+            $state.go('app.workOrder');
+        }
+
+    });
 });

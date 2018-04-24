@@ -10,7 +10,7 @@
         traditional href="" links. See documentation for details.
         -->
         <ul data-smart-menu ng-if="vm.isAuthenticated()">
-            <li data-menu-collapse>
+            <li data-menu-collapse  has-any-authority="ROLE_MANAGER,ROLE_SUPERVISOR,ROLE_ADMIN">
                 <a href="#" title="{{getWord('Dashboard')}}">
                     <i class="fa fa-lg fa-fw fa-home"></i> <span
                     class="menu-item-parent">{{getWord('Dashboard')}}</span></a>
@@ -43,7 +43,7 @@
                 </ul>
             </li>
 
-            <li data-menu-collapse class="top-menu-invisible">
+            <li data-menu-collapse class="top-menu-invisible" has-any-authority="ROLE_MANAGER,ROLE_SUPERVISOR,ROLE_ADMIN">
                 <a href="#" title="{{getWord('Assets')}}"><i
                     class="fa fa-lg fa-fw fa-cogs"></i>
                     <span class="menu-item-parent">{{getWord('Assets')}}</span></a>
@@ -65,8 +65,8 @@
                     </li>
                 </ul>
             </li>
-            <li data-menu-collapse class="top-menu-invisible">
-                <a data-ui-sref="#" title="{{getWord('Maintenance')}}">
+            <li data-menu-collapse class="top-menu-invisible" has-any-authority="ROLE_USER">
+                <a data-ui-sref="app.workOrder" title="{{getWord('Maintenance')}}">
                     <i class="fa fa-lg fa-fw fa-wrench"></i> <span
                     class="menu-item-parent">{{getWord('Maintenance')}}</span></a>
                 <ul>
@@ -82,17 +82,17 @@
                     </li>
                 </ul>
             </li>
-            <li>
+            <li has-any-authority="ROLE_MANAGER,ROLE_SUPERVISOR,ROLE_ADMIN">
                 <a data-ui-sref="app.home" title="{{getWord('Alerts')}}">
                     <i class="fa fa-lg fa-fw fa-bell"></i> <span
                     class="menu-item-parent">{{getWord('Alerts')}}</span></a>
             </li>
-            <li>
+            <li has-any-authority="ROLE_MANAGER,ROLE_SUPERVISOR,ROLE_ADMIN">
                 <a data-ui-sref="app.home" title="{{getWord('Reports')}}">
                     <i class="fa fa-lg fa-fw fa-bar-chart"></i> <span
                     class="menu-item-parent">{{getWord('Reports')}}</span></a>
             </li>
-            <li data-menu-collapse>
+            <li data-menu-collapse has-any-authority="ROLE_MANAGER,ROLE_SUPERVISOR,ROLE_ADMIN">
                 <a href="#" title="{{getWord('Settings')}}">
                     <i class="fa fa-lg fa-fw fa-sliders"></i> <span
                     class="menu-item-parent">{{getWord('Settings')}}</span></a>
