@@ -53,9 +53,22 @@ public class WorkOrderTemplateService {
      */
     @Transactional(readOnly = true)
     public Page<WorkOrderTemplateDTO> findAll(Pageable pageable) {
-        log.debug("Request to get all WorkOrderTemplates");
+        log.debug("Request to get all paged WorkOrderTemplates");
         Page<WorkOrderTemplate> result = workOrderTemplateRepository.findAll(pageable);
         return result.map(workOrderTemplate -> workOrderTemplateMapper.workOrderTemplateToWorkOrderTemplateDTO(workOrderTemplate));
+    }
+
+    /**
+     *  Get all the workOrderTemplates.
+     *
+     *  @return the list of entities
+     */
+    @Transactional(readOnly = true)
+    public List<WorkOrderTemplateDTO> findAll() {
+        log.debug("Request to get all WorkOrderTemplates");
+        List<WorkOrderTemplate> result = workOrderTemplateRepository.findAll();
+        return result.stream().map(workOrderTemplateMapper::workOrderTemplateToWorkOrderTemplateDTO)
+            .collect(Collectors.toCollection(LinkedList::new));
     }
 
     /**

@@ -84,18 +84,16 @@ public class WorkOrderTemplateResource {
     /**
      * GET  /work-order-templates : get all the workOrderTemplates.
      *
-     * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of workOrderTemplates in body
      * @throws URISyntaxException if there is an error to generate the pagination HTTP headers
      */
     @GetMapping("/work-order-templates")
     @Timed
-    public ResponseEntity<List<WorkOrderTemplateDTO>> getAllWorkOrderTemplates(@ApiParam Pageable pageable)
+    public ResponseEntity<List<WorkOrderTemplateDTO>> getAllWorkOrderTemplates()
         throws URISyntaxException {
         log.debug("REST request to get a page of WorkOrderTemplates");
-        Page<WorkOrderTemplateDTO> page = workOrderTemplateService.findAll(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/work-order-templates");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        List<WorkOrderTemplateDTO> result = workOrderTemplateService.findAll();
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     /**
