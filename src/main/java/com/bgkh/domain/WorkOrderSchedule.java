@@ -43,6 +43,9 @@ public class WorkOrderSchedule implements Serializable {
     @Column(name = "completed_date")
     private ZonedDateTime completedDate;
 
+    @Column(name = "delay")
+    private int delayDays;
+
     @ManyToOne
     private WorkOrder workOrder;
 
@@ -225,6 +228,15 @@ public class WorkOrderSchedule implements Serializable {
             ", description='" + description + "'" +
             ", scheduleStatus='" + scheduleStatus + "'" +
             ", completedDate='" + completedDate + "'" +
+            ", delay='" + delayDays + "'" +
             '}';
+    }
+
+    public int getDelayDays() {
+        return delayDays;
+    }
+
+    public void setDelayDays(int delayDays) {
+        this.delayDays = delayDays;
     }
 }

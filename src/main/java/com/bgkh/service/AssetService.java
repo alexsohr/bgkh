@@ -21,6 +21,14 @@ public interface AssetService {
     AssetDTO save(AssetDTO assetDTO);
 
     /**
+     * Save a asset.
+     *
+     * @param asset the entity to save
+     * @return the persisted entity
+     */
+    AssetDTO save(Asset asset);
+
+    /**
      * Copy a asset.
      *
      * @param assetDTOs the entities to copy
@@ -41,7 +49,7 @@ public interface AssetService {
      *
      *  @return the list of entities
      */
-    List<AssetDTO> findAll();
+    List<Asset> findAll();
 
 
     List<String> findAllManufactures();
@@ -58,7 +66,7 @@ public interface AssetService {
      *  @param id the id of the entity
      *  @return the entity
      */
-    AssetDTO findOne(Long id);
+    Asset findOne(Long id);
 
     /**
      *  Delete the "id" asset.

@@ -20,7 +20,7 @@ public interface AssetRepository extends JpaRepository<Asset,Long> {
     @Query("select asset from Asset asset where asset.technician.login = ?#{principal.username}")
     List<Asset> findByTechnicianIsCurrentUser();
 
-    @Query("select asset.manufacture from Asset asset where asset.manufacture <> '' AND asset.manufacture is not null group by asset.manufacture")
+    @Query("select DISTINCT asset.manufacture from Asset asset where asset.manufacture <> '' AND asset.manufacture is not null group by asset.manufacture")
     List<String> findAllManufactures();
 
     @Query("select asset.unit from Asset asset where asset.unit <> '' AND asset.unit is not null group by asset.unit")

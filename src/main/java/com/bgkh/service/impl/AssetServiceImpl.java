@@ -74,6 +74,24 @@ public class AssetServiceImpl implements AssetService {
         return result;
     }
 
+    /**
+     * Save a asset.
+     *
+     * @param asset the entity to save
+     * @return the persisted entity
+     */
+    public AssetDTO save(Asset asset) {
+        log.debug("Request to save Asset : {}", asset);
+        AssetDTO assetDTO = assetMapper.assetToAssetDTO(asset);
+        attachUploadFilesFromIds(asset);
+        saveOrUpdateSpecificType(asset, assetDTO);
+        asset = assetRepository.save(asset);
+//        saveOrUpdateSpecificType(asset, assetDTO);
+        saveOrUpdateSpecificTypeFieldsAndValues(asset, assetDTO);
+        AssetDTO result = assetMapper.assetToAssetDTO(asset);
+        return result;
+    }
+
     private void saveOrUpdateSpecificType(Asset asset, AssetDTO assetDTO) {
         if (!asset.getAssetType().equals(AssetType.ASSET_GROUP)) {
             AssetSpecificationType assetSpecificationType = new AssetSpecificationType();
@@ -233,11 +251,12 @@ public class AssetServiceImpl implements AssetService {
      * @return the list of entities
      */
     @Transactional(readOnly = true)
-    public List<AssetDTO> findAll() {
+    public List<Asset> findAll() {
         log.debug("Request to get all Assets");
-        List<AssetDTO> result = assetRepository.findAllWithEagerRelationships().stream()
-            .map(assetMapper::assetToAssetDTO)
-            .collect(Collectors.toCollection(LinkedList::new));
+        List<Asset> result = assetRepository.findAllWithEagerRelationships();
+            //.stream()
+            //.map(assetMapper::assetToAssetDTO)
+            //.collect(Collectors.toCollection(LinkedList::new));
 
         return result;
     }
@@ -277,11 +296,11 @@ public class AssetServiceImpl implements AssetService {
      * @return the entity
      */
     @Transactional(readOnly = true)
-    public AssetDTO findOne(Long id) {
+    public Asset findOne(Long id) {
         log.debug("Request to get Asset : {}", id);
         Asset asset = assetRepository.findOneWithEagerRelationships(id);
         AssetDTO assetDTO = assetMapper.assetToAssetDTO(asset);
-        return assetDTO;
+        return asset;
     }
 
     private void findAllChildren(Long id, List<Asset> assets) {

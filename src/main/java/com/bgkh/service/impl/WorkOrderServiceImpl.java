@@ -53,10 +53,10 @@ public class WorkOrderServiceImpl implements WorkOrderService {
      * @return the list of entities
      */
     @Transactional(readOnly = true)
-    public Page<WorkOrderDTO> findAll(Pageable pageable) {
+    public Page<WorkOrder> findAll(Pageable pageable) {
         log.debug("Request to get all WorkOrders");
         Page<WorkOrder> result = workOrderRepository.findAll(pageable);
-        return result.map(workOrder -> workOrderMapper.workOrderToWorkOrderDTO(workOrder));
+        return result;//.map(workOrder -> workOrderMapper.workOrderToWorkOrderDTO(workOrder));
     }
 
     /**
@@ -65,11 +65,12 @@ public class WorkOrderServiceImpl implements WorkOrderService {
      * @return the list of entities
      */
     @Transactional(readOnly = true)
-    public List<WorkOrderDTO> findAll() {
+    public List<WorkOrder> findAll() {
         log.debug("Request to get all WorkOrders");
         List<WorkOrder> result = workOrderRepository.findAll();
-        return result.stream().map(workOrderMapper::workOrderToWorkOrderDTO)
-            .collect(Collectors.toCollection(LinkedList::new));
+        return result;
+            //.stream().map(workOrderMapper::workOrderToWorkOrderDTO)
+            //.collect(Collectors.toCollection(LinkedList::new));
     }
 
     /**
@@ -79,11 +80,11 @@ public class WorkOrderServiceImpl implements WorkOrderService {
      * @return the entity
      */
     @Transactional(readOnly = true)
-    public WorkOrderDTO findOne(Long id) {
+    public WorkOrder findOne(Long id) {
         log.debug("Request to get WorkOrder : {}", id);
         WorkOrder workOrder = workOrderRepository.findOne(id);
-        WorkOrderDTO workOrderDTO = workOrderMapper.workOrderToWorkOrderDTO(workOrder);
-        return workOrderDTO;
+        //WorkOrderDTO workOrderDTO = workOrderMapper.workOrderToWorkOrderDTO(workOrder);
+        return workOrder;
     }
 
     /**
@@ -97,10 +98,11 @@ public class WorkOrderServiceImpl implements WorkOrderService {
     }
 
     @Override
-    public List<WorkOrderDTO> findAllByAssetId(Long assetId) {
-        List<WorkOrderDTO> allByAssetId = workOrderRepository.findAllByAssetId(assetId).stream()
-            .map(workOrderMapper::workOrderToWorkOrderDTO)
-            .collect(Collectors.toCollection(LinkedList::new));
+    public List<WorkOrder> findAllByAssetId(Long assetId) {
+        List<WorkOrder> allByAssetId = workOrderRepository.findAllByAssetId(assetId);
+            //.stream()
+            //.map(workOrderMapper::workOrderToWorkOrderDTO)
+            //.collect(Collectors.toCollection(LinkedList::new));
 
         return allByAssetId;
     }

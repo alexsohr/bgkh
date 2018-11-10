@@ -1,6 +1,6 @@
 package com.bgkh.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
+import com.bgkh.domain.Asset;
 import com.bgkh.service.AssetService;
 import com.bgkh.service.dto.AssetDTO;
 import com.bgkh.service.dto.AssetDTOs;
@@ -9,7 +9,6 @@ import com.bgkh.web.rest.util.HeaderUtil;
 import com.codahale.metrics.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,10 +17,8 @@ import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * REST controller for managing Asset.
@@ -70,12 +67,15 @@ public class AssetResource {
 
     @PostMapping("/assets/move/{id}")
     @Timed
-    public ResponseEntity<AssetDTO> moveAsset(@Valid @RequestBody Long parentId, @PathVariable Long id) throws URISyntaxException {
+    public ResponseEntity<Asset> moveAsset(@Valid @RequestBody Long parentId, @PathVariable Long id) throws URISyntaxException {
         log.debug("REST request to move Asset with id : {}", id);
 
-        AssetDTO assetDTO = assetService.findOne(id);
+        Asset asset = assetService.findOne(id);
 
-        AssetDTO result = assetService.save(assetDTO);
+        AssetDTO dtoresult = assetService.save(asset);
+
+        Asset result = assetMapper.assetDTOToAsset(dtoresult);
+
         return ResponseEntity.created(new URI("/api/assets/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert("asset", result.getId().toString()))
             .body(result);
@@ -121,7 +121,7 @@ public class AssetResource {
      */
     @GetMapping("/assets")
     @Timed
-    public List<AssetDTO> getAllAssets() {
+    public List<Asset> getAllAssets() {
         log.debug("REST request to get all Assets");
         return assetService.findAll();
     }
@@ -164,9 +164,9 @@ public class AssetResource {
      */
     @GetMapping("/assets/{id}")
     @Timed
-    public ResponseEntity<AssetDTO> getAsset(@PathVariable Long id) {
+    public ResponseEntity<Asset> getAsset(@PathVariable Long id) {
         log.debug("REST request to get Asset : {}", id);
-        AssetDTO assetDTO = assetService.findOne(id);
+        Asset assetDTO = assetService.findOne(id);
         return Optional.ofNullable(assetDTO)
             .map(result -> new ResponseEntity<>(
                 result,

@@ -28,14 +28,14 @@ public interface WorkOrderService {
      *  @param pageable the pagination information
      *  @return the list of entities
      */
-    Page<WorkOrderDTO> findAll(Pageable pageable);
+    Page<WorkOrder> findAll(Pageable pageable);
 
     /**
      *  Get all the workOrders.
      *
      *  @return the list of entities
      */
-    List<WorkOrderDTO> findAll();
+    List<WorkOrder> findAll();
 
     /**
      *  Get the "id" workOrder.
@@ -43,7 +43,7 @@ public interface WorkOrderService {
      *  @param id the id of the entity
      *  @return the entity
      */
-    WorkOrderDTO findOne(Long id);
+    WorkOrder findOne(Long id);
 
     /**
      *  Delete the "id" workOrder.
@@ -52,7 +52,7 @@ public interface WorkOrderService {
      */
     void delete(Long id);
 
-    List<WorkOrderDTO> findAllByAssetId(Long assetId);
+    List<WorkOrder> findAllByAssetId(Long assetId);
 
     WorkOrderDTOs saveAll(WorkOrderDTOs workOrderDTOs);
 
