@@ -1,5 +1,6 @@
 package com.bgkh.web.rest;
 
+import com.bgkh.domain.WorkOrder;
 import com.bgkh.service.dto.WorkOrderDTOs;
 import com.codahale.metrics.annotation.Timed;
 import com.bgkh.service.WorkOrderService;
@@ -89,10 +90,10 @@ public class WorkOrderResource {
      */
     @GetMapping("/work-orders")
     @Timed
-    public ResponseEntity<List<WorkOrderDTO>> getAllWorkOrders(@ApiParam Pageable pageable)
+    public ResponseEntity<List<WorkOrder>> getAllWorkOrders(@ApiParam Pageable pageable)
         throws URISyntaxException {
         log.debug("REST request to get a page of WorkOrders");
-        Page<WorkOrderDTO> page = workOrderService.findAll(pageable);
+        Page<WorkOrder> page = workOrderService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/work-orders");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
@@ -100,10 +101,10 @@ public class WorkOrderResource {
 
     @GetMapping("/work-orders-by-asset/{assetId}")
     @Timed
-    public ResponseEntity<List<WorkOrderDTO>> getWorkOrders(@PathVariable Long assetId) {
+    public ResponseEntity<List<WorkOrder>> getWorkOrders(@PathVariable Long assetId) {
         log.debug("REST request to get WorkOrder with asset Id : {}", assetId);
-        List<WorkOrderDTO> workOrderDTOs = workOrderService.findAllByAssetId(assetId);
-        return new ResponseEntity<>(workOrderDTOs, HttpStatus.OK);
+        List<WorkOrder> workOrders = workOrderService.findAllByAssetId(assetId);
+        return new ResponseEntity<>(workOrders, HttpStatus.OK);
     }
 
     @PostMapping("/work-orders-by-asset")
@@ -134,10 +135,10 @@ public class WorkOrderResource {
      */
     @GetMapping("/work-orders/{id}")
     @Timed
-    public ResponseEntity<WorkOrderDTO> getWorkOrder(@PathVariable Long id) {
+    public ResponseEntity<WorkOrder> getWorkOrder(@PathVariable Long id) {
         log.debug("REST request to get WorkOrder : {}", id);
-        WorkOrderDTO workOrderDTO = workOrderService.findOne(id);
-        return Optional.ofNullable(workOrderDTO)
+        WorkOrder workOrder = workOrderService.findOne(id);
+        return Optional.ofNullable(workOrder)
             .map(result -> new ResponseEntity<>(
                 result,
                 HttpStatus.OK))

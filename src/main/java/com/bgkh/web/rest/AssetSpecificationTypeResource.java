@@ -103,14 +103,14 @@ public class AssetSpecificationTypeResource {
     @Timed
     public List<AssetSpecificationType> getAllWorkOrderAssetSpecificationTypes() {
         log.debug("REST request to get all AssetSpecificationTypes for WorkOrder");
-        List<AssetDTO> allByParentId = assetService.findAll();
+        List<Asset > allByParentId = assetService.findAll();
         List<AssetSpecificationType> assetSpecificationTypes = assetSpecificationTypeRepository.findAllWorkOrderAssetSpecificationTypes();
         Set<AssetSpecificationType> resultSpecificationTypes = new HashSet<>();
-        for (AssetDTO asset: allByParentId) {
+        for (Asset asset: allByParentId) {
             int childCount = assetService.findCountByParentId(asset.getId());
             if (childCount == 0) {
                 for (AssetSpecificationType specificationType: assetSpecificationTypes) {
-                    if (asset.getAssetSpecificationTypeId().equals(specificationType.getId())) {
+                    if (asset.getAssetSpecificationType().getId().equals(specificationType.getId())) {
                         resultSpecificationTypes.add(specificationType);
                         break;
                     }
