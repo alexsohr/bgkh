@@ -26,6 +26,7 @@
                     <th jh-sort-by="workOrderType"><span data-translate="appApp.workOrderTemplate.workOrderType">Work Order Type</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="functionType"><span data-translate="appApp.workOrderTemplate.functionType">Function Type</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="name"><span data-translate="appApp.workOrderTemplate.name">Name</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="shortDesc"><span data-translate="appApp.workOrderTemplate.shortDesc">Short Desc</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="assetSpecificationTypeId"><span data-translate="appApp.workOrderTemplate.assetSpecificationType">Asset Specification Type</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th></th>
                 </tr>
@@ -40,6 +41,7 @@
                     <td data-translate="{{'appApp.WorkOrderTemplateType.' + workOrderTemplate.workOrderType}}">{{workOrderTemplate.workOrderType}}</td>
                     <td data-translate="{{'appApp.WorkOrderTemplateFunctionType.' + workOrderTemplate.functionType}}">{{workOrderTemplate.functionType}}</td>
                     <td>{{workOrderTemplate.name}}</td>
+                    <td>{{workOrderTemplate.shortDesc}}</td>
                     <td>
                         <a ui-sref="asset-specification-type-detail({id:workOrderTemplate.assetSpecificationTypeId})">{{workOrderTemplate.assetSpecificationTypeId}}</a>
                     </td>

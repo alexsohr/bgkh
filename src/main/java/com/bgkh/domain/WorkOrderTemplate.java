@@ -52,6 +52,9 @@ public class WorkOrderTemplate implements Serializable {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "short_desc")
+    private String shortDesc;
+
     @ManyToOne
     @NotNull
     private AssetSpecificationType assetSpecificationType;
@@ -155,6 +158,19 @@ public class WorkOrderTemplate implements Serializable {
         this.name = name;
     }
 
+    public String getShortDesc() {
+        return shortDesc;
+    }
+
+    public WorkOrderTemplate shortDesc(String shortDesc) {
+        this.shortDesc = shortDesc;
+        return this;
+    }
+
+    public void setShortDesc(String shortDesc) {
+        this.shortDesc = shortDesc;
+    }
+
     public AssetSpecificationType getAssetSpecificationType() {
         return assetSpecificationType;
     }
@@ -199,6 +215,7 @@ public class WorkOrderTemplate implements Serializable {
             ", workOrderType='" + workOrderType + "'" +
             ", functionType='" + functionType + "'" +
             ", name='" + name + "'" +
+            ", shortDesc='" + shortDesc + "'" +
             '}';
     }
 }

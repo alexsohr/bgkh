@@ -135,6 +135,7 @@
                                 workOrderType: null,
                                 functionType: null,
                                 name: null,
+                                shortDesc: null,
                                 id: null
                             };
                         }

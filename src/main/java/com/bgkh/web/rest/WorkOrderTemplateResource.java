@@ -1,6 +1,5 @@
 package com.bgkh.web.rest;
 
-import com.bgkh.service.mapper.WorkOrderTemplateMapper;
 import com.codahale.metrics.annotation.Timed;
 import com.bgkh.service.WorkOrderTemplateService;
 import com.bgkh.web.rest.util.HeaderUtil;

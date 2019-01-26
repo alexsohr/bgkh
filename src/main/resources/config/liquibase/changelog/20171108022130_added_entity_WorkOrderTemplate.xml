@@ -52,6 +52,10 @@
                 <constraints nullable="false" />
             </column>
             
+            <column name="short_desc" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            
             <column name="asset_specification_type_id" type="bigint">
                 <constraints nullable="false" />
             </column>

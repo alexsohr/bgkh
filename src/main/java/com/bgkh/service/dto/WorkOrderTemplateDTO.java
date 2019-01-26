@@ -33,6 +33,8 @@ public class WorkOrderTemplateDTO implements Serializable {
     @NotNull
     private String name;
 
+    private String shortDesc;
+
 
     private Long assetSpecificationTypeId;
     
@@ -92,6 +94,13 @@ public class WorkOrderTemplateDTO implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+    public String getShortDesc() {
+        return shortDesc;
+    }
+
+    public void setShortDesc(String shortDesc) {
+        this.shortDesc = shortDesc;
+    }
 
     public Long getAssetSpecificationTypeId() {
         return assetSpecificationTypeId;
@@ -133,6 +142,7 @@ public class WorkOrderTemplateDTO implements Serializable {
             ", workOrderType='" + workOrderType + "'" +
             ", functionType='" + functionType + "'" +
             ", name='" + name + "'" +
+            ", shortDesc='" + shortDesc + "'" +
             '}';
     }
 }

@@ -23,6 +23,7 @@
             "workOrderType": "Work Order Type",
             "functionType": "Function Type",
             "name": "Name",
+            "shortDesc": "Short Desc",
             "assetSpecificationType": "Asset Specification Type"
         }
     }

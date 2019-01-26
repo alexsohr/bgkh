@@ -50,6 +50,10 @@
             "fieldValidateRules": [
                 "required"
             ]
+        },
+        {
+            "fieldName": "shortDesc",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20171108022130",
